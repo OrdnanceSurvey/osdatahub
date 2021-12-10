@@ -24,11 +24,14 @@ CLASSIFIERS = ["Natural Language :: English",
 REQUIREMENTS = ["geojson==2.5.0",
                 "requests==2.25.0",
                 "typeguard==2.13.0",
-                "shapely==1.8.0"]
+                "shapely==1.8.0"
+                ]
 
 
 TEST_REQUIREMENTS = ["pytest",
-                     "requests-mock"]
+                     "requests-mock",
+                     "myst-parser==0.15.2"
+                     ]
 
 
 setup(
