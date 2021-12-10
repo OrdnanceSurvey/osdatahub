@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Overview &#8212; osdatahub 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="OS Data Hub Features API" href="FeaturesAPI.html" />
+    <link rel="prev" title="Welcome to osdatahub&#39;s documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="FeaturesAPI.html" title="OS Data Hub Features API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to osdatahub&#39;s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">osdatahub 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Overview</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<section class="tex2jax_ignore mathjax_ignore" id="osdatahub-omit-in-toc">
+<h2>osdatahub <!-- omit in toc --><a class="headerlink" href="#osdatahub-omit-in-toc" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">osdatahub</span></code> is a python package from Ordnance Survey (OS) that makes it easier to interact with OS data via the <a class="reference external" href="https://osdatahub.os.uk/">OS Data Hub APIs</a>.</p>
+<p>OS is the national mapping agency for Great Britain and produces a large variety of mapping
+and geospatial products. Much of OS’s data is available via the <a class="reference external" href="https://osdatahub.os.uk/">OS Data Hub</a>, a platform
+that hosts both free and premium data products. <code class="docutils literal notranslate"><span class="pre">osdatahub</span></code> provides a user-friendly way to interact with these data products
+in Python.</p>
+<p><img alt="The OS Logo" src="_images/os-logo.png" /></p>
+<section id="features-omit-in-toc">
+<h3>Features <!-- omit in toc --><a class="headerlink" href="#features-omit-in-toc" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Get access to Ordnance Survey data in as few as 2-3 lines of code</p></li>
+<li><p>Easily query geographic extents using bounding boxes, radii and ONS geographies</p></li>
+<li><p>Request as much data as you need with automatic API paging</p></li>
+<li><p>Supports the OS Features and OS Places APIs</p></li>
+</ul>
+</section>
+<section id="links-omit-in-toc">
+<h3>Links <!-- omit in toc --><a class="headerlink" href="#links-omit-in-toc" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>GitHub repo: https://github.com/OrdnanceSurvey/osdatahub</p></li>
+<li><p>Documentation: https://osdatahub.readthedocs.io/en/latest/</p></li>
+<li><p>PyPI: https://pypi.org/project/osdatahub/</p></li>
+<li><p>Free Software: Open Government License</p></li>
+</ul>
+<p><strong>Note:</strong> This package is under active development.</p>
+</section>
+<section id="contents-omit-in-toc">
+<h3>Contents <!-- omit in toc --><a class="headerlink" href="#contents-omit-in-toc" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="#setup">Setup</a></p></li>
+<li><p><a class="reference external" href="#quick-start">Quick Start</a></p>
+<ul>
+<li><p><a class="reference external" href="#features-api">Features API</a></p></li>
+<li><p><a class="reference external" href="#places-api">Places API</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#tutorials">Tutorials</a></p></li>
+<li><p><a class="reference external" href="#contribute">Contribute</a></p></li>
+</ul>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">osdatahub</span></code> is available on <a class="reference external" href="https://pypi.org/project/osdatahub/">PyPI</a>. To install <code class="docutils literal notranslate"><span class="pre">osdatahub</span></code>, run this command in your terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install osdatahub
+</pre></div>
+</div>
+<p>You’ll also need to sign-up for an account on the <a class="reference external" href="https://osdatahub.os.uk/">OS Data Hub</a> and get an API key. If you’ve setup you’re account and need help getting a key, try the
+following steps:</p>
+<ol class="simple">
+<li><p>Navigate to the <strong>API Dashboard</strong> located on the top navigation bar</p></li>
+<li><p>Go to <strong>My Projects</strong></p></li>
+<li><p>Click <strong>Create a new project</strong>, give your project a name, then click <strong>Create project</strong></p></li>
+<li><p>Select <strong>Add an API to this project</strong></p></li>
+<li><p>Choose the APIs you would like to use and click <strong>Done</strong> (Note: osdatahub supports
+the OS Features API and the OS Places API)</p></li>
+</ol>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<section id="features-api">
+<h3>Features API<a class="headerlink" href="#features-api" title="Permalink to this headline">¶</a></h3>
+<p>Data can be queried within a geographical extent in just a few simple steps!</p>
+<p>First, we need to import the <strong>FeaturesAPI</strong> class (which helps us runs queries) and
+the <strong>Extent</strong> class (which helps us to define a target region):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">osdatahub</span> <span class="kn">import</span> <span class="n">FeaturesAPI</span><span class="p">,</span> <span class="n">Extent</span>
+</pre></div>
+</div>
+<p>Then we need to get our <a class="reference external" href="https://osdatahub.os.uk/">OS API key</a> and store it as a variable (<span class="xref myst">find out how to
+do this securely with environment variables</span>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;[YOUR KEY GOES HERE]&quot;</span>
+</pre></div>
+</div>
+<p>Next, we define our geographic extent. For this example we’re going use a
+bounding box, but it is also possible to specify radial extents, ONS
+geographies and custom polygons.</p>
+<p>These bounding box coordinates are BNG coordinates in the order
+(West, South, East, North):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">extent</span> <span class="o">=</span> <span class="n">Extent</span><span class="o">.</span><span class="n">from_bbox</span><span class="p">((</span><span class="mi">600000</span><span class="p">,</span> <span class="mi">310200</span><span class="p">,</span> <span class="mi">600900</span><span class="p">,</span> <span class="mi">310900</span><span class="p">),</span> <span class="s2">&quot;EPSG:27700&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And now we can run our query! We just have to assemble the parts and decide
+which OS Features product we want to explore. In this case, we’re going to
+choose “zoomstack_local_buildings” — an open data set of Great Britain’s
+local buildings:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">product</span> <span class="o">=</span> <span class="s2">&quot;zoomstack_local_buildings&quot;</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">FeaturesAPI</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">product</span><span class="p">,</span> <span class="n">extent</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The data stored in the results variable will be in geojson format, limited to
+50 features. To save the query results as a geojson file, you need to import
+the <a class="reference external" href="https://github.com/jazzband/geojson">geojson module</a> and use the .dump()
+function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">geojson</span>
+
+<span class="n">geojson</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;FILENAME.geojson&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Putting this all together, we get:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">osdatahub</span> <span class="kn">import</span> <span class="n">FeaturesAPI</span><span class="p">,</span> <span class="n">Extent</span>
+<span class="kn">import</span> <span class="nn">geojson</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;[YOUR KEY GOES HERE]&quot;</span>
+<span class="n">extent</span> <span class="o">=</span> <span class="n">Extent</span><span class="o">.</span><span class="n">from_bbox</span><span class="p">((</span><span class="mi">600000</span><span class="p">,</span> <span class="mi">310200</span><span class="p">,</span> <span class="mi">600900</span><span class="p">,</span> <span class="mi">310900</span><span class="p">),</span> <span class="s2">&quot;EPSG:27700&quot;</span><span class="p">)</span>
+<span class="n">product</span> <span class="o">=</span> <span class="s2">&quot;zoomstack_local_buildings&quot;</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">FeaturesAPI</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">product</span><span class="p">,</span> <span class="n">extent</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="n">geojson</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;FILENAME.geojson&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="places-api">
+<h3>Places API<a class="headerlink" href="#places-api" title="Permalink to this headline">¶</a></h3>
+<p>To run a similar query using the OS Places API, we just need to make two changes.
+First, we no longer need to decide on a product — the Places API is always
+going to give us addresses! Secondly, the <strong>PlacesAPI</strong> class does not require
+an extent (because there are other, non-geographic, queries available).
+Therefore, our bounding box extent does not need to be passed in until the
+query is run.</p>
+<p>The final result looks like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">osdatahub</span> <span class="kn">import</span> <span class="n">PlacesAPI</span><span class="p">,</span> <span class="n">Extent</span>
+<span class="kn">import</span> <span class="nn">geojson</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;[YOUR KEY GOES HERE]&quot;</span>
+<span class="n">extent</span> <span class="o">=</span> <span class="n">Extent</span><span class="o">.</span><span class="n">from_bbox</span><span class="p">((</span><span class="mi">600000</span><span class="p">,</span> <span class="mi">310200</span><span class="p">,</span> <span class="mi">600900</span><span class="p">,</span> <span class="mi">310900</span><span class="p">),</span> <span class="s2">&quot;EPSG:27700&quot;</span><span class="p">)</span>
+<span class="n">places</span> <span class="o">=</span> <span class="n">PlacesAPI</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="c1"># No extent or product is given to PlacesAPI</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">extent</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span> <span class="c1"># Extent is passed directly into the .query() function</span>
+
+<span class="n">geojson</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;FILENAME.geojson&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Note: The PlacesAPI requires a <em>premium</em> API key!</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="tutorials">
+<h2>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h2>
+<p>Find examples using <code class="docutils literal notranslate"><span class="pre">osdatahub</span></code> in the Examples folder on github.</p>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="contribute">
+<h2>Contribute<a class="headerlink" href="#contribute" title="Permalink to this headline">¶</a></h2>
+<p>This package is still under active developement and we welcome contributions from the community via issues and pull requests.</p>
+<p>To install osdatahub, along with the tools you need to develop and run tests,
+run the following in your environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -e .<span class="o">[</span>dev<span class="o">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Overview</a><ul>
+<li><a class="reference internal" href="#osdatahub-omit-in-toc">osdatahub <!-- omit in toc --></a><ul>
+<li><a class="reference internal" href="#features-omit-in-toc">Features <!-- omit in toc --></a></li>
+<li><a class="reference internal" href="#links-omit-in-toc">Links <!-- omit in toc --></a></li>
+<li><a class="reference internal" href="#contents-omit-in-toc">Contents <!-- omit in toc --></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#quick-start">Quick Start</a><ul>
+<li><a class="reference internal" href="#features-api">Features API</a></li>
+<li><a class="reference internal" href="#places-api">Places API</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tutorials">Tutorials</a></li>
+<li><a class="reference internal" href="#contribute">Contribute</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to <code class="docutils literal notranslate"><span class="pre">osdatahub's</span></code> documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="FeaturesAPI.html"
+                        title="next chapter">OS Data Hub Features API</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/readme_link.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="FeaturesAPI.html" title="OS Data Hub Features API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to osdatahub&#39;s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">osdatahub 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Overview</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, OS Rapid Prototyping Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.0.
+    </div>
+  </body>
+</html>

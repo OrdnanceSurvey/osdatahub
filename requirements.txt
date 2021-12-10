@@ -1,0 +1,4 @@
+geojson==2.5.0
+requests==2.25.0
+typeguard==2.13.0
+shapely==1.8.0
