@@ -8,7 +8,7 @@ and geospatial products. Much of OS's data is available via the [OS Data Hub](ht
 that hosts both free and premium data products. `osdatahub` provides a user-friendly way to interact with these data products
 in Python.
 
-![The OS Logo](https://github.com/OrdnanceSurvey/osdatahub/blob/modify-links/media/os-logo.png)
+![The OS Logo](https://raw.githubusercontent.com/OrdnanceSurvey/osdatahub/modify-links/media/os-logo.png)
 
 ## Features <!-- omit in toc -->
 - Get access to Ordnance Survey data in as few as 2-3 lines of code
