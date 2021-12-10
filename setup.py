@@ -33,7 +33,7 @@ TEST_REQUIREMENTS = ["pytest",
 
 setup(
     name="osdatahub",
-    version="1.2.8",
+    version="0.0.0",
     python_requires=">=3.7",
     description="osdatahub is Ordnance Survey's (OS) Python API wrapper, designed to make data from the OS Data Hub APIs readily accessible to developers.",
     long_description=README,

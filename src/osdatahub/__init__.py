@@ -3,4 +3,4 @@ from osdatahub.FeaturesAPI import FeaturesAPI
 from osdatahub.PlacesAPI import PlacesAPI
 
 
-__version__ = "1.2.8"
+__version__ = "0.0.0"
