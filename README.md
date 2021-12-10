@@ -8,7 +8,7 @@ and geospatial products. Much of OS's data is available via the [OS Data Hub](ht
 that hosts both free and premium data products. `osdatahub` provides a user-friendly way to interact with these data products
 in Python.
 
-![The OS Logo](/media/os-logo.png)
+![The OS Logo](https://github.com/OrdnanceSurvey/osdatahub/blob/modify-links/media/os-logo.png)
 
 ## Features <!-- omit in toc -->
 - Get access to Ordnance Survey data in as few as 2-3 lines of code
@@ -67,7 +67,7 @@ from osdatahub import FeaturesAPI, Extent
 ```
 
 Then we need to get our [OS API key](https://osdatahub.os.uk/) and store it as a variable ([find out how to 
-do this securely with environment variables](/Examples/Setting%20up%20an%20API%20key.ipynb)):
+do this securely with environment variables](https://github.com/OrdnanceSurvey/osdatahub/blob/modify-links/Examples/Setting%20up%20an%20API%20key.ipynb)):
 
 ```python
 key = "[YOUR KEY GOES HERE]"
@@ -146,7 +146,18 @@ Note: The PlacesAPI requires a *premium* API key!
 
 # Tutorials
 
-Find examples using `osdatahub` in the Examples folder on github.
+Example notebooks, demonstrating various `osdatahub` features can be found in 
+the Examples folder. Here is a list of the available content:
+
+- [Setting up an API Key](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/Setting%20up%20an%20API%20key.ipynb)
+- [Quick Start Guide](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/Quick%20Start%20Guide.ipynb)
+- [Defining Extents](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/Defining%20Extents%20for%20API%20Queries.ipynb)
+- [Filtering Attributes](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/Filtering%20Attributes%20for%20API%20Queries.ipynb)
+- [Plotting Query Results - GeoPandas, Matplotlib, Contextily](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/Plotting%20API%20Results%20-%20GeoPandas%2C%20Matplotlib%20and%20Contextily.ipynb)
+- [Interactive Plotting for Query Results](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/Interactive%20Plotting%20for%20API%20Results%20-%20Folium.ipynb)
+- [Converting Query Results into Common Formats](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/Converting%20API%20Results%20into%20Common%20Data%20Formats.ipynb)
+- [Post Processing Query Results](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/Post%20Processing%20API%20Queries.ipynb)
+- [Common CRS Pitfalls](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/CRS%20pitfalls.ipynb)
 
 # Contribute
 
