@@ -23,6 +23,8 @@ developers.
    PlacesAPI
    Extent
    Utilities
+   Data Hub Explorer <https://labs.os.uk/public/data-hub-explorer/>
+   Examples <https://github.com/OrdnanceSurvey/osdatahub/tree/master/Examples>
 
 Indices and tables
 ==================
