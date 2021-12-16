@@ -6,7 +6,7 @@ from geojson import FeatureCollection
 
 from osdatahub.extent import Extent
 from osdatahub.grow_list import GrowList
-from osdatahub.NamesAPI.local_types import validate_local_type
+from osdatahub.NamesAPI.local_types import validate_local_type, get_local_type
 from osdatahub.utils import addresses_to_geojson
 
 
@@ -100,7 +100,7 @@ class NamesAPI:
             data.extend(self.__format_response(response))
         except KeyError:
             response.raise_for_status()
-        return addresses_to_geojson(data.values, "EPSG:27700")
+        return addresses_to_geojson(data.values, crs="EPSG:27700")
 
     @staticmethod
     @typechecked
@@ -124,9 +124,9 @@ class NamesAPI:
                 raise ValueError(f"The local type(s) {invalid_local_types} are not valid local types")
             # builds local_type query whether given one argument or multiple
             if isinstance(local_type, str):
-                local_types = "LOCAL_TYPE:" + local_type
+                local_types = "LOCAL_TYPE:" + get_local_type(local_type)
             elif isinstance(local_type, Iterable):
-                local_types = " ".join([f"LOCAL_TYPE:{arg}" for arg in local_type])
+                local_types = " ".join([f"LOCAL_TYPE:{get_local_type(arg)}" for arg in local_type])
             else:
                 raise TypeError(
                     f"'local_type' argument must be Iterable or str, but was type {type(local_type)}")
@@ -134,6 +134,8 @@ class NamesAPI:
 
         # adds bbox filter to argument
         if bbox_filter:
+            if not isinstance(bbox_filter, Extent):
+                raise TypeError(f"argument 'bbox_filter' must be type Extent. Is type {type(bbox_filter)}")
             if bbox_filter.crs != "EPSG:27700":
                 raise ValueError("'bbox_filter' argument must have CRS of British National Grid (EPSG:27700). Its CRS "
                                  f"is {bbox_filter.crs}")

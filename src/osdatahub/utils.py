@@ -157,7 +157,10 @@ def address_to_feature(address, crs):
         attributes called 'LAT' and 'LNG' in the address
     """
     if crs.lower() in ("epsg:27700", "bng"):
-        x, y = address["X_COORDINATE"], address["Y_COORDINATE"]
+        try:
+            x, y = address["X_COORDINATE"], address["Y_COORDINATE"]
+        except KeyError:
+            x, y = address["GEOMETRY_X"], address["GEOMETRY_Y"]
     elif all(i in address.keys() for i in ("LNG", "LAT")):
         x, y = address["LNG"], address["LAT"]
     else:

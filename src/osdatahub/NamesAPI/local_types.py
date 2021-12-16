@@ -79,3 +79,11 @@ LOCAL_TYPE = {
 def validate_local_type(local_type: Union[str, Iterable]) -> set:
     local_type = {local_type} if isinstance(local_type, str) else set(local_type)
     return local_type - set(LOCAL_TYPE.keys())
+
+
+def get_local_type(local_type_name: str) -> str:
+    return LOCAL_TYPE[local_type_name].local_type
+
+
+if __name__ == '__main__':
+    x = get_local_type("town")
