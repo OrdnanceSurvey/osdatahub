@@ -134,8 +134,6 @@ class NamesAPI:
 
         # adds bbox filter to argument
         if bbox_filter:
-            if not isinstance(bbox_filter, Extent):
-                raise TypeError(f"argument 'bbox_filter' must be type Extent. Is type {type(bbox_filter)}")
             if bbox_filter.crs != "EPSG:27700":
                 raise ValueError("'bbox_filter' argument must have CRS of British National Grid (EPSG:27700). Its CRS "
                                  f"is {bbox_filter.crs}")
