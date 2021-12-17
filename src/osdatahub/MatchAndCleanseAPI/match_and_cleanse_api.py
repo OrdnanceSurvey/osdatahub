@@ -1,9 +1,13 @@
 from collections.abc import Iterable
 from typing import Union
+
+import requests
 from typeguard import typechecked
 
-from osdatahub.codes import DATASET
+from osdatahub.codes import DATASET, validate_logical_status_code, validate_country_codes, COUNTRY_CODES, \
+    LOGICAL_STATUS_CODES
 from osdatahub.grow_list import GrowList
+from osdatahub.utils import addresses_to_geojson
 
 
 class MatchAndCleanseAPI:
@@ -23,13 +27,13 @@ class MatchAndCleanseAPI:
     @typechecked
     def match(self, text: str,
               limit: int = 100,
+              output_crs: str = "EPSG:27700",
               dataset: Union[Iterable, str] = None,
-              minmatch: float = None,
-              matchprecision: str = None,
+              min_match: Union[float, int] = None,
+              match_precision: Union[int, str] = None,
               classification_code: Union[Iterable, str] = None,
               logical_status_code: Union[str, int] = None,
-              country_code: Union[str, Iterable] = None,
-              output_srs: str = None):
+              country_code: Union[str, Iterable] = None):
         """
 
         """
@@ -40,14 +44,92 @@ class MatchAndCleanseAPI:
             dataset = set(dataset) if isinstance(dataset, Iterable) else {dataset}
             if not dataset.issubset(DATASET):
                 raise ValueError(f"Invalid dataset values. Possible values are {DATASET}")
+
+        if min_match:
+            if not 0.1 <= min_match <= 1:
+                raise ValueError(f"argument \"min_match\" must have a value between 0.1 and 1. Had a value {min_match}")
+            params.update({"minmatch": min_match})
+
+        if match_precision:
+            if (isinstance(match_precision, str) and not match_precision.isnumeric()) or not 1 <= match_precision <= 10:
+                raise ValueError(f"argument \"match_precision\" must be a number between 1 and 10, but had a value of "
+                                 f"{match_precision}")
+            params.update({"matchprecision": str(match_precision)})
+
+        if classification_code or logical_status_code or country_code:
+            params.update({"fq": self.__format_fq(classification_code, logical_status_code, country_code)})
+
+        if output_crs:
+            if output_crs not in ('BNG', 'EPSG:27700', 'WGS84', 'EPSG:4326', 'EPSG:3857', 'EPSG:4258'):
+                raise ValueError(f"argument \"output_srs\" must have be one of 'BNG', 'EPSG:27700', 'WGS84', "
+                                 f"'EPSG:4326', 'EPSG:3857', 'EPSG:4258' but had a value of {output_crs}")
+            params.update({"output_srs": output_crs})
+
         try:
             n_required = min(limit, 100)
             while n_required > 0 and data.grown:
                 params.update({"offset": len(data), "maxresults": n_required})
-                print(params)
-                response = requests.get(self.__endpoint("find"), params=params)
+                response = requests.get(self.__endpoint("match"), params=params)
                 data.extend(self.__format_response(response))
                 n_required = min(100, limit - len(data))
         except KeyError:
             response.raise_for_status()
-        return addresses_to_geojson(data.values, "EPSG:27700")
+        print(data.values)
+        return addresses_to_geojson(data.values, output_crs)
+
+    @staticmethod
+    @typechecked
+    def __format_fq(classification_code: Union[str, Iterable] = None,
+                    logical_status_code: Union[str, int] = None,
+                    country_code: Union[str, Iterable] = None) -> list:
+        """
+        Formats optional fq arguments for Match & Cleanse API query
+
+        Args:
+            classification_code (str|Iterable[str], optional): The classification codes to filter query
+            logical_status_code (str|Number, optional): Logical status code to filter query
+            country_code (str|Iterable[str], optional): Country code to filter query
+
+        Returns:
+            list of fq filtering arguments
+        """
+        fq_args = []
+        if classification_code:
+            if isinstance(classification_code, str):
+                class_codes = "classification_code:" + classification_code
+            elif isinstance(classification_code, Iterable):
+                class_codes = " ".join([f"classification_code:{arg}" for arg in classification_code])
+            else:
+                raise TypeError(f"'classification_code' argument must be Iterable or str, but was type "
+                                f"{type(classification_code)}")
+
+            fq_args.append(class_codes)
+        if logical_status_code:
+            if not str(logical_status_code).isnumeric():
+                raise TypeError("logical_status_code can have a maximum of 1 filter and must have a numeric value.")
+            if not validate_logical_status_code:
+                raise ValueError(f"argument \"logical_status_code\" must be one of {LOGICAL_STATUS_CODES} but was "
+                                 f"{logical_status_code}")
+            fq_args.append("logical_status_code:" + str(logical_status_code))
+
+        if country_code:
+            invalid_country_codes = validate_country_codes(country_code)
+            if invalid_country_codes:
+                raise ValueError(f"Argument \"country_code\" must contain only the values {COUNTRY_CODES.keys()} but "
+                                 f"had the invalid values {invalid_country_codes}")
+
+            if isinstance(country_code, str):
+                country_codes_str = "COUNTRY_CODE:" + country_code
+            elif isinstance(country_code, Iterable):
+                country_codes_str = " ".join([f"COUNTRY_CODE:{arg}" for arg in country_code])
+            else:
+                raise TypeError(f"'country_code' argument must be Iterable or str, but was type {type(country_code)}")
+
+            fq_args.append(country_codes_str)
+
+        return fq_args
+
+    @staticmethod
+    def __format_response(response: requests.Response) -> list:
+        return [result["DPA"] for result
+                in response.json()["results"]]
