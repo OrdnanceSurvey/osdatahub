@@ -1,12 +1,32 @@
 import pytest
 from os import environ
+import unittest.mock as mock
 
 from osdatahub.NamesAPI.names_api import NamesAPI
 from tests.data import names_data as data
 
 
 class TestFind:
-    pass
+    @pytest.fixture()
+    def names(self):
+        names = NamesAPI("test")
+        yield names
+
+    @pytest.mark.parametrize(*data.test_find_pass())
+    @pytest.mark.usefixtures("names")
+    @mock.patch('requests.get')
+    def test_find_pass(self, request_mocked, names, text, limit, bounds, bbox_filter, local_type,
+                     expected_url, expected_params):
+        names.find(text, limit=limit, bounds=bounds, bbox_filter=bbox_filter, local_type=local_type)
+        request_mocked.assert_called_with(expected_url,
+                                          params=expected_params)
+
+    @pytest.mark.parametrize(*data.test_find_fail())
+    @pytest.mark.usefixtures("names")
+    def test_find_fail(self, names, text, limit, bounds, bbox_filter, local_type,
+                     expected_result):
+        with pytest.raises(expected_exception=expected_result):
+            names.find(text, limit=limit, bounds=bounds, bbox_filter=bbox_filter, local_type=local_type)
 
 
 class TestNearest:

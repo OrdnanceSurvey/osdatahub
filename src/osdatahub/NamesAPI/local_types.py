@@ -1,9 +1,8 @@
 from collections import namedtuple
-from typing import Union
 from collections.abc import Iterable
+from typing import Union
 
 Local_Type = namedtuple("Local_Type", "Type local_type")
-
 
 LOCAL_TYPE = {
     "airfield": Local_Type("transportNetwork", "Airfield"),
@@ -84,6 +83,3 @@ def validate_local_type(local_type: Union[str, Iterable]) -> set:
 def get_local_type(local_type_name: str) -> str:
     return LOCAL_TYPE[local_type_name].local_type
 
-
-if __name__ == '__main__':
-    x = get_local_type("town")

@@ -1,12 +1,13 @@
-import requests
-from typing import Union
-from typeguard import typechecked
 from collections.abc import Iterable
-from geojson import FeatureCollection
+from typing import Union
 
+import requests
+from geojson import FeatureCollection
+from typeguard import typechecked
+
+from osdatahub.NamesAPI.local_types import validate_local_type, get_local_type
 from osdatahub.extent import Extent
 from osdatahub.grow_list import GrowList
-from osdatahub.NamesAPI.local_types import validate_local_type, get_local_type
 from osdatahub.utils import addresses_to_geojson
 
 
@@ -45,16 +46,21 @@ class NamesAPI:
             text (str): The free text search parameter
             limit (int, optional): The maximum number of features to return.
                 Defaults to 100.
-            bounds (Extent, optional): Biases the results to a certain area. Must be British National Grid (ESPG:27700) CRS
-            bbox_filter (Extent, optional): Filters the results to a certain area. Must be British National Grid (EPSG:27700) CRS
-            local_type (Union[Iterable, str], optional): Filters the results to certain local types. Available local types
-       c         can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
+            bounds (Extent, optional): Biases the results to a certain area. Must be British National Grid
+                (EPSG:27700) CRS
+            bbox_filter (Extent, optional): Filters the results to a certain area. Must be British National Grid
+                (EPSG:27700) CRS
+            local_type (Union[Iterable, str], optional): Filters the results to certain local types. Available local
+                types can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
         data = GrowList()
         params = {"query": text}
+
+        if limit <= 0:
+            raise ValueError("Parameter \"limit\" must be a positive integer")
 
         if bounds:
             if not bounds.crs == "EPSG:27700":
@@ -85,8 +91,8 @@ class NamesAPI:
             point (tuple): A set of coordinates
             radius (float): The search radius in metres (max. 1000).
                 Defaults to 100.
-            local_type (Union[Iterable, str], optional):  Filters the results to certain local types. Available local types
-                can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
+            local_type (Union[Iterable, str], optional):  Filters the results to certain local types. Available local
+                types can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -109,9 +115,10 @@ class NamesAPI:
         Formats optional fq arguments for Names API query
 
         Args:
-            bbox_filter (Extent, optional): Filters the results to a certain area. Must be British National Grid (EPSG:27700) CRS
-            local_type (Union[str, Iterable], optional): Filters the results to certain local types. Available local types
-                can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
+            bbox_filter (Extent, optional): Filters the results to a certain area. Must be British National Grid
+                (EPSG:27700) CRS
+            local_type (Union[str, Iterable], optional): Filters the results to certain local types. Available local
+                types can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
 
         Returns:
             list of fq filtering arguments
