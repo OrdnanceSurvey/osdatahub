@@ -88,7 +88,7 @@ class NamesAPI:
         to determine the closest name.
 
         Args:
-            point (tuple): A set of coordinates
+            point (tuple): A set of coordinates in British National Grid (EPSG:27700) format
             radius (float): The search radius in metres (max. 1000).
                 Defaults to 100.
             local_type (Union[Iterable, str], optional):  Filters the results to certain local types. Available local
@@ -98,9 +98,14 @@ class NamesAPI:
             FeatureCollection: The results of the query in GeoJSON format
         """
         data = GrowList()
+        if not all([str(p).isnumeric() for p in point]):
+            raise TypeError("All values in argument \"point\" must be numeric")
+        if not 0.01 <= radius <= 1000:
+            raise ValueError(f"Argument \"radius\" must be between 0 and 1000, but had value {radius}")
+
         params = {"point": ",".join([str(c) for c in point]), "radius": radius}
         if local_type:
-            params.update({"fq": self.__format_fq(bbox=None, local_type=local_type)})
+            params.update({"fq": self.__format_fq(local_type=local_type)})
         try:
             response = requests.get(self.__endpoint("nearest"), params=params)
             data.extend(self.__format_response(response))
@@ -126,6 +131,7 @@ class NamesAPI:
         fq_args = []
         if local_type:
             # check that all given local types are valid
+            print(local_type)
             invalid_local_types = validate_local_type(local_type)
             if invalid_local_types:
                 raise ValueError(f"The local type(s) {invalid_local_types} are not valid local types")

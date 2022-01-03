@@ -23,14 +23,30 @@ class TestFind:
 
     @pytest.mark.parametrize(*data.test_find_fail())
     @pytest.mark.usefixtures("names")
-    def test_find_fail(self, names, text, limit, bounds, bbox_filter, local_type,
-                     expected_result):
+    def test_find_fail(self, names, text, limit, bounds, bbox_filter, local_type, expected_result):
         with pytest.raises(expected_exception=expected_result):
             names.find(text, limit=limit, bounds=bounds, bbox_filter=bbox_filter, local_type=local_type)
 
 
 class TestNearest:
-    pass
+    @pytest.fixture()
+    def names(self):
+        names = NamesAPI("test")
+        yield names
+
+    @pytest.mark.parametrize(*data.test_nearest_pass())
+    @pytest.mark.usefixtures("names")
+    @mock.patch('requests.get')
+    def test_nearest_pass(self, request_mocked, names, point, radius, local_type, expected_url, expected_params):
+        names.nearest(point=point, radius=radius, local_type=local_type)
+        request_mocked.assert_called_with(expected_url,
+                                          params=expected_params)
+
+    @pytest.mark.parametrize(*data.test_nearest_fail())
+    @pytest.mark.usefixtures("names")
+    def test_nearest_fail(self, names, point, radius, local_type, expected_result):
+        with pytest.raises(expected_exception=expected_result):
+            names.nearest(point=point, radius=radius, local_type=local_type)
 
 
 class TestFormatFq:
