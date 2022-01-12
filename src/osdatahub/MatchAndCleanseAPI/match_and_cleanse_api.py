@@ -40,18 +40,25 @@ class MatchAndCleanseAPI:
         data = GrowList()
         params = {"query": text}
 
-        if dataset:
-            dataset = set(dataset) if isinstance(dataset, Iterable) else {dataset}
-            if not dataset.issubset(DATASET):
-                raise ValueError(f"Invalid dataset values. Possible values are {DATASET}")
+        if not limit > 0:
+            raise ValueError(f"Argument \"limit\" must have a positive value")
 
-        if min_match:
+        if dataset:
+            dataset = set([dataset] if isinstance(dataset, str) else dataset)
+            if not all(isinstance(x, str) for x in dataset):
+                raise TypeError("Argument \"dataset\" must consist only of strings")
+            elif not dataset.issubset(DATASET):
+                raise ValueError(f"Invalid dataset values. Possible values are {DATASET} but had value {dataset}")
+            params.update({"dataset": ",".join(sorted(dataset))})
+
+        if min_match is not None:
             if not 0.1 <= min_match <= 1:
                 raise ValueError(f"argument \"min_match\" must have a value between 0.1 and 1. Had a value {min_match}")
             params.update({"minmatch": min_match})
 
-        if match_precision:
-            if (isinstance(match_precision, str) and not match_precision.isnumeric()) or not 1 <= match_precision <= 10:
+        if match_precision is not None:
+            if (isinstance(match_precision, str) and not match_precision.isnumeric()) or \
+                    (not 1 <= int(match_precision) <= 10):
                 raise ValueError(f"argument \"match_precision\" must be a number between 1 and 10, but had a value of "
                                  f"{match_precision}")
             params.update({"matchprecision": str(match_precision)})
@@ -96,9 +103,11 @@ class MatchAndCleanseAPI:
         fq_args = []
         if classification_code:
             if isinstance(classification_code, str):
-                class_codes = "classification_code:" + classification_code
+                class_codes = "CLASSIFICATION_CODE:" + classification_code
             elif isinstance(classification_code, Iterable):
-                class_codes = " ".join([f"classification_code:{arg}" for arg in classification_code])
+                if not all(isinstance(x, str) for x in classification_code):
+                    raise TypeError("Argument \"classification_code\" must consist only of strings")
+                class_codes = " ".join([f"CLASSIFICATION_CODE:{arg}" for arg in classification_code])
             else:
                 raise TypeError(f"'classification_code' argument must be Iterable or str, but was type "
                                 f"{type(classification_code)}")
@@ -107,10 +116,10 @@ class MatchAndCleanseAPI:
         if logical_status_code:
             if not str(logical_status_code).isnumeric():
                 raise TypeError("logical_status_code can have a maximum of 1 filter and must have a numeric value.")
-            if not validate_logical_status_code:
+            if not validate_logical_status_code(logical_status_code):
                 raise ValueError(f"argument \"logical_status_code\" must be one of {LOGICAL_STATUS_CODES} but was "
                                  f"{logical_status_code}")
-            fq_args.append("logical_status_code:" + str(logical_status_code))
+            fq_args.append("LOGICAL_STATUS_CODE:" + str(logical_status_code))
 
         if country_code:
             invalid_country_codes = validate_country_codes(country_code)
@@ -121,6 +130,8 @@ class MatchAndCleanseAPI:
             if isinstance(country_code, str):
                 country_codes_str = "COUNTRY_CODE:" + country_code
             elif isinstance(country_code, Iterable):
+                if not all(isinstance(x, str) for x in country_code):
+                    raise TypeError("Argument \"country_code\" must consist only of strings")
                 country_codes_str = " ".join([f"COUNTRY_CODE:{arg}" for arg in country_code])
             else:
                 raise TypeError(f"'country_code' argument must be Iterable or str, but was type {type(country_code)}")
