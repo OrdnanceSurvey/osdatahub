@@ -22,6 +22,11 @@ COUNTRY_CODES = {
     "J": "This record is not assigned to a country as it falls outside of the land boundaries used"
 }
 
+AREA_CODES = {"GB", "HP", "HT", "HU", "HW", "HX", "HY", "HZ", "NA", "NB", "NC", "ND", "NF", "NG", "NH", "NJ", "NK",
+              "NL", "NM", "NN," "NO", "NR", "NS", "NT", "NU", "NW", "NX", "NY", "NZ", "OV", "SD", "SE", "TA", "SH",
+              "SJ", "SK", "TF", "TG", "SM", "SN", "SO", "SP", "TL", "TM", "SR", "SS", "ST", "SU", "TQ", "TR", "SV",
+              "SW", "SX", "SY", "SZ", "TV"}
+
 
 def validate_country_codes(country_code: Union[Iterable, str]) -> set:
     country_code = set(country_code) if isinstance(country_code, Iterable) else {country_code}
