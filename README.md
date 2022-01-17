@@ -138,7 +138,7 @@ import geojson
 key = "[YOUR KEY GOES HERE]"
 extent = Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700")
 places = PlacesAPI(key) # No extent or product is given to PlacesAPI
-results = features.query(extent, limit=50) # Extent is passed directly into the .query() function
+results = places.query(extent, limit=50) # Extent is passed directly into the .query() function
 
 geojson.dump(results, open("FILENAME.geojson", "w"))
 ```
