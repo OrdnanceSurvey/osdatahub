@@ -1,7 +1,15 @@
-from collections import namedtuple
 
-
-Options = namedtuple("Options", "name values")
+class Options:
+    
+    def __init__(self, name, values):
+        self.name = name
+        self.values = values
+    
+    def validate(self, value):
+        if value not in self.values:
+            valid = "\n- ".join(self.values)
+            raise ValueError(f"'{value}' is not a valid {self.name}, please choose from one of the following:\n- {valid}")
+        return True
 
 
 correlation_methods = Options("Correlation Method",
