@@ -2,7 +2,7 @@ from collections import namedtuple
 from collections.abc import Iterable
 from typing import Union
 
-Local_Type = namedtuple("Local_Type", "Type local_type")
+Local_Type = namedtuple("LocalType", "Type local_type")
 
 LOCAL_TYPE = {
     "airfield": Local_Type("transportNetwork", "Airfield"),

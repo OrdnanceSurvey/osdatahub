@@ -24,7 +24,7 @@ class NamesAPI:
 
         key = environ.get("OS_API_KEY")
         names = NamesAPI(key)
-        results = features.find("Buckingham Palace", limit=5)
+        results = names.find("Buckingham Palace", limit=5)
     """
     __ENDPOINT = r"https://api.os.uk/search/names/v1/"
     HEADERS = {"method": "POST",
@@ -60,14 +60,14 @@ class NamesAPI:
         params = {"query": text}
 
         if limit <= 0:
-            raise ValueError("Parameter \"limit\" must be a positive integer")
+            raise ValueError(f"Parameter \"limit\" must be a positive integer. Instead got {limit}")
 
         if bounds:
             if not bounds.crs == "EPSG:27700":
                 raise TypeError("Bounds must be in British National Grid CRS (EPSG:27700)")
             params.update({"bounds": bounds.bbox.to_string()})
         if bbox_filter or local_type:
-            if bbox_filter and bbox_filter.crs != "EPSG:27700":
+            if bbox_filter and (not bbox_filter.crs == "EPSG:27700"):
                 raise TypeError("Bounding Box filter must be in British National Grid CRS (EPSG:27700)")
             params.update({"fq": self.__format_fq(bbox_filter, local_type)})
 
@@ -89,7 +89,7 @@ class NamesAPI:
 
         Args:
             point (tuple): A set of coordinates in British National Grid (EPSG:27700) format
-            radius (float): The search radius in metres (max. 1000).
+            radius (float): The search radius in metres (min. 0.01, max. 1000).
                 Defaults to 100.
             local_type (Union[Iterable, str], optional):  Filters the results to certain local types. Available local
                 types can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
@@ -101,7 +101,7 @@ class NamesAPI:
         if not all([str(p).isnumeric() for p in point]):
             raise TypeError("All values in argument \"point\" must be numeric")
         if not 0.01 <= radius <= 1000:
-            raise ValueError(f"Argument \"radius\" must be between 0 and 1000, but had value {radius}")
+            raise ValueError(f"Argument \"radius\" must be between 0.01 and 1000, but had value {radius}")
 
         params = {"point": ",".join([str(c) for c in point]), "radius": radius}
         if local_type:
@@ -131,7 +131,6 @@ class NamesAPI:
         fq_args = []
         if local_type:
             # check that all given local types are valid
-            print(local_type)
             invalid_local_types = validate_local_type(local_type)
             if invalid_local_types:
                 raise ValueError(f"The local type(s) {invalid_local_types} are not valid local types")
@@ -147,7 +146,7 @@ class NamesAPI:
 
         # adds bbox filter to argument
         if bbox_filter:
-            if bbox_filter.crs != "EPSG:27700":
+            if not bbox_filter.crs == "EPSG:27700":
                 raise ValueError("'bbox_filter' argument must have CRS of British National Grid (EPSG:27700). Its CRS "
                                  f"is {bbox_filter.crs}")
             fq_args.append("BBOX:" + str(bbox_filter.bbox.to_string()))
