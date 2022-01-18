@@ -1,19 +1,43 @@
+from pathlib import Path
+from typing import Union
+
 import requests
 from typeguard import typechecked
 
-from .download_executor import DownloadObj
-from .downloads_api import DownloadsAPI
+from .downloads_api import _DownloadsAPIBase, _DownloadObj
 from osdatahub.codes import AREA_CODES
 
 
-class Product(DownloadsAPI):
-    _ENDPOINT = DownloadsAPI._ENDPOINT + "products"
+class Product(_DownloadsAPIBase):
+    """
+    Main class for downloading OS OpenData products
+    (https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData)
+
+    Args:
+        key (str): A valid OS API Key. Get a free key here - https://osdatahub.os.uk/
+        product_id (str): Valid ID for a Downloads API Product or DataPackage.
+
+    """
+    _ENDPOINT = _DownloadsAPIBase._ENDPOINT + "products"
 
     @typechecked
     def download_list(self, file_name: str = None, file_format: str = None, file_subformat: str = None,
-                      area: str = None) -> list:
+                      area: str = None, return_dowloadobj: bool = False) -> Union[list, dict]:
         """
-        Returns a list of possible downloads for specific OS OpenData Product based on given filters
+        Returns a list of possible downloads for a specific OS OpenData Product based on given filters
+
+        Args:
+            file_name (str, optional): Filter the list of downloads to only include those with this file name
+            file_format (str, optional): Filter the list of downloads to only include those with this format
+            file_subformat (str, optional): Filter the list of downloads to only include those with this subformat
+            area (str, optional) Filter the list of downloads to only include those that cover this area. Available
+                values can be found here -
+                https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData/get_products__productId__downloads
+            return_dowloadobj (bool, optional): Returns the downloadable files as _DownloadObj objects instead of as a
+                json. Defaults to False
+
+        Returns:
+            List of downloadable files from Downloads API
         """
         params = {}
         if area and area not in AREA_CODES:
@@ -29,21 +53,43 @@ class Product(DownloadsAPI):
             params.update({"area": area})
 
         response = requests.get(url=self._endpoint(f"{self.id}/downloads"), params=params)
-        return [DownloadObj(url=download["url"], file_name=download["fileName"])
-                for download in response.json()]
+        if return_dowloadobj:
+            return [_DownloadObj(url=download["url"], file_name=download["fileName"])
+                    for download in response.json()]
+        else:
+            return response.json()
 
-    def download(self, output_dir=".",
+    @typechecked
+    def download(self, output_dir: Union[str, Path] = ".",
                  file_name: str = None,
                  file_format: str = None,
                  file_subformat: str = None,
                  area: str = None,
-                 download_multiple=False,
-                 overwrite=False,
-                 processes=None):
+                 download_multiple: bool = False,
+                 overwrite: bool = False,
+                 processes: int = None) -> list:
+        """
+        Downloads Product files to your local machine
+
+        Args:
+            output_dir (Union[str, Path], optional): the path where the downloaded files will be saved. Defaults to
+                current working directory
+            file_name (str, optional): name of the file(s) to download
+            file_format (str, optional): format of the file(s) to download
+            file_subformat (str, optional): subformat of the file(s) to download
+            area (str, optional): The area that the file must cover. Available values can be found in
+                osdatahub.codes.AREA_CODES or at
+                https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData/get_products__productId__downloads
+            download_multiple (bool, optional): whether to download multiple files if multiple products are within your
+                search criteria. Defaults to False
+            overwrite (bool, optional): whether to overwrite existing files. Defaults to False
+            processes (int, optional): Number of processes with which to download multiple files. Only relevant if
+                multiple files will be downloaded (and download_multiple is set to True)
+        """
         download_list = self.download_list(file_name=file_name, file_format=file_format, file_subformat=file_subformat,
-                                           area=area)
-        super().download(download_list=download_list,
-                         output_dir=output_dir,
-                         overwrite=overwrite,
-                         download_multiple=download_multiple,
-                         processes=processes)
+                                           area=area, return_dowloadobj=True)
+        return super()._download(download_list=download_list,
+                                 output_dir=output_dir,
+                                 overwrite=overwrite,
+                                 download_multiple=download_multiple,
+                                 processes=processes)
