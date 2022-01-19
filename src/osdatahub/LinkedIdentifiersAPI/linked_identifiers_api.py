@@ -4,6 +4,7 @@ import requests
 from osdatahub.errors import raise_http_error
 from osdatahub.LinkedIdentifiersAPI.linked_identifier_options import (
     correlation_methods, feature_types, identifier_types)
+from typeguard import typechecked
 
 
 class LinkedIdentifiersAPI:
@@ -34,11 +35,13 @@ class LinkedIdentifiersAPI:
             query = f"identifiers/{id}?key={self.key}"
         return self.__ENDPOINT + query
 
-    def lookup(self, id: Union[int, str],
+    @typechecked
+    def query(self, id: Union[int, str],
                feature_type: str = None, identifier_type: str = None) -> dict:
         endpoint = self.__get_endpoint(id, feature_type, identifier_type)
         return self.__request(endpoint)
 
+    @typechecked
     def product_version(self, correlation_method: str) -> dict:
         correlation_methods.validate(correlation_method)
         endpoint = self.__ENDPOINT +\
@@ -53,4 +56,4 @@ if __name__ == "__main__":
 
     linked_id = LinkedIdentifiersAPI(key)
 
-    print(linked_id.lookup("200001025758", identifier_type="UPRN"))
+    print(linked_id.query("200001025758", identifier_type="UPRN"))

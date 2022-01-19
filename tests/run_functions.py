@@ -7,7 +7,7 @@ pytest. Otherwise, running tests could cost developers real money!
 """
 
 
-from osdatahub import Extent, FeaturesAPI, PlacesAPI
+from osdatahub import Extent, FeaturesAPI, PlacesAPI, LinkedIdentifiersAPI
 from os import environ
 
 
@@ -71,6 +71,36 @@ results = places.nearest((600000, 310200), "EPSG:27700", radius=500)
 
 assert len(results["features"]) == 1, f"PlacesAPI.nearest() FAILED: {len(results['features']) = }"
 print(f"PlacesAPI.nearest(){'PASSED':.>20}")
+
+
+"""
+======= LinkedIdentifiersAPI =======
+"""
+
+# query id
+linked_id = LinkedIdentifiersAPI(key)
+results = linked_id.query(80833669)
+
+assert len(results["linkedIdentifiers"]) == 1, f"LinkedIdentifiersAPI.query() FAILED: {len(results['linkedIdentifiers']) = }"
+print(f"LinkedIdentifiersAPI.query(){'PASSED':.>20}")
+
+
+# query id and feature_type
+linked_id = LinkedIdentifiersAPI(key)
+results = linked_id.query(80833669, feature_type="Street")
+
+
+assert len(results["linkedIdentifier"]) == 3, f"LinkedIdentifiersAPI.query(feature_type) FAILED: {len(results['linkedIdentifier']) = }"
+print(f"LinkedIdentifiersAPI.query(feature_type){'PASSED':.>20}")
+
+
+# query id and identifier_type
+linked_id = LinkedIdentifiersAPI(key)
+results = linked_id.query(80833669, identifier_type="USRN")
+
+
+assert len(results["linkedIdentifier"]) == 3, f"LinkedIdentifiersAPI.query(identifier_type) FAILED: {len(results['linkedIdentifier']) = }"
+print(f"LinkedIdentifiersAPI.query(identifier_type){'PASSED':.>20}")
 
 
 print(f"{'Complete':=^40}")
