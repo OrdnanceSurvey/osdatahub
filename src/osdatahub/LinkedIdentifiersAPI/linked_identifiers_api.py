@@ -6,7 +6,7 @@ from osdatahub.LinkedIdentifiersAPI.linked_identifier_options import (
     correlation_methods, feature_types, identifier_types)
 
 
-class LinkedIdentifiers:
+class LinkedIdentifiersAPI:
 
     __ENDPOINT = r"https://api.os.uk/search/links/v1/"
 
@@ -51,6 +51,6 @@ if __name__ == "__main__":
 
     key = os.environ.get("OS_API_KEY")
 
-    linked_id = LinkedIdentifiers(key)
+    linked_id = LinkedIdentifiersAPI(key)
 
     print(linked_id.lookup("200001025758", identifier_type="UPRN"))
