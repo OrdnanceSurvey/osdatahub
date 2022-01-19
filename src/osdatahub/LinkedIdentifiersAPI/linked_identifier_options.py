@@ -1,14 +1,17 @@
+from typing import Sequence, Any
+
 
 class Options:
     
-    def __init__(self, name, values):
+    def __init__(self, name: str, values: Sequence):
         self.name = name
         self.values = values
     
-    def validate(self, value):
+    def validate(self, value: Any) -> bool:
         if value not in self.values:
             valid = "\n- ".join(self.values)
-            raise ValueError(f"'{value}' is not a valid {self.name}, please choose from one of the following:\n- {valid}")
+            raise ValueError(f"'{value}' is not a valid {self.name}, " +\
+                f"please choose from one of the following:\n- {valid}")
         return True
 
 

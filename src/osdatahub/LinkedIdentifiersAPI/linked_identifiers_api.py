@@ -1,4 +1,4 @@
-import re
+from typing import Union
 
 import requests
 from osdatahub.errors import raise_http_error
@@ -7,19 +7,20 @@ from osdatahub.LinkedIdentifiersAPI.linked_identifier_options import (
 
 
 class LinkedIdentifiers:
-    
+
     __ENDPOINT = r"https://api.os.uk/search/links/v1/"
 
     def __init__(self, key: str):
         self.key = key
         
-    def __request(self, endpoint):
+    def __request(self, endpoint: str) -> dict:
         response = requests.get(endpoint)
         if response.status_code != 200:
             raise_http_error(response)
         return response.json()
 
-    def __get_endpoint(self, id, feature_type, identifier_type):
+    def __get_endpoint(self, id: Union[int, str],
+                       feature_type: str, identifier_type: str) -> str:
         if feature_type is not None and identifier_type is not None:
             raise ValueError("It is possible to query by the feature_type " +\
                              "OR the identifier type, but not both")
@@ -33,11 +34,12 @@ class LinkedIdentifiers:
             query = f"identifiers/{id}?key={self.key}"
         return self.__ENDPOINT + query
 
-    def lookup(self, id, feature_type=None, identifier_type=None):
+    def lookup(self, id: Union[int, str],
+               feature_type: str = None, identifier_type: str = None) -> dict:
         endpoint = self.__get_endpoint(id, feature_type, identifier_type)
         return self.__request(endpoint)
 
-    def product_version(self, correlation_method):
+    def product_version(self, correlation_method: str) -> dict:
         correlation_methods.validate(correlation_method)
         endpoint = self.__ENDPOINT +\
             f"productVersionInfo/{correlation_method}?key={self.key}"
