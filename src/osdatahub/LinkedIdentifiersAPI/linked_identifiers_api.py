@@ -8,12 +8,26 @@ from typeguard import typechecked
 
 
 class LinkedIdentifiersAPI:
+    """Main class for querying the OS Linked Identifiers API (https://osdatahub.os.uk/docs/linkedIdentifiers/overview)
+
+    Args:
+        key (str): A valid OS API Key. Get a free key here - https://osdatahub.os.uk/
+
+    Example::
+
+        from osdatahub import LinkedIdentifiersAPI
+        from os import environ
+
+        key = environ.get("OS_API_KEY")
+        linked_ids = LinkedIdentifiersAPI(key)
+        results = linked_ids.query(200001025758)
+    """
 
     __ENDPOINT = r"https://api.os.uk/search/links/v1/"
 
     def __init__(self, key: str):
         self.key = key
-        
+
     def __request(self, endpoint: str) -> dict:
         response = requests.get(endpoint)
         if response.status_code != 200:
@@ -38,11 +52,35 @@ class LinkedIdentifiersAPI:
     @typechecked
     def query(self, id: Union[int, str],
                feature_type: str = None, identifier_type: str = None) -> dict:
+        """Run a query of the OS Linked Identifiers API - looks up an 
+        identifier and finds its associated identifiers.
+        
+        Queries can be also be made more specific if the feature type
+        or identifier type are known, but note: you cannot specify both!
+
+        Args:
+            id (Union[int, str]): The identifier to look up.
+            feature_type (str): Look up linked identifiers when the input feature type is known.
+            identifier_type (str): Look up linked identifiers when the input identifier type is known.
+
+        Returns:
+            dict: The results of the query in  JSON format
+        """
         endpoint = self.__get_endpoint(id, feature_type, identifier_type)
         return self.__request(endpoint)
 
     @typechecked
     def product_version(self, correlation_method: str) -> dict:
+        """Discover the current product version information. For a list of 
+        valid correlation methods see (https://osdatahub.os.uk/docs/linkedIdentifiers/technicalSpecification)
+
+        Args:
+            correlation_method (str): Correlation method - corresponding to a 
+            particular feature relationship
+
+        Returns:
+            dict: The results of the query in  JSON format
+        """
         correlation_methods.validate(correlation_method)
         endpoint = self.__ENDPOINT +\
             f"productVersionInfo/{correlation_method}?key={self.key}"
@@ -56,4 +94,4 @@ if __name__ == "__main__":
 
     linked_id = LinkedIdentifiersAPI(key)
 
-    print(linked_id.query("200001025758", identifier_type="UPRN"))
+    print(linked_id.query(200001025758))
