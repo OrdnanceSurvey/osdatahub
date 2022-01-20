@@ -28,30 +28,31 @@ class LinkedIdentifiersAPI:
     def __init__(self, key: str):
         self.key = key
 
-    def __request(self, endpoint: str) -> dict:
+    @staticmethod
+    def __request(endpoint: str) -> dict:
         response = requests.get(endpoint)
         if response.status_code != 200:
             raise_http_error(response)
         return response.json()
 
-    def __get_endpoint(self, id: Union[int, str],
-                       feature_type: str, identifier_type: str) -> str:
+    def __get_endpoint(self, identifier: Union[int, str], feature_type: str,
+                       identifier_type: str) -> str:
         if feature_type is not None and identifier_type is not None:
             raise ValueError("It is possible to query by the feature_type " +\
                              "OR the identifier type, but not both")
         elif feature_type is not None:
             feature_types.validate(feature_type)
-            query = f"featureTypes/{feature_type}/{id}?key={self.key}"
+            subdirectory = f"featureTypes/{feature_type}"
         elif identifier_type is not None:
             identifier_types.validate(identifier_type)
-            query = f"identifierTypes/{identifier_type}/{id}?key={self.key}"
+            subdirectory = f"identifierTypes/{identifier_type}"
         else:
-            query = f"identifiers/{id}?key={self.key}"
-        return self.__ENDPOINT + query
+            subdirectory = "identifiers"
+        return self.__ENDPOINT + subdirectory + f"/{identifier}?key={self.key}"
 
     @typechecked
-    def query(self, id: Union[int, str],
-               feature_type: str = None, identifier_type: str = None) -> dict:
+    def query(self, identifier: Union[int, str], feature_type: str = None,
+              identifier_type: str = None) -> dict:
         """Run a query of the OS Linked Identifiers API - looks up an 
         identifier and finds its associated identifiers.
         
@@ -59,14 +60,15 @@ class LinkedIdentifiersAPI:
         or identifier type are known, but note: you cannot specify both!
 
         Args:
-            id (Union[int, str]): The identifier to look up.
+            identifier (Union[int, str]): The identifier to look up.
             feature_type (str): Look up linked identifiers when the input feature type is known.
             identifier_type (str): Look up linked identifiers when the input identifier type is known.
 
         Returns:
-            dict: The results of the query in  JSON format
+            dict: The results of the query in JSON format
         """
-        endpoint = self.__get_endpoint(id, feature_type, identifier_type)
+        endpoint = self.__get_endpoint(identifier, feature_type,
+                                       identifier_type)
         return self.__request(endpoint)
 
     @typechecked
@@ -79,19 +81,10 @@ class LinkedIdentifiersAPI:
             particular feature relationship
 
         Returns:
-            dict: The results of the query in  JSON format
+            dict: The results of the query in JSON format
         """
         correlation_methods.validate(correlation_method)
         endpoint = self.__ENDPOINT +\
             f"productVersionInfo/{correlation_method}?key={self.key}"
         return self.__request(endpoint)
 
-
-if __name__ == "__main__":
-    import os
-
-    key = os.environ.get("OS_API_KEY")
-
-    linked_id = LinkedIdentifiersAPI(key)
-
-    print(linked_id.query(200001025758))
