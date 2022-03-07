@@ -6,6 +6,7 @@ from geojson import FeatureCollection
 from typeguard import typechecked
 
 from osdatahub.NamesAPI.local_types import validate_local_type, get_local_type
+from osdatahub.errors import raise_http_error
 from osdatahub.extent import Extent
 from osdatahub.grow_list import GrowList
 from osdatahub.utils import addresses_to_geojson
@@ -80,7 +81,7 @@ class NamesAPI:
                 data.extend(self.__format_response(response))
                 n_required = min(100, limit - len(data))
         except KeyError:
-            response.raise_for_status()
+            raise_http_error(response)
         return addresses_to_geojson(data.values, "EPSG:27700")
 
     def nearest(self, point: tuple, radius: float = 100, local_type: Union[Iterable, str] = None) -> FeatureCollection:
@@ -110,7 +111,7 @@ class NamesAPI:
             response = requests.get(self.__endpoint("nearest"), params=params)
             data.extend(self.__format_response(response))
         except KeyError:
-            response.raise_for_status()
+            raise_http_error(response)
         return addresses_to_geojson(data.values, crs="EPSG:27700")
 
     @staticmethod
