@@ -32,7 +32,8 @@ class FeaturesAPI:
         results = features.query(limit=50)
 
     """
-    ENDPOINT = r"https://api.os.uk/features/v1/wfs"
+    ENDPOINT = r"https://ordnance-omse-dev-dev.apigee.net/features-fix-wfs/v1/wfs"
+    # ENDPOINT = r"https://api.os.uk/features/v1/wfs"
 
     DEFAULTS = {"service": "wfs",
                 "version": "2.0.0",
@@ -91,7 +92,7 @@ class FeaturesAPI:
         try:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
-                response = requests.get(self.ENDPOINT, params=params)
+                response = requests.get(self.ENDPOINT, params=params, verify=True)
                 data.extend(response.json()["features"])
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
@@ -132,13 +133,20 @@ if __name__ == "__main__":
     from osdatahub import Extent, FeaturesAPI
     import geojson
 
-    key = environ.get("OS_API_KEY")
+    key = r"3Wk8tPRL0GxtavtmWvtOsODcHI90UnpG"
+    # key = environ.get("OS_API_KEY")
 
     extent = Extent.from_bbox((354000, 349000, 355000, 350000),
                               "EPSG:27700")
 
-    features = FeaturesAPI(key, "topographic_area", extent)
+    features = FeaturesAPI(key, "topographic_point", extent)
 
-    results = features.query(limit=1000000000)
+    results = features.query(limit=100)
 
-    print(len(results["features"]))
+    s = set()
+    for feature in results["features"]:
+        s.update(feature["geometry"].keys())
+        if "numberMatched" in feature["properties"].keys():
+            print("Found numberMatched")
+
+    print(s)

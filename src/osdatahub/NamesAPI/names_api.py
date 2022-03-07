@@ -20,7 +20,7 @@ class NamesAPI:
 
     Example::
 
-        from osdatahub import FeaturesAPI, Extent
+        from osdatahub import NamesAPI
         from os import environ
 
         key = environ.get("OS_API_KEY")
@@ -85,7 +85,7 @@ class NamesAPI:
         return addresses_to_geojson(data.values, "EPSG:27700")
 
     def nearest(self, point: tuple, radius: float = 100, local_type: Union[Iterable, str] = None) -> FeatureCollection:
-        """Takes a pair of coordinates (X, Y)/(Lon, Lat) as an input
+        """Takes a pair of coordinates (X,Y) as an input
         to determine the closest name.
 
         Args:
