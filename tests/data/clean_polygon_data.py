@@ -69,7 +69,7 @@ def test_clean_polygon():
 
 
 def get_test_polygons(polygon_name, source):
-    path = rf"tests\data\clean_polygon_data\{source}\{polygon_name}.geojson"
+    path = f"./tests/data/clean_polygon_data/{source}/{polygon_name}.geojson"
     with open(path, "r") as f:
         return geojson.load(f)["features"]
 
