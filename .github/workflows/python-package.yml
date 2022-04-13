@@ -30,9 +30,6 @@ jobs:
         python -m pip install pytest
         python -m pip install -e .[dev]
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - shell: |
-        cd ../..
-        ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
     - name: Test with pytest
       run: |
         python -m pytest ../
