@@ -87,4 +87,3 @@ class LinkedIdentifiersAPI:
         endpoint = self.__ENDPOINT +\
             f"productVersionInfo/{correlation_method}?key={self.key}"
         return self.__request(endpoint)
-
