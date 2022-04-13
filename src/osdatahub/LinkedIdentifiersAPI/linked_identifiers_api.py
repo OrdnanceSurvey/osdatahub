@@ -3,7 +3,10 @@ from typing import Union
 import requests
 from osdatahub.errors import raise_http_error
 from osdatahub.LinkedIdentifiersAPI.linked_identifier_options import (
-    correlation_methods, feature_types, identifier_types)
+    correlation_methods,
+    feature_types,
+    identifier_types,
+)
 from typeguard import typechecked
 
 
@@ -35,11 +38,14 @@ class LinkedIdentifiersAPI:
             raise_http_error(response)
         return response.json()
 
-    def __get_endpoint(self, identifier: Union[int, str], feature_type: str,
-                       identifier_type: str) -> str:
+    def __get_endpoint(
+        self, identifier: Union[int, str], feature_type: str, identifier_type: str
+    ) -> str:
         if feature_type is not None and identifier_type is not None:
-            raise ValueError("It is possible to query by the feature_type " +\
-                             "OR the identifier type, but not both")
+            raise ValueError(
+                "It is possible to query by the feature_type "
+                + "OR the identifier type, but not both"
+            )
         elif feature_type is not None:
             feature_types.validate(feature_type)
             subdirectory = f"featureTypes/{feature_type}"
@@ -51,11 +57,15 @@ class LinkedIdentifiersAPI:
         return self.__ENDPOINT + subdirectory + f"/{identifier}?key={self.key}"
 
     @typechecked
-    def query(self, identifier: Union[int, str], feature_type: str = None,
-              identifier_type: str = None) -> dict:
-        """Run a query of the OS Linked Identifiers API - looks up an 
+    def query(
+        self,
+        identifier: Union[int, str],
+        feature_type: str = None,
+        identifier_type: str = None,
+    ) -> dict:
+        """Run a query of the OS Linked Identifiers API - looks up an
         identifier and finds its associated identifiers.
-        
+
         Queries can be also be made more specific if the feature type
         or identifier type are known, but note: you cannot specify both!
 
@@ -67,23 +77,23 @@ class LinkedIdentifiersAPI:
         Returns:
             dict: The results of the query in JSON format
         """
-        endpoint = self.__get_endpoint(identifier, feature_type,
-                                       identifier_type)
+        endpoint = self.__get_endpoint(identifier, feature_type, identifier_type)
         return self.__request(endpoint)
 
     @typechecked
     def product_version(self, correlation_method: str) -> dict:
-        """Discover the current product version information. For a list of 
+        """Discover the current product version information. For a list of
         valid correlation methods see (https://osdatahub.os.uk/docs/linkedIdentifiers/technicalSpecification)
 
         Args:
-            correlation_method (str): Correlation method - corresponding to a 
+            correlation_method (str): Correlation method - corresponding to a
             particular feature relationship
 
         Returns:
             dict: The results of the query in JSON format
         """
         correlation_methods.validate(correlation_method)
-        endpoint = self.__ENDPOINT +\
-            f"productVersionInfo/{correlation_method}?key={self.key}"
+        endpoint = (
+            self.__ENDPOINT + f"productVersionInfo/{correlation_method}?key={self.key}"
+        )
         return self.__request(endpoint)

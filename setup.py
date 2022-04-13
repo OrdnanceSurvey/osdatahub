@@ -10,25 +10,28 @@ HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
 
 
-CLASSIFIERS = ["Natural Language :: English",
-               "Intended Audience :: Developers",
-               "Intended Audience :: Science/Research",
-               "Programming Language :: Python :: 3.7",
-               "Programming Language :: Python :: 3.8",
-               "Programming Language :: Python :: 3.9",
-               "Programming Language :: Python :: 3.10",
-               "Topic :: Utilities",
-               "Topic :: Scientific/Engineering :: GIS",]
+CLASSIFIERS = [
+    "Natural Language :: English",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Utilities",
+    "Topic :: Scientific/Engineering :: GIS",
+]
 
 
-REQUIREMENTS = ["geojson==2.5.0",
-                "requests==2.25.0",
-                "typeguard==2.13.0",
-                "shapely==1.8.0"]
+REQUIREMENTS = [
+    "geojson==2.5.0",
+    "requests==2.25.0",
+    "typeguard==2.13.0",
+    "shapely==1.8.0",
+]
 
 
-TEST_REQUIREMENTS = ["pytest",
-                     "requests-mock"]
+TEST_REQUIREMENTS = ["pytest", "requests-mock"]
 
 
 setup(
@@ -44,10 +47,8 @@ setup(
     license="OGL",
     classifiers=CLASSIFIERS,
     install_requires=REQUIREMENTS,
-    extras_require={
-        "dev": TEST_REQUIREMENTS
-    },
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
+    extras_require={"dev": TEST_REQUIREMENTS},
+    packages=find_packages("src"),
+    package_dir={"": "src"},
     include_package_data=True,
 )

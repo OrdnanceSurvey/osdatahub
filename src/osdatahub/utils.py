@@ -63,7 +63,7 @@ def clean_polygons(feature_list: list) -> list:
 
 def clean_polygon(feature: dict) -> dict:
     """Fixes the geometry of MultiPolygons, which are identified by being
-    lists rather than dictionaries. 
+    lists rather than dictionaries.
 
     Args:
         feature (dict): GeoJSON Polygon feature
@@ -115,7 +115,7 @@ def features_to_geojson(feature_list, geom_type, crs) -> FeatureCollection:
         feature_list (list): List of GeoJSON geometries
         geom_type (str): string describing which GeoJSON geometry type is
         in feature_list.
-        crs (str): string representation of a coordinate system 
+        crs (str): string representation of a coordinate system
 
     Returns:
         FeatureCollection: cleaned FeatureCollection
@@ -130,7 +130,7 @@ def addresses_to_geojson(address_list, crs):
 
     Args:
         address_list (list): List of GeoJSON addresses
-        crs (str): string representation of a coordinate system 
+        crs (str): string representation of a coordinate system
 
     Returns:
         FeatureCollection: cleaned FeatureCollection
@@ -147,7 +147,7 @@ def address_to_feature(address, crs):
 
     Args:
         address (dict): dictionary representation of an address
-        crs (str): string representation of a coordinate system 
+        crs (str): string representation of a coordinate system
 
     Returns:
         dict: dictionary representation of the input address
@@ -161,14 +161,13 @@ def address_to_feature(address, crs):
     elif all(i in address.keys() for i in ("LNG", "LAT")):
         x, y = address["LNG"], address["LAT"]
     else:
-        raise ValueError(f"If CRS is not British National Grid, there should be attributes called 'LAT' and 'LNG' in"
-                         f" address. LAT and LNG were not found, and CRS is {crs}")
+        raise ValueError(
+            f"If CRS is not British National Grid, there should be attributes called 'LAT' and 'LNG' in"
+            f" address. LAT and LNG were not found, and CRS is {crs}"
+        )
 
-    return {"type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [x, y]
-            },
-            "properties": {
-                **address
-            }}
+    return {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [x, y]},
+        "properties": {**address},
+    }

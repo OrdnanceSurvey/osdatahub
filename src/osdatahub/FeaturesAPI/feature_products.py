@@ -27,7 +27,7 @@ PREMIUM = {
     "sites_routing_point": Product("Sites_RoutingPoint", "Point"),
     "topographic_boundary": Product("Topography_BoundaryLine", "LineString"),
     "cartographic_symbol": Product("Topography_CartographicSymbol", "Point"),
-    "cartographic_text": Product("Topography_CartographicText", "Point")
+    "cartographic_text": Product("Topography_CartographicText", "Point"),
 }
 
 
@@ -56,7 +56,7 @@ OPEN = {
     "openUPRN_address": Product("OpenUPRN_Address", "Point"),
     "openTOID_highways_network": Product("OpenTOID_HighwaysNetwork", "Point"),
     "openTOID_sites": Product("OpenTOID_SitesLayer", "Point"),
-    "openTOID_topography": Product("OpenTOID_TopographyLayer", "Point")
+    "openTOID_topography": Product("OpenTOID_TopographyLayer", "Point"),
 }
 
 
@@ -75,12 +75,17 @@ def validate_product_name(product_name: str) -> str:
     if product_name in OPEN or product_name in PREMIUM:
         return product_name
     suggested_products = suggest_product(product_name)
-    suggestion_str = ", ".join(suggested_products) \
-        if len(suggested_products) > 0 else "Can't find a match..."
-    raise ValueError(f"Unrecognised product '{product_name}'.\n\n"\
-        f"\tBest Matches: {suggestion_str}\n\n"\
-        f"\tOpen Products: {', '.join(list(OPEN))}\n\n"\
-        f"\tPremium Products: {', '.join(list(PREMIUM))}\n\n")
+    suggestion_str = (
+        ", ".join(suggested_products)
+        if len(suggested_products) > 0
+        else "Can't find a match..."
+    )
+    raise ValueError(
+        f"Unrecognised product '{product_name}'.\n\n"
+        f"\tBest Matches: {suggestion_str}\n\n"
+        f"\tOpen Products: {', '.join(list(OPEN))}\n\n"
+        f"\tPremium Products: {', '.join(list(PREMIUM))}\n\n"
+    )
 
 
 def get_product(product_name: str):
