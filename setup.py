@@ -23,20 +23,22 @@ CLASSIFIERS = [
 ]
 
 
-REQUIREMENTS = [
-    "geojson==2.5.0",
-    "requests==2.25.0",
-    "typeguard==2.13.0",
-    "shapely==1.8.0",
-]
+REQUIREMENTS = ["geojson==2.5.0",
+                "requests==2.25.0",
+                "typeguard==2.13.0",
+                "shapely==1.8.0"
+                ]
 
 
-TEST_REQUIREMENTS = ["pytest", "requests-mock"]
+TEST_REQUIREMENTS = ["pytest",
+                     "requests-mock",
+                     "myst-parser==0.15.2"
+                     ]
 
 
 setup(
     name="osdatahub",
-    version="0.0.0",
+    version="0.1.0",
     python_requires=">=3.7",
     description="osdatahub is Ordnance Survey's (OS) Python API wrapper, designed to make data from the OS Data Hub APIs readily accessible to developers.",
     long_description=README,

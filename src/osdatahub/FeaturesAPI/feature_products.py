@@ -28,6 +28,29 @@ PREMIUM = {
     "topographic_boundary": Product("Topography_BoundaryLine", "LineString"),
     "cartographic_symbol": Product("Topography_CartographicSymbol", "Point"),
     "cartographic_text": Product("Topography_CartographicText", "Point"),
+    "Topography_TopographicArea": Product("Topography_TopographicArea", "Polygon"),
+    "Topography_TopographicPoint": Product("Topography_TopographicPoint", "Point"),
+    "Topography_TopographicLine": Product("Topography_TopographicLine", "LineString"),
+    "WaterNetwork_WatercourseLink": Product("WaterNetwork_WatercourseLink", "LineString"),
+    "WaterNetwork_HydroNode": Product("WaterNetwork_HydroNode", "Point"),
+    "DetailedPathNetwork_RouteLink": Product("DetailedPathNetwork_RouteLink", "LineString"),
+    "DetailedPathNetwork_RouteNode": Product("DetailedPathNetwork_RouteNode", "Point"),
+    "Highways_ConnectingLink": Product("Highways_ConnectingLink", "LineString"),
+    "Highways_ConnectingNode": Product("Highways_ConnectingNode", "Point"),
+    "Highways_FerryLink": Product("Highways_FerryLink", "LineString"),
+    "Highways_FerryNode": Product("Highways_FerryNode", "Point"),
+    "Highways_PathLink": Product("Highways_PathLink", "LineString"),
+    "Highways_PathNode": Product("Highways_PathNode", "Point"),
+    "Highways_RoadLink": Product("Highways_RoadLink", "LineString"),
+    "Highways_RoadNode": Product("Highways_RoadNode", "Point"),
+    "Highways_Street": Product("Highways_Street", "LineString"),
+    "Greenspace_GreenspaceArea": Product("Greenspace_GreenspaceArea", "Polygon"),
+    "Sites_AccessPoint": Product("Sites_AccessPoint", "Point"),
+    "Sites_FunctionalSite": Product("Sites_FunctionalSite", "Polygon"),
+    "Sites_RoutingPoint": Product("Sites_RoutingPoint", "Point"),
+    "Topography_BoundaryLine": Product("Topography_BoundaryLine", "LineString"),
+    "Topography_CartographicSymbol": Product("Topography_CartographicSymbol", "Point"),
+    "Topography_CartographicText": Product("Topography_CartographicText", "Point")
 }
 
 
@@ -57,6 +80,21 @@ OPEN = {
     "openTOID_highways_network": Product("OpenTOID_HighwaysNetwork", "Point"),
     "openTOID_sites": Product("OpenTOID_SitesLayer", "Point"),
     "openTOID_topography": Product("OpenTOID_TopographyLayer", "Point"),
+    "Zoomstack_DistrictBuildings": Product("Zoomstack_DistrictBuildings", "Polygon"),
+    "Zoomstack_ETL": Product("Zoomstack_ETL", "LineString"),
+    "Zoomstack_Rail": Product("Zoomstack_Rail", "LineString"),
+    "Zoomstack_RoadsLocal": Product("Zoomstack_RoadsLocal", "LineString"),
+    "Zoomstack_RoadsNational": Product("Zoomstack_RoadsNational", "LineString"),
+    "Zoomstack_RoadsRegional": Product("Zoomstack_RoadsRegional", "LineString"),
+    "Zoomstack_Waterlines": Product("Zoomstack_Waterlines", "LineString"),
+    "OpenUSRN_USRN": Product("OpenUSRN_USRN", "LineString"),
+    "Zoomstack_Airports": Product("Zoomstack_Airports", "Point"),
+    "Zoomstack_Names": Product("Zoomstack_Names", "Point"),
+    "Zoomstack_RailwayStations": Product("Zoomstack_RailwayStations", "Point"),
+    "openUPRN_address": Product("OpenUPRN_Address", "Point"),
+    "OpenTOID_HighwaysNetwork": Product("OpenTOID_HighwaysNetwork", "Point"),
+    "OpenTOID_SitesLayer": Product("OpenTOID_SitesLayer", "Point"),
+    "OpenTOID_TopographyLayer": Product("OpenTOID_TopographyLayer", "Point")
 }
 
 
@@ -75,17 +113,12 @@ def validate_product_name(product_name: str) -> str:
     if product_name in OPEN or product_name in PREMIUM:
         return product_name
     suggested_products = suggest_product(product_name)
-    suggestion_str = (
-        ", ".join(suggested_products)
-        if len(suggested_products) > 0
-        else "Can't find a match..."
-    )
-    raise ValueError(
-        f"Unrecognised product '{product_name}'.\n\n"
-        f"\tBest Matches: {suggestion_str}\n\n"
-        f"\tOpen Products: {', '.join(list(OPEN))}\n\n"
-        f"\tPremium Products: {', '.join(list(PREMIUM))}\n\n"
-    )
+    suggestion_str = ", ".join(suggested_products) \
+        if len(suggested_products) > 0 else "Can't find a match..."
+    raise ValueError(f"Unrecognised product '{product_name}'.\n\n"\
+        f"\tBest Matches: {suggestion_str}\n\n"\
+        f"\tOpen Products: {', '.join(list(OPEN))}\n\n"\
+        f"\tPremium Products: {', '.join(list(PREMIUM))}\n\n")
 
 
 def get_product(product_name: str):
