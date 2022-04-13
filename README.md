@@ -6,7 +6,7 @@
 OS is the national mapping agency for Great Britain and produces a large variety of mapping
 and geospatial products. Much of OS's data is available via the [OS Data Hub](https://osdatahub.os.uk/), a platform
 that hosts both free and premium data products. `osdatahub` provides a user-friendly way to interact with these data products
-in Python.
+in Python. To see what data is available, you can use the [OS Data Hub Explorer](https://labs.os.uk/public/data-hub-explorer/).
 
 ![The OS Logo](https://raw.githubusercontent.com/OrdnanceSurvey/osdatahub/modify-links/media/os-logo.png)
 
@@ -139,7 +139,7 @@ import geojson
 key = "[YOUR KEY GOES HERE]"
 extent = Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700")
 places = PlacesAPI(key) # No extent or product is given to PlacesAPI
-results = features.query(extent, limit=50) # Extent is passed directly into the .query() function
+results = places.query(extent, limit=50) # Extent is passed directly into the .query() function
 
 geojson.dump(results, open("FILENAME.geojson", "w"))
 ```
