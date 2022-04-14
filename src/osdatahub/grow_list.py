@@ -1,9 +1,7 @@
-
-
 class GrowList:
     """
-    GrowList is a convenience class that behaves similarly to a normal 
-    list, except that it stores its length changes whenever it is extended 
+    GrowList is a convenience class that behaves similarly to a normal
+    list, except that it stores its length changes whenever it is extended
     with the extend() function.
     """
 
@@ -16,7 +14,7 @@ class GrowList:
 
     def __repr__(self):
         return repr(self.values)
-    
+
     def __iter__(self):
         return iter(self.values)
 
@@ -26,7 +24,7 @@ class GrowList:
         been extended with an empty list of values.
 
         Returns:
-            bool: True suggests that the GrowList has recently grown, False 
+            bool: True suggests that the GrowList has recently grown, False
             suggests that it has been extended with an empty list
         """
         if len(self.size) == 1 or self.size[-1] > self.size[-2]:

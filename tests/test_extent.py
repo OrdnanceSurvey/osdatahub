@@ -6,7 +6,6 @@ import requests_mock
 
 
 class TestExtent:
-
     @pytest.mark.parametrize(*data.test_from_bbox())
     def test_from_bbox(self, bbox, crs, expected_result):
         # Act
@@ -16,8 +15,7 @@ class TestExtent:
         assert extent == expected_result
 
     @pytest.mark.parametrize(*data.test_from_radius())
-    def test_from_radius(self, centre, radius, crs,
-                         expected_result, expected_bbox):
+    def test_from_radius(self, centre, radius, crs, expected_result, expected_bbox):
         # Act
         extent = Extent.from_radius(centre, radius, crs)
 
@@ -26,8 +24,9 @@ class TestExtent:
         assert extent.bbox == expected_bbox
 
     @pytest.mark.parametrize(*data.test_set_crs())
-    def test_set_crs(self, initital_polygon, initital_crs,
-                     updated_crs, expected_result):
+    def test_set_crs(
+        self, initital_polygon, initital_crs, updated_crs, expected_result
+    ):
         # Arrange
         extent = Extent(initital_polygon, initital_crs)
 
@@ -38,8 +37,7 @@ class TestExtent:
         assert extent == expected_result
 
     @pytest.mark.parametrize(*data.test_is_within())
-    def test_is_within(self, polygon, crs, bounds,
-                       expected_result):
+    def test_is_within(self, polygon, crs, bounds, expected_result):
         # Arrange
         extent = Extent(polygon, crs)
 
@@ -48,7 +46,7 @@ class TestExtent:
 
         # Assert
         assert within == expected_result
-    
+
     @pytest.mark.parametrize(*data.test_xml_coords())
     def test_xml_coords(self, polygon, crs, expected_result):
         # Arrange

@@ -1,5 +1,6 @@
 from osdatahub.extent import Extent
 from osdatahub.FeaturesAPI import FeaturesAPI
+from osdatahub.LinkedIdentifiersAPI import LinkedIdentifiersAPI
 from osdatahub.PlacesAPI import PlacesAPI
 from osdatahub.NamesAPI import NamesAPI
 

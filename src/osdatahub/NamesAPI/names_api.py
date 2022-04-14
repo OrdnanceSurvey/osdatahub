@@ -3,7 +3,7 @@ from typing import Union
 
 import requests
 from geojson import FeatureCollection
-from typeguard import typechecked
+from typeguard import typechecked, check_argument_types
 
 from osdatahub.NamesAPI.local_types import validate_local_type, get_local_type
 from osdatahub.errors import raise_http_error
@@ -37,7 +37,6 @@ class NamesAPI:
     def __endpoint(self, api_name: str) -> str:
         return self.__ENDPOINT + api_name + f"?key={self.key}"
 
-    @typechecked
     def find(self, text: str, limit: int = 100,
              bounds: Extent = None, bbox_filter: Extent = None,
              local_type: Union[Iterable, str] = None) -> FeatureCollection:
@@ -57,6 +56,7 @@ class NamesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
+        assert check_argument_types()
         data = GrowList()
         params = {"query": text}
 
@@ -114,7 +114,6 @@ class NamesAPI:
         return addresses_to_geojson(data.values, crs="EPSG:27700")
 
     @staticmethod
-    @typechecked
     def __format_fq(bbox_filter: Extent = None, local_type: Union[str, Iterable] = None) -> list:
         """
         Formats optional fq arguments for Names API query
@@ -128,6 +127,7 @@ class NamesAPI:
         Returns:
             list of fq filtering arguments
         """
+        assert check_argument_types()
         fq_args = []
         if local_type:
             # check that all given local types are valid
