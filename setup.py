@@ -10,15 +10,17 @@ HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
 
 
-CLASSIFIERS = ["Natural Language :: English",
-               "Intended Audience :: Developers",
-               "Intended Audience :: Science/Research",
-               "Programming Language :: Python :: 3.7",
-               "Programming Language :: Python :: 3.8",
-               "Programming Language :: Python :: 3.9",
-               "Programming Language :: Python :: 3.10",
-               "Topic :: Utilities",
-               "Topic :: Scientific/Engineering :: GIS",]
+CLASSIFIERS = [
+    "Natural Language :: English",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Utilities",
+    "Topic :: Scientific/Engineering :: GIS",
+]
 
 
 REQUIREMENTS = ["geojson==2.5.0",
@@ -36,7 +38,7 @@ TEST_REQUIREMENTS = ["pytest",
 
 setup(
     name="osdatahub",
-    version="0.0.0",
+    version="0.1.0",
     python_requires=">=3.7",
     description="osdatahub is Ordnance Survey's (OS) Python API wrapper, designed to make data from the OS Data Hub APIs readily accessible to developers.",
     long_description=README,
@@ -47,10 +49,8 @@ setup(
     license="OGL",
     classifiers=CLASSIFIERS,
     install_requires=REQUIREMENTS,
-    extras_require={
-        "dev": TEST_REQUIREMENTS
-    },
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
+    extras_require={"dev": TEST_REQUIREMENTS},
+    packages=find_packages("src"),
+    package_dir={"": "src"},
     include_package_data=True,
 )

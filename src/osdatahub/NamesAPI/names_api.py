@@ -1,12 +1,14 @@
-import requests
-from typing import Union
-from typeguard import typechecked
 from collections.abc import Iterable
-from geojson import FeatureCollection
+from typing import Union
 
+import requests
+from geojson import FeatureCollection
+from typeguard import typechecked, check_argument_types
+
+from osdatahub.NamesAPI.local_types import validate_local_type, get_local_type
+from osdatahub.errors import raise_http_error
 from osdatahub.extent import Extent
 from osdatahub.grow_list import GrowList
-from osdatahub.NamesAPI.local_types import validate_local_type, get_local_type
 from osdatahub.utils import addresses_to_geojson
 
 
@@ -18,12 +20,12 @@ class NamesAPI:
 
     Example::
 
-        from osdatahub import FeaturesAPI, Extent
+        from osdatahub import NamesAPI
         from os import environ
 
         key = environ.get("OS_API_KEY")
         names = NamesAPI(key)
-        results = features.find("Buckingham Palace", limit=5)
+        results = names.find("Buckingham Palace", limit=5)
     """
     __ENDPOINT = r"https://api.os.uk/search/names/v1/"
     HEADERS = {"method": "POST",
@@ -35,7 +37,6 @@ class NamesAPI:
     def __endpoint(self, api_name: str) -> str:
         return self.__ENDPOINT + api_name + f"?key={self.key}"
 
-    @typechecked
     def find(self, text: str, limit: int = 100,
              bounds: Extent = None, bbox_filter: Extent = None,
              local_type: Union[Iterable, str] = None) -> FeatureCollection:
@@ -45,23 +46,29 @@ class NamesAPI:
             text (str): The free text search parameter
             limit (int, optional): The maximum number of features to return.
                 Defaults to 100.
-            bounds (Extent, optional): Biases the results to a certain area. Must be British National Grid (ESPG:27700) CRS
-            bbox_filter (Extent, optional): Filters the results to a certain area. Must be British National Grid (EPSG:27700) CRS
-            local_type (Union[Iterable, str], optional): Filters the results to certain local types. Available local types
-       c         can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
+            bounds (Extent, optional): Biases the results to a certain area. Must be British National Grid
+                (EPSG:27700) CRS
+            bbox_filter (Extent, optional): Filters the results to a certain area. Must be British National Grid
+                (EPSG:27700) CRS
+            local_type (Union[Iterable, str], optional): Filters the results to certain local types. Available local
+                types can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
+        assert check_argument_types()
         data = GrowList()
         params = {"query": text}
+
+        if limit <= 0:
+            raise ValueError(f"Parameter \"limit\" must be a positive integer. Instead got {limit}")
 
         if bounds:
             if not bounds.crs == "EPSG:27700":
                 raise TypeError("Bounds must be in British National Grid CRS (EPSG:27700)")
             params.update({"bounds": bounds.bbox.to_string()})
         if bbox_filter or local_type:
-            if bbox_filter and bbox_filter.crs != "EPSG:27700":
+            if bbox_filter and (not bbox_filter.crs == "EPSG:27700"):
                 raise TypeError("Bounding Box filter must be in British National Grid CRS (EPSG:27700)")
             params.update({"fq": self.__format_fq(bbox_filter, local_type)})
 
@@ -69,53 +76,58 @@ class NamesAPI:
             n_required = min(limit, 100)
             while n_required > 0 and data.grown:
                 params.update({"offset": len(data), "maxresults": n_required})
-                print(params)
                 response = requests.get(self.__endpoint("find"), params=params)
                 data.extend(self.__format_response(response))
                 n_required = min(100, limit - len(data))
         except KeyError:
-            response.raise_for_status()
+            raise_http_error(response)
         return addresses_to_geojson(data.values, "EPSG:27700")
 
     def nearest(self, point: tuple, radius: float = 100, local_type: Union[Iterable, str] = None) -> FeatureCollection:
-        """Takes a pair of coordinates (X, Y)/(Lon, Lat) as an input
+        """Takes a pair of coordinates (X, Y) as an input
         to determine the closest name.
 
         Args:
-            point (tuple): A set of coordinates
-            radius (float): The search radius in metres (max. 1000).
+            point (tuple): A set of coordinates in British National Grid (EPSG:27700) format
+            radius (float): The search radius in metres (min. 0.01, max. 1000).
                 Defaults to 100.
-            local_type (Union[Iterable, str], optional):  Filters the results to certain local types. Available local types
-                can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
+            local_type (Union[Iterable, str], optional):  Filters the results to certain local types. Available local
+                types can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
         data = GrowList()
+        if not all([str(p).isnumeric() for p in point]):
+            raise TypeError("All values in argument \"point\" must be numeric")
+        if not 0.01 <= radius <= 1000:
+            raise ValueError(f"Argument \"radius\" must be between 0.01 and 1000, but had value {radius}")
+
         params = {"point": ",".join([str(c) for c in point]), "radius": radius}
         if local_type:
-            params.update({"fq": self.__format_fq(bbox=None, local_type=local_type)})
+            params.update({"fq": self.__format_fq(local_type=local_type)})
         try:
             response = requests.get(self.__endpoint("nearest"), params=params)
             data.extend(self.__format_response(response))
         except KeyError:
-            response.raise_for_status()
+            raise_http_error(response)
         return addresses_to_geojson(data.values, crs="EPSG:27700")
 
     @staticmethod
-    @typechecked
     def __format_fq(bbox_filter: Extent = None, local_type: Union[str, Iterable] = None) -> list:
         """
         Formats optional fq arguments for Names API query
 
         Args:
-            bbox_filter (Extent, optional): Filters the results to a certain area. Must be British National Grid (EPSG:27700) CRS
-            local_type (Union[str, Iterable], optional): Filters the results to certain local types. Available local types
-                can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
+            bbox_filter (Extent, optional): Filters the results to a certain area. Must be British National Grid
+                (EPSG:27700) CRS
+            local_type (Union[str, Iterable], optional): Filters the results to certain local types. Available local
+                types can be found at the bottom of https://osdatahub.os.uk/docs/names/technicalSpecification
 
         Returns:
             list of fq filtering arguments
         """
+        assert check_argument_types()
         fq_args = []
         if local_type:
             # check that all given local types are valid
@@ -134,9 +146,7 @@ class NamesAPI:
 
         # adds bbox filter to argument
         if bbox_filter:
-            if not isinstance(bbox_filter, Extent):
-                raise TypeError(f"argument 'bbox_filter' must be type Extent. Is type {type(bbox_filter)}")
-            if bbox_filter.crs != "EPSG:27700":
+            if not bbox_filter.crs == "EPSG:27700":
                 raise ValueError("'bbox_filter' argument must have CRS of British National Grid (EPSG:27700). Its CRS "
                                  f"is {bbox_filter.crs}")
             fq_args.append("BBOX:" + str(bbox_filter.bbox.to_string()))

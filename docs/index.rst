@@ -21,7 +21,7 @@ developers.
    readme_link
    FeaturesAPI
    PlacesAPI
-   DownloadsAPI
+   NamesAPI
    Extent
    Utilities
    Data Hub Explorer <https://labs.os.uk/public/data-hub-explorer/>

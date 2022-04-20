@@ -92,7 +92,8 @@ class Extent:
         """
         if crs.upper() not in ("EPSG:27700", "EPSG:3857"):
             raise ValueError(
-                f"crs must be one of ('EPSG:27700', 'EPSG:3857'), got {crs}")
+                f"crs must be one of ('EPSG:27700', 'EPSG:3857'), got {crs}"
+            )
         if isinstance(centre, tuple) and len(centre) == 2:
             return Extent(Point(*centre).buffer(radius), crs)
         elif isinstance(centre, Point):
@@ -138,8 +139,7 @@ class Extent:
         coords = list(self.polygon.exterior.coords)
         if self.crs.upper() == "EPSG:4326":
             coords = [(c2, c1) for c1, c2 in coords]
-        return {"type": "Polygon",
-                "coordinates": [coords]}
+        return {"type": "Polygon", "coordinates": [coords]}
 
     @classmethod
     def from_ons_code(cls, ons_code: str) -> "Extent":
@@ -167,8 +167,9 @@ class Extent:
 
     def __repr__(self):
         coords = list(self.polygon.exterior.coords)
-        return (f"{self.__class__.__name__}(polygon=Polygon({coords}),"
-                f"crs='{self.crs}')")
+        return (
+            f"{self.__class__.__name__}(polygon=Polygon({coords})," f"crs='{self.crs}')"
+        )
 
     def __eq__(self, o: object) -> bool:
         return self.polygon.equals(o.polygon) and (self.crs == o.crs)

@@ -14,23 +14,27 @@ def intersects(extent: Extent) -> str:
     """
     coords = extent.xml_coords
     crs = extent.crs.upper()
-    return "<ogc:Intersects>"\
-                "<ogc:PropertyName>SHAPE</ogc:PropertyName>"\
-                f"<gml:Polygon xmlns:gml='http://www.opengis.net/gml' srsName='{crs}'>"\
-                    "<gml:outerBoundaryIs>"\
-                        "<gml:LinearRing>"\
-                            f'<gml:coordinates decimal="." cs="," ts=" ">{coords}</gml:coordinates>'\
-                        "</gml:LinearRing>"\
-                    "</gml:outerBoundaryIs>"\
-                "</gml:Polygon>"\
-            "</ogc:Intersects>"
+    return (
+        "<ogc:Intersects>"
+        "<ogc:PropertyName>SHAPE</ogc:PropertyName>"
+        f"<gml:Polygon xmlns:gml='http://www.opengis.net/gml' srsName='{crs}'>"
+        "<gml:outerBoundaryIs>"
+        "<gml:LinearRing>"
+        f'<gml:coordinates decimal="." cs="," ts=" ">{coords}</gml:coordinates>'
+        "</gml:LinearRing>"
+        "</gml:outerBoundaryIs>"
+        "</gml:Polygon>"
+        "</ogc:Intersects>"
+    )
 
 
 def single_attribute_filter(property_name, filter_name, value):
-    return f'<ogc:{filter_name}>'\
-                f'<ogc:PropertyName>{property_name}</ogc:PropertyName>'\
-                f'<ogc:Literal>{value}</ogc:Literal>'\
-            f'</ogc:{filter_name}>'
+    return (
+        f"<ogc:{filter_name}>"
+        f"<ogc:PropertyName>{property_name}</ogc:PropertyName>"
+        f"<ogc:Literal>{value}</ogc:Literal>"
+        f"</ogc:{filter_name}>"
+    )
 
 
 def is_between(property_name: str, lower: float, upper: float) -> str:
@@ -44,40 +48,48 @@ def is_between(property_name: str, lower: float, upper: float) -> str:
     Returns:
         str: A valid OGC XML filter
     """
-    return f'<ogc:PropertyIsBetween>'\
-                f'<ogc:PropertyName>{property_name}</ogc:PropertyName>'\
-                f'<LowerBoundary>'\
-                    f'<ogc:Literal>{lower}</ogc:Literal>'\
-                '</LowerBoundary>'\
-                '<UpperBoundary>'\
-                    f'<ogc:Literal>{upper}</ogc:Literal>'\
-                '</UpperBoundary>'\
-            f'</ogc:PropertyIsBetween>'
+    return (
+        f"<ogc:PropertyIsBetween>"
+        f"<ogc:PropertyName>{property_name}</ogc:PropertyName>"
+        f"<LowerBoundary>"
+        f"<ogc:Literal>{lower}</ogc:Literal>"
+        "</LowerBoundary>"
+        "<UpperBoundary>"
+        f"<ogc:Literal>{upper}</ogc:Literal>"
+        "</UpperBoundary>"
+        f"</ogc:PropertyIsBetween>"
+    )
 
 
-
-def is_like(property_name: str, value: str, wildcard: str = "*",
-            single_char: str = "#", escape_char: str = "!") -> str:
-    """Constructs an OGC XML filter for a string attribute that is similar to 
+def is_like(
+    property_name: str,
+    value: str,
+    wildcard: str = "*",
+    single_char: str = "#",
+    escape_char: str = "!",
+) -> str:
+    """Constructs an OGC XML filter for a string attribute that is similar to
     the input value
 
     Args:
         property_name (str): Property / attribute name to be filtered
         value (str): String that is used to match with attribute values
-        wildcard (str, optional): A character that any combination of other 
+        wildcard (str, optional): A character that any combination of other
             characters will match with. Defaults to "*".
-        single_char (str, optional): A character that any single character 
+        single_char (str, optional): A character that any single character
             will match with. Defaults to "#".
-        escape_char (str, optional): Used to escape the meaning of the 
+        escape_char (str, optional): Used to escape the meaning of the
             wildcard, single_char and escape_char itself. Defaults to "!".
 
     Returns:
         str: A valid OGC XML filter
     """
-    return f'<ogc:PropertyIsLike wildCard="{wildcard}" singleChar="{single_char}" escapeChar="{escape_char}">'\
-                f'<ogc:ValueReference>{property_name}</ogc:ValueReference>'\
-                f'<ogc:Literal>{value}</ogc:Literal>'\
-            f'</ogc:PropertyIsLike>'
+    return (
+        f'<ogc:PropertyIsLike wildCard="{wildcard}" singleChar="{single_char}" escapeChar="{escape_char}">'
+        f"<ogc:ValueReference>{property_name}</ogc:ValueReference>"
+        f"<ogc:Literal>{value}</ogc:Literal>"
+        f"</ogc:PropertyIsLike>"
+    )
 
 
 def is_equal(property_name: str, value: Union[str, float]) -> str:
@@ -137,7 +149,7 @@ def is_greater_than(property_name: str, value: float) -> str:
 
 
 def is_less_than_or_equal_to(property_name: str, value: float) -> str:
-    """Constructs an OGC Filter for a numerical attribute that is less 
+    """Constructs an OGC Filter for a numerical attribute that is less
     than or equal to the input value
 
     Args:
@@ -151,7 +163,7 @@ def is_less_than_or_equal_to(property_name: str, value: float) -> str:
 
 
 def is_greater_than_or_equal_to(property_name: str, value: float) -> str:
-    """Constructs an OGC Filter for a numerical attribute that is greater 
+    """Constructs an OGC Filter for a numerical attribute that is greater
     than or equal to the input value
 
     Args:
@@ -161,4 +173,6 @@ def is_greater_than_or_equal_to(property_name: str, value: float) -> str:
     Returns:
         str: A valid OGC XML filter
     """
-    return single_attribute_filter(property_name, "PropertyIsGreaterThanOrEqualTo", value)
+    return single_attribute_filter(
+        property_name, "PropertyIsGreaterThanOrEqualTo", value
+    )

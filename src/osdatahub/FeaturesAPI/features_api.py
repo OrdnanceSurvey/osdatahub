@@ -5,8 +5,7 @@ from geojson import FeatureCollection
 from osdatahub.errors import raise_http_error
 from osdatahub import Extent
 from osdatahub.FeaturesAPI import feature_products as products
-from osdatahub.FeaturesAPI.feature_products import (get_product,
-                                                    validate_product_name)
+from osdatahub.FeaturesAPI.feature_products import get_product, validate_product_name
 from osdatahub.filters import intersects
 from osdatahub.grow_list import GrowList
 from osdatahub.utils import features_to_geojson
@@ -32,17 +31,18 @@ class FeaturesAPI:
         results = features.query(limit=50)
 
     """
+
     ENDPOINT = r"https://api.os.uk/features/v1/wfs"
 
-    DEFAULTS = {"service": "wfs",
-                "version": "2.0.0",
-                "request": "GetFeature",
-                "outputFormat": "geojson",
-                "count": 100}
+    DEFAULTS = {
+        "service": "wfs",
+        "version": "2.0.0",
+        "request": "GetFeature",
+        "outputFormat": "geojson",
+        "count": 100,
+    }
 
-    def __init__(self, key: str,
-                 product_name: str,
-                 extent: Extent):
+    def __init__(self, key: str, product_name: str, extent: Extent):
         self.key = key
         self.product = product_name
         self.extent = extent
@@ -58,8 +58,10 @@ class FeaturesAPI:
             self.__extent = o
         else:
             o_type = type(o)
-            raise TypeError(f'type of argument "extent" must be '
-                            f'osdatahub.extent.Extent; got {o_type} instead')
+            raise TypeError(
+                f'type of argument "extent" must be '
+                f"osdatahub.extent.Extent; got {o_type} instead"
+            )
 
     @property
     def product(self):
@@ -96,9 +98,7 @@ class FeaturesAPI:
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
             raise_http_error(response)
-        return features_to_geojson(data.values,
-                                   self.product.geometry,
-                                   self.extent.crs)
+        return features_to_geojson(data.values, self.product.geometry, self.extent.crs)
 
     def __construct_filter(self) -> str:
         filter_body = intersects(self.extent)
@@ -109,11 +109,13 @@ class FeaturesAPI:
 
     @property
     def __params(self) -> dict:
-        return {**self.DEFAULTS,
-                "key": self.key,
-                "srsName": self.extent.crs,
-                "typeName": self.product.name,
-                "filter": self.__construct_filter()}
+        return {
+            **self.DEFAULTS,
+            "key": self.key,
+            "srsName": self.extent.crs,
+            "typeName": self.product.name,
+            "filter": self.__construct_filter(),
+        }
 
     @typechecked
     def add_filters(self, *xml_filters: str) -> None:
@@ -134,8 +136,7 @@ if __name__ == "__main__":
 
     key = environ.get("OS_API_KEY")
 
-    extent = Extent.from_bbox((354000, 349000, 355000, 350000),
-                              "EPSG:27700")
+    extent = Extent.from_bbox((354000, 349000, 355000, 350000), "EPSG:27700")
 
     features = FeaturesAPI(key, "topographic_area", extent)
 

@@ -1,7 +1,7 @@
 OS Data Hub Names API
 =========================
 
-PlacesAPI
+NamesAPI
 -----------------------------------------
 
 .. automodule:: osdatahub.NamesAPI.names_api

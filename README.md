@@ -6,7 +6,7 @@
 OS is the national mapping agency for Great Britain and produces a large variety of mapping
 and geospatial products. Much of OS's data is available via the [OS Data Hub](https://osdatahub.os.uk/), a platform
 that hosts both free and premium data products. `osdatahub` provides a user-friendly way to interact with these data products
-in Python.
+in Python. To see what data is available, you can use the [OS Data Hub Explorer](https://labs.os.uk/public/data-hub-explorer/).
 
 ![The OS Logo](https://raw.githubusercontent.com/OrdnanceSurvey/osdatahub/modify-links/media/os-logo.png)
 
@@ -30,6 +30,7 @@ in Python.
 - [Quick Start](#quick-start)
   - [Features API](#features-api)
   - [Places API](#places-api)
+  - [Names API](#names-api)
 - [Tutorials](#tutorials)
 - [Contribute](#contribute)
 
@@ -138,11 +139,35 @@ import geojson
 key = "[YOUR KEY GOES HERE]"
 extent = Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700")
 places = PlacesAPI(key) # No extent or product is given to PlacesAPI
-results = features.query(extent, limit=50) # Extent is passed directly into the .query() function
+results = places.query(extent, limit=50) # Extent is passed directly into the .query() function
 
 geojson.dump(results, open("FILENAME.geojson", "w"))
 ```
 Note: The PlacesAPI requires a *premium* API key!
+
+
+## Names API
+
+The OS Data Hub also contains the OS Names API, which is a geographic directory containing basic information about 
+identifiable places. The API allows us to identify places by their address/place name and can find the nearest 
+address to a given point. 
+
+The **NamesAPI** class is very similar to **PlacesAPI** as it needs only a (**premium**) API key. We can then query
+the object with a place name to get more information:
+
+```python
+from osdatahub import NamesAPI
+
+key = "[YOUR KEY GOES HERE]"
+
+names = NamesAPI(key) # only a premium key is required to create a NamesAPI object
+results = names.find("Buckingham Palace", limit=5)
+
+geojson.dump(results, open("FILENAME.geojson", "w"))
+```
+
+Note: The NamesAPI requires a *premium* API key!
+
 
 # Tutorials
 
