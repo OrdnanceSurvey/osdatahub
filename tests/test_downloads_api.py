@@ -1,13 +1,13 @@
 import pytest
 
-from osdatahub.DownloadsAPI import Product, DataPackage
+from osdatahub.DownloadsAPI import OpenData, DataPackage
 from osdatahub.DownloadsAPI.downloads_api import _DownloadsAPIBase, _DownloadObj
 
 
 class TestProduct:
     @pytest.fixture()
     def product(self):
-        product = Product(key="test_key", product_id="test_id")
+        product = OpenData(key="test_key", product_id="test_id")
         yield product
 
     def test_download_list_pass(self):
@@ -46,11 +46,11 @@ class TestDownloadsAPIBase:
     @pytest.fixture()
     def downloads_api_base(self):
         # TODO: check this fixture works
-        downloads_api_base = _DownloadsAPIBase(key="test_key", product_id="test_id")
+        downloads_api_base = _DownloadsAPIBase(product_id="test_id")
         yield downloads_api_base
 
-    def test_details(self):
-        # TODO: implement base details
+    @pytest.mark.usefixtures("downloads_api_base")
+    def test_details(self, downloads_api_base):
         pass
 
     def test_all_products(self):
