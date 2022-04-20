@@ -1,13 +1,13 @@
 import pytest
 
-from osdatahub.DownloadsAPI import OpenData, DataPackage
+from osdatahub import OpenDataDownload, DataPackageDownload
 from osdatahub.DownloadsAPI.downloads_api import _DownloadsAPIBase, _DownloadObj
 
 
 class TestProduct:
     @pytest.fixture()
     def product(self):
-        product = OpenData(key="test_key", product_id="test_id")
+        product = OpenDataDownload(product_id="test_id")
         yield product
 
     def test_download_list_pass(self):
@@ -22,7 +22,7 @@ class TestProduct:
 class TestDataPackage:
     @pytest.fixture()
     def data_package(self):
-        data_package = DataPackage(key="test_key", product_id="test_id")
+        data_package = DataPackageDownload(key="test_key", product_id="test_id")
         yield data_package
 
     def test_download_list_pass(self):
@@ -69,7 +69,7 @@ class TestDownloadsAPIBase:
 class TestDownloadObj:
     @pytest.fixture()
     def download_obj(self):
-        download_obj = _DownloadObj(url="test_url", file_name="test_file")
+        download_obj = _DownloadObj(url="test_url", file_name="test_file", size=256)
         yield download_obj
 
     def download_pass(self):
