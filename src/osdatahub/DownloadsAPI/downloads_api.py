@@ -3,11 +3,12 @@ from abc import ABC, abstractmethod
 from multiprocessing import cpu_count
 from pathlib import Path
 from typing import Union
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, wait, as_completed
 import requests
 import os
 import logging
 from tqdm import tqdm
+from tqdm.contrib.concurrent import thread_map
 
 
 class _DownloadObj:
@@ -17,11 +18,12 @@ class _DownloadObj:
         url (str): Direct url for the download file
         file_name (str): Name of the file to be downloaded
     """
-    def __init__(self, url: str, file_name: str):
+    def __init__(self, url: str, file_name: str, size: int):
         self.url = url
         self.file_name = file_name
+        self.size = size
 
-    def download(self, output_dir: Union[str, Path], overwrite: bool = False) -> str:
+    def download(self, output_dir: Union[str, Path], overwrite: bool = False, pbar: tqdm = None) -> str:
         """
         Downloads file to given directory
 
@@ -41,11 +43,14 @@ class _DownloadObj:
         chunk_size = 1024
         if r.status_code == 200:
             with open(output_path, 'wb') as f:
-                with tqdm(total=size, desc=self.file_name, unit="B", unit_scale=True, leave=True) as pbar:
+                if not pbar:
+                    pbar = tqdm(total=size, desc=self.file_name, unit="B", unit_scale=True, leave=True)
                     for chunk in r.iter_content(chunk_size=chunk_size):
                         f.write(chunk)
                         f.flush()
                         pbar.update(chunk_size)
+
+        pbar.write(f"Finished downloading {self.file_name} to {output_path}")
         return output_path
 
 
@@ -60,8 +65,7 @@ class _DownloadsAPIBase(ABC):
     """
     _ENDPOINT = f"https://api.os.uk/downloads/v1/"
 
-    def __init__(self, key: str, product_id: str):
-        self.key = key
+    def __init__(self, product_id: str):
         self.id = product_id
 
     def _endpoint(self, api_name: str) -> str:
@@ -84,12 +88,23 @@ class _DownloadsAPIBase(ABC):
         return requests.get(self._endpoint(self.id)).json()
 
     @classmethod
-    def all_products(cls) -> list:
+    def all_products(cls, **kwargs) -> list:
+        """
+        Returns a list of all available products of the product type
+
+        Returns: list of dictionaries containing all products available to download
+
+        """
         response = requests.get(cls._ENDPOINT)
         return response.json()
 
     @abstractmethod
-    def download_list(self):
+    def product_list(self):
+        """
+        Abstract method for returning a list of files available to download for a specific data package/opendata product
+        Returns:
+
+        """
         pass
 
     @staticmethod
@@ -117,13 +132,22 @@ class _DownloadsAPIBase(ABC):
                             "\"download_multiple\" is set to False. Please pass only 1 download or set "
                             "\"download_multiple\" to True.")
 
+        if not os.path.isdir(output_dir):
+            os.makedirs(output_dir)
+
         # downloads in parallel if multiple files need to be downloaded
         if isinstance(download_list, list) and len(download_list) > 1 and download_multiple:
             if not processes:
                 processes = cpu_count()
             with ThreadPoolExecutor(max_workers=processes) as executor:
-                results = executor.map(lambda p: p.download(output_dir=output_dir, overwrite=overwrite),
-                                       download_list)
+                pbar = tqdm(total=sum([d.size for d in download_list]), unit="B", unit_scale=True, leave=True,
+                            desc=f"Downloading {len(download_list)} files from osdatahub")
+                results = list([executor.submit(p.download, output_dir, overwrite, pbar) for p in download_list])
+
+                num_downloads_completed = 0
+                for _ in as_completed(results):
+                    num_downloads_completed += 1
+                    pbar.set_description(f"Downloading {len(download_list) - num_downloads_completed} files from osdatahub")
         else:
             # download single file
             d = download_list[0] if isinstance(download_list, list) else download_list
