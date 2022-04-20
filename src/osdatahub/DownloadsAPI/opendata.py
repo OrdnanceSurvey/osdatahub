@@ -8,7 +8,7 @@ from .downloads_api import _DownloadsAPIBase, _DownloadObj
 from osdatahub.codes import AREA_CODES
 
 
-class OpenData(_DownloadsAPIBase):
+class OpenDataDownload(_DownloadsAPIBase):
     """
     Main class for downloading OS OpenData products
     (https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData)

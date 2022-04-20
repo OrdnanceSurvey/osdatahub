@@ -8,7 +8,7 @@ from typeguard import typechecked
 from .downloads_api import _DownloadsAPIBase, _DownloadObj
 
 
-class DataPackage(_DownloadsAPIBase):
+class DataPackageDownload(_DownloadsAPIBase):
     """
     Main class for downloading OS Premium Data Packages
     (https://osdatahub.os.uk/docs/downloads/technicalSpecification#/Data%20Packages)
