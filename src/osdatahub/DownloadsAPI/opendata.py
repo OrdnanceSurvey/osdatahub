@@ -8,7 +8,7 @@ from .downloads_api import _DownloadsAPIBase, _DownloadObj
 from osdatahub.codes import AREA_CODES
 
 
-class Product(_DownloadsAPIBase):
+class OpenData(_DownloadsAPIBase):
     """
     Main class for downloading OS OpenData products
     (https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData)
@@ -21,7 +21,7 @@ class Product(_DownloadsAPIBase):
     _ENDPOINT = _DownloadsAPIBase._ENDPOINT + "products"
 
     @typechecked
-    def download_list(self, file_name: str = None, file_format: str = None, file_subformat: str = None,
+    def product_list(self, file_name: str = None, file_format: str = None, file_subformat: str = None,
                       area: str = None, return_dowloadobj: bool = False) -> Union[list, dict]:
         """
         Returns a list of possible downloads for a specific OS OpenData Product based on given filters
@@ -54,12 +54,11 @@ class Product(_DownloadsAPIBase):
 
         response = requests.get(url=self._endpoint(f"{self.id}/downloads"), params=params)
         if return_dowloadobj:
-            return [_DownloadObj(url=download["url"], file_name=download["fileName"])
+            return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=download["size"])
                     for download in response.json()]
         else:
             return response.json()
 
-    @typechecked
     def download(self, output_dir: Union[str, Path] = ".",
                  file_name: str = None,
                  file_format: str = None,
@@ -86,7 +85,7 @@ class Product(_DownloadsAPIBase):
             processes (int, optional): Number of processes with which to download multiple files. Only relevant if
                 multiple files will be downloaded (and download_multiple is set to True)
         """
-        download_list = self.download_list(file_name=file_name, file_format=file_format, file_subformat=file_subformat,
+        download_list = self.product_list(file_name=file_name, file_format=file_format, file_subformat=file_subformat,
                                            area=area, return_dowloadobj=True)
         return super()._download(download_list=download_list,
                                  output_dir=output_dir,
