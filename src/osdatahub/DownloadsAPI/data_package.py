@@ -20,6 +20,28 @@ class DataPackage(_DownloadsAPIBase):
     """
     _ENDPOINT = _DownloadsAPIBase._ENDPOINT + "dataPackages"
 
+    def __init__(self, key: str, product_id: str):
+        super().__init__(product_id=product_id)
+        self.key = key
+
+    def __endpoint(self, api_name: str) -> str:
+        return self._ENDPOINT + api_name + f"?key={self.key}"
+
+    @classmethod
+    def all_products(cls, key) -> list:
+        """
+        Returns a list of all available data packages
+
+        Args:
+            key (str): A valid OS API Key. Get a free key here - https://osdatahub.os.uk/
+
+        Returns: A list of dictionaries containing all available Data Packages
+
+        """
+        print(cls._ENDPOINT + f"?key={key}")
+        response = requests.get(cls._ENDPOINT + f"?key={key}")
+        return response.json()
+
     @functools.cached_property
     def versions(self) -> list:
         """
@@ -28,10 +50,10 @@ class DataPackage(_DownloadsAPIBase):
         return requests.get(self._endpoint(f"{self.id}/versions")).json()
 
     @typechecked
-    def download_list(self, version_id: str, file_name: str = None,
+    def product_list(self, version_id: str, file_name: str = None,
                       return_downloadobj: bool = False) -> Union[list, dict]:
         """
-        Returns a list of possible downloads for a specific OS Premium Data Packag based on given filters
+        Returns a list of possible downloads for a specific OS Premium Data Package based on given filters
 
         Args:
             version_id (str): Filter the list of possible downloads by the version id of the given product
@@ -80,7 +102,7 @@ class DataPackage(_DownloadsAPIBase):
             processes (int, optional): Number of processes with which to download multiple files. Only relevant if
                 multiple files will be downloaded (and download_multiple is set to True)
         """
-        download_list = self.download_list(version_id, file_name=file_name, return_downloadobj=True)
+        download_list = self.product_list(version_id, file_name=file_name, return_downloadobj=True)
         return super()._download(download_list=download_list,
                                  output_dir=output_dir,
                                  overwrite=overwrite,
