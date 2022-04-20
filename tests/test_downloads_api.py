@@ -42,30 +42,6 @@ class TestDataPackage:
         pass
 
 
-class TestDownloadsAPIBase:
-    @pytest.fixture()
-    def downloads_api_base(self):
-        # TODO: check this fixture works
-        downloads_api_base = _DownloadsAPIBase(product_id="test_id")
-        yield downloads_api_base
-
-    @pytest.mark.usefixtures("downloads_api_base")
-    def test_details(self, downloads_api_base):
-        pass
-
-    def test_all_products(self):
-        # TODO: implement base all_products
-        pass
-
-    def test_downloads_pass(self):
-        # TODO: implement base _download pass
-        pass
-
-    def test_downloads_fail(self):
-        # TODO: implement base _download fail
-        pass
-
-
 class TestDownloadObj:
     @pytest.fixture()
     def download_obj(self):
