@@ -4,8 +4,8 @@ from typing import Union
 import requests
 from typeguard import typechecked
 
-from .downloads_api import _DownloadsAPIBase, _DownloadObj
 from osdatahub.codes import AREA_CODES
+from .downloads_api import _DownloadsAPIBase, _DownloadObj
 
 
 class OpenDataDownload(_DownloadsAPIBase):
@@ -14,15 +14,13 @@ class OpenDataDownload(_DownloadsAPIBase):
     (https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData)
 
     Args:
-        key (str): A valid OS API Key. Get a free key here - https://osdatahub.os.uk/
         product_id (str): Valid ID for a Downloads API Product or DataPackage.
-
     """
     _ENDPOINT = _DownloadsAPIBase._ENDPOINT + "products"
 
     @typechecked
     def product_list(self, file_name: str = None, file_format: str = None, file_subformat: str = None,
-                      area: str = None, return_dowloadobj: bool = False) -> Union[list, dict]:
+                     area: str = None, return_dowloadobj: bool = False) -> Union[list, dict]:
         """
         Returns a list of possible downloads for a specific OS OpenData Product based on given filters
 
@@ -31,8 +29,7 @@ class OpenDataDownload(_DownloadsAPIBase):
             file_format (str, optional): Filter the list of downloads to only include those with this format
             file_subformat (str, optional): Filter the list of downloads to only include those with this subformat
             area (str, optional) Filter the list of downloads to only include those that cover this area. Available
-                values can be found here -
-                https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData/get_products__productId__downloads
+                values can be found here - https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData/get_products__productId__downloads
             return_dowloadobj (bool, optional): Returns the downloadable files as _DownloadObj objects instead of as a
                 json. Defaults to False
 
@@ -86,7 +83,7 @@ class OpenDataDownload(_DownloadsAPIBase):
                 multiple files will be downloaded (and download_multiple is set to True)
         """
         download_list = self.product_list(file_name=file_name, file_format=file_format, file_subformat=file_subformat,
-                                           area=area, return_dowloadobj=True)
+                                          area=area, return_dowloadobj=True)
         return super()._download(download_list=download_list,
                                  output_dir=output_dir,
                                  overwrite=overwrite,

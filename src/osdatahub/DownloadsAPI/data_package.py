@@ -51,7 +51,7 @@ class DataPackageDownload(_DownloadsAPIBase):
 
     @typechecked
     def product_list(self, version_id: str, file_name: str = None,
-                      return_downloadobj: bool = False) -> Union[list, dict]:
+                     return_downloadobj: bool = False) -> Union[list, dict]:
         """
         Returns a list of possible downloads for a specific OS Premium Data Package based on given filters
 
@@ -71,11 +71,12 @@ class DataPackageDownload(_DownloadsAPIBase):
             params.update({"fileName": file_name})
             response = requests.get(url=endpoint, params=params)
             if return_downloadobj:
-                return [_DownloadObj(url=response.json()["Location"], file_name=file_name)]
+                return [_DownloadObj(url=response.json()["Location"], file_name=file_name,
+                                     size=response.json()["Size"])]
         else:
             response = requests.get(url=endpoint, params=params)
             if return_downloadobj:
-                return [_DownloadObj(url=download["url"], file_name=download["fileName"])
+                return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=response.json()["Size"])
                         for download in response.json()["downloads"]]
 
         return response.json()

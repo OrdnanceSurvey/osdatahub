@@ -1,14 +1,14 @@
 import functools
+import logging
+import os
 from abc import ABC, abstractmethod
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from multiprocessing import cpu_count
 from pathlib import Path
 from typing import Union
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, wait, as_completed
+
 import requests
-import os
-import logging
 from tqdm import tqdm
-from tqdm.contrib.concurrent import thread_map
 
 
 class _DownloadObj:
@@ -18,6 +18,7 @@ class _DownloadObj:
         url (str): Direct url for the download file
         file_name (str): Name of the file to be downloaded
     """
+
     def __init__(self, url: str, file_name: str, size: int):
         self.url = url
         self.file_name = file_name
@@ -30,6 +31,7 @@ class _DownloadObj:
         Args:
             output_dir (Union[str, Path]): Directory to save the downloaded file
             overwrite (bool, optional): whether to overwrite an existing file. Defaults to False
+            pbar (tqdm, optional): tqdm progress bar to update in the event of downloading multiple files at once
         """
         output_path = os.path.join(output_dir, self.file_name)
 
@@ -59,7 +61,6 @@ class _DownloadsAPIBase(ABC):
     (https://osdatahub.os.uk/docs/downloads/overview)
 
     Args:
-        key (str): A valid OS API Key. Get a free key here - https://osdatahub.os.uk/
         product_id (str): Valid ID for a Downloads API Product or DataPackage.
 
     """
@@ -116,7 +117,7 @@ class _DownloadsAPIBase(ABC):
 
         Args:
              download_list (Union[list, DownloadObj]): The DownloadObj objects representing all the
-                products/datapackages that need to be downloaded
+                products/data packages that need to be downloaded
              output_dir (Union[str, Path]): path to directory where the files will be saved to
              overwrite (bool, optional): Whether to overwrite any existing files with the same name and path.
                 Defaults to False
@@ -147,7 +148,8 @@ class _DownloadsAPIBase(ABC):
                 num_downloads_completed = 0
                 for _ in as_completed(results):
                     num_downloads_completed += 1
-                    pbar.set_description(f"Downloading {len(download_list) - num_downloads_completed} files from osdatahub")
+                    pbar.set_description(
+                        f"Downloading {len(download_list) - num_downloads_completed} files from osdatahub")
         else:
             # download single file
             d = download_list[0] if isinstance(download_list, list) else download_list
