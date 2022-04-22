@@ -67,7 +67,7 @@ def test__params():
     return test_variables, test_data
 
 
-def test_query_pass():
+def test_request_params():
     test_variables = "extent, product, filters, limit, expected_url, expected_params"
     test_data = [
         param(
@@ -109,6 +109,34 @@ def test_query_pass():
                 "startIndex": 0
             },
             id="bbox no filters - limit=50",
+        ),
+    ]
+    return test_variables, test_data
+
+
+def test_query():
+    test_variables = "product, extent, limit, expected_count"
+    test_data = [
+        param(
+            "topographic_area",
+            Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700"),
+            100,
+            100,
+            id="bbox, topographic_area, limit=100",
+        ),
+        param(
+            "topographic_area",
+            Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700"),
+            12,
+            12,
+            id="bbox, topographic_area, limit=12",
+        ),
+        param(
+            "topographic_area",
+            Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700"),
+            200,
+            200,
+            id="bbox, topographic_area, limit=200",
         ),
     ]
     return test_variables, test_data

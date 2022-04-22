@@ -29,7 +29,6 @@ class FeaturesAPI:
         extent = Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700")
         features = FeaturesAPI(key, "zoomstack_local_buildings", extent)
         results = features.query(limit=50)
-
     """
 
     ENDPOINT = r"https://api.os.uk/features/v1/wfs"
@@ -137,10 +136,11 @@ if __name__ == "__main__":
 
     key = environ.get("OS_API_KEY")
 
-    extent = Extent.from_bbox((354000, 349000, 355000, 350000), "EPSG:27700")
+    bbox = (-1.1446, 52.6133, -1.0327, 52.6587)
+    extent = Extent.from_bbox(bbox, "EPSG:4326")
 
-    features = FeaturesAPI(key, "topographic_area", extent)
-
-    results = features.query(limit=1000000000)
+    product = "Zoomstack_Sites"
+    features = FeaturesAPI(key, product, extent)
+    results = features.query()
 
     print(len(results["features"]))

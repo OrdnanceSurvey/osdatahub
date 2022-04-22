@@ -2,8 +2,12 @@ import unittest.mock as mock
 
 import pytest
 from osdatahub import FeaturesAPI
+import os
 
 from tests.data import features_api_data as data
+
+
+API_KEY = os.environ.get("OSDATAHUB_TEST_KEY")
 
 
 class TestFeaturesAPI:
@@ -20,10 +24,10 @@ class TestFeaturesAPI:
         # Assert
         assert params == expected_result
 
-    @pytest.mark.parametrize(*data.test_query_pass())
+    @pytest.mark.parametrize(*data.test_request_params())
     @mock.patch('requests.get')
-    def test_query_pass(self, request_mocked, extent, product, filters,
-                        limit, expected_url, expected_params):
+    def test_request_params(self, request_mocked, extent, product, filters,
+                            limit, expected_url, expected_params):
         features_api = FeaturesAPI("API-KEY", product, extent)
         for filter in filters:
             features_api.add_filters(filter)
@@ -31,3 +35,10 @@ class TestFeaturesAPI:
         features_api.query(limit=limit)
         request_mocked.assert_called_with(expected_url,
                                           params=expected_params)
+
+    @pytest.mark.skipif(API_KEY is None, reason="Test API key not available")
+    @pytest.mark.parametrize(*data.test_query())
+    def test_query(self, product, extent, limit, expected_count):
+        features_api = FeaturesAPI(API_KEY, product, extent)
+        results = features_api.query(limit=limit)
+        assert len(results["features"]) == expected_count
