@@ -43,6 +43,12 @@ in Python. To see what data is available, you can use the [OS Data Hub Explorer]
 pip install osdatahub
 ```
 
+The library is also available to download via [conda](https://anaconda.org/conda-forge/osdatahub):
+
+```bash
+conda install -c conda-forge osdatahub
+```
+
 You'll also need to sign-up for an account on the [OS Data Hub](https://osdatahub.os.uk/) and get an API key. If you've setup you're account and need help getting a key, try the 
 following steps:
 
