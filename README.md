@@ -1,5 +1,8 @@
 # osdatahub <!-- omit in toc -->
 
+[![GitHub issues](https://img.shields.io/github/issues/OrdnanceSurvey/osdatahub)](https://github.com/OrdnanceSurvey/osdatahub/issues)
+[![Python package](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml/badge.svg)](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml)
+
 `osdatahub` is a python package from Ordnance Survey (OS) that makes it easier to interact with OS data via the [OS Data Hub APIs](https://osdatahub.os.uk/).
 
 
