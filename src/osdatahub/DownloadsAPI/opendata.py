@@ -49,7 +49,7 @@ class OpenDataDownload(_DownloadsAPIBase):
         if area:
             params.update({"area": area})
 
-        response = requests.get(url=self._endpoint(f"{self.id}/downloads"), params=params)
+        response = requests.get(url=self._endpoint(f"{self._id}/downloads"), params=params)
         if return_dowloadobj:
             return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=download["size"])
                     for download in response.json()]

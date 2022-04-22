@@ -67,7 +67,7 @@ class _DownloadsAPIBase(ABC):
     _ENDPOINT = f"https://api.os.uk/downloads/v1/"
 
     def __init__(self, product_id: str):
-        self.id = product_id
+        self._id = product_id
 
     def _endpoint(self, api_name: str) -> str:
         """
@@ -82,12 +82,16 @@ class _DownloadsAPIBase(ABC):
         return f"{self._ENDPOINT}/{api_name}"
 
     @property
+    def id(self):
+        return self._id
+
+    @property
     @functools.lru_cache()
     def details(self) -> dict:
         """
         Calls endpoint to return details about the product or data package
         """
-        return requests.get(self._endpoint(self.id)).json()
+        return requests.get(self._endpoint(self._id)).json()
 
     @classmethod
     def all_products(cls, **kwargs) -> list:

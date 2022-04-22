@@ -48,7 +48,7 @@ class DataPackageDownload(_DownloadsAPIBase):
         """
         Get all the available versions for the data package
         """
-        return requests.get(self._endpoint(f"{self.id}/versions")).json()
+        return requests.get(self._endpoint(f"{self._id}/versions")).json()
 
     @typechecked
     def product_list(self, version_id: str, file_name: str = None,
@@ -65,7 +65,7 @@ class DataPackageDownload(_DownloadsAPIBase):
         Returns:
             List of downloadable files from Downloads API
         """
-        endpoint = self._endpoint(f"{self.id}/versions/{version_id}")
+        endpoint = self._endpoint(f"{self._id}/versions/{version_id}")
         params = {}
         if file_name:
             endpoint += "/downloads"
