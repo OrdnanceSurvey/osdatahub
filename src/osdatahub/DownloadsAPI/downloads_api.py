@@ -81,7 +81,8 @@ class _DownloadsAPIBase(ABC):
         """
         return f"{self._ENDPOINT}/{api_name}"
 
-    @functools.cached_property
+    @property
+    @functools.lru_cache()
     def details(self) -> dict:
         """
         Calls endpoint to return details about the product or data package
