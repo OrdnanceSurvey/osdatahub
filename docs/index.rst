@@ -22,6 +22,7 @@ developers.
    FeaturesAPI
    PlacesAPI
    NamesAPI
+   LinkedIdentifiersAPI
    DownloadsAPI
    Extent
    Utilities
