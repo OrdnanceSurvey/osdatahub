@@ -22,6 +22,7 @@ developers.
    FeaturesAPI
    PlacesAPI
    NamesAPI
+   DownloadsAPI
    Extent
    Utilities
    Data Hub Explorer <https://labs.os.uk/public/data-hub-explorer/>

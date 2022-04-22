@@ -1,10 +1,10 @@
 OS Data Hub Downloads API
 =========================
 
-Product
+Open Data Product
 -----------------------------------------
 
-.. automodule:: osdatahub.DownloadsAPI.product
+.. automodule:: osdatahub.DownloadsAPI.opendata
    :members:
    :undoc-members:
    :show-inheritance:
