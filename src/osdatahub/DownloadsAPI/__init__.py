@@ -1,2 +1,2 @@
-from .data_package import *
-from .opendata import *
+from .data_package import DataPackageDownload
+from .opendata import OpenDataDownload
