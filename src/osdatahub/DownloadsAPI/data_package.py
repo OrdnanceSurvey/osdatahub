@@ -42,7 +42,8 @@ class DataPackageDownload(_DownloadsAPIBase):
         response = requests.get(cls._ENDPOINT + f"?key={key}")
         return response.json()
 
-    @functools.cached_property
+    @property
+    @functools.lru_cache()
     def versions(self) -> list:
         """
         Get all the available versions for the data package
