@@ -20,7 +20,7 @@ class OpenDataDownload(_DownloadsAPIBase):
 
     @typechecked
     def product_list(self, file_name: str = None, file_format: str = None, file_subformat: str = None,
-                     area: str = None, return_dowloadobj: bool = False) -> Union[list, dict]:
+                     area: str = None, return_downloadobj: bool = False) -> Union[list, dict]:
         """
         Returns a list of possible downloads for a specific OS OpenData Product based on given filters
 
@@ -30,7 +30,7 @@ class OpenDataDownload(_DownloadsAPIBase):
             file_subformat (str, optional): Filter the list of downloads to only include those with this subformat
             area (str, optional) Filter the list of downloads to only include those that cover this area. Available
                 values can be found here - https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData/get_products__productId__downloads
-            return_dowloadobj (bool, optional): Returns the downloadable files as _DownloadObj objects instead of as a
+            return_downloadobj (bool, optional): Returns the downloadable files as _DownloadObj objects instead of as a
                 json. Defaults to False
 
         Returns:
@@ -50,7 +50,7 @@ class OpenDataDownload(_DownloadsAPIBase):
             params.update({"area": area})
 
         response = requests.get(url=self._endpoint(f"{self._id}/downloads"), params=params)
-        if return_dowloadobj:
+        if return_downloadobj:
             return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=download["size"])
                     for download in response.json()]
         else:
