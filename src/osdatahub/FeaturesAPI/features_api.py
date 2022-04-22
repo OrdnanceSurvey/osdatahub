@@ -75,7 +75,6 @@ class FeaturesAPI:
     def xml_filter(self):
         return self.__construct_filter()
 
-
     def query(self, limit: int = 100) -> FeatureCollection:
         """Run a query of the OS Features API
 
