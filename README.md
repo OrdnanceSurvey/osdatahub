@@ -1,5 +1,8 @@
 # osdatahub <!-- omit in toc -->
 
+[![GitHub issues](https://img.shields.io/github/issues/OrdnanceSurvey/osdatahub)](https://github.com/OrdnanceSurvey/osdatahub/issues)
+[![Python package](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml/badge.svg)](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml)
+
 `osdatahub` is a python package from Ordnance Survey (OS) that makes it easier to interact with OS data via the [OS Data Hub APIs](https://osdatahub.os.uk/).
 
 
@@ -31,6 +34,7 @@ in Python. To see what data is available, you can use the [OS Data Hub Explorer]
   - [Features API](#features-api)
   - [Places API](#places-api)
   - [Names API](#names-api)
+  - [Linked Identifiers API](#linked-identifiers-api)
 - [Tutorials](#tutorials)
 - [Contribute](#contribute)
 
@@ -168,6 +172,20 @@ geojson.dump(results, open("FILENAME.geojson", "w"))
 
 Note: The NamesAPI requires a *premium* API key!
 
+## Linked Identifiers API
+
+The [OS Linked Identifiers API](https://osdatahub.os.uk/docs/linkedIdentifiers/overview) allows you to access the valuable relationships between properties, streets and OS MasterMap identifiers for free. It's as easy as providing the identifier you are interested in and the API will return the related feature identifiers. This allows you to find what addresses exist on a given street, or the UPRN for a building on a map, or the USRN for a road and more.
+
+You can access the Linked Identifiers API via the **LinkedIdentifiersAPI** class. 
+In it's simplest form, queries can be made using just an API key and an identifier:
+
+```python
+from osdatahub import LinkedIdentifiersAPI
+
+key = "[YOUR KEY GOES HERE]"
+linked_ids = LinkedIdentifiersAPI(key)
+results = linked_ids.query(200001025758)
+```
 
 # Tutorials
 
