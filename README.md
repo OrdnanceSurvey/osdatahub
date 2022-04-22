@@ -169,6 +169,49 @@ geojson.dump(results, open("FILENAME.geojson", "w"))
 Note: The NamesAPI requires a *premium* API key!
 
 
+## Downloads API
+
+If you'd like to download an entire dataset instead of querying the API on demand, the OS Data Hub has the Downloads
+API. This API allows you to search,m explore, and download both [Open Data Products](https://osdatahub.os.uk/downloads/open) (e.g. OS Open Rivers, Boundary-Line, and a 1:250,000 scale 
+colour raster of Great Britain) and Premium Data Packages using Python.
+
+It is possible to download Open Data products without an API key, but the Premium Data Packages require you to have
+a premium API key and order the package you want to download on the [OS Data Hub website](https://osdatahub.os.uk/downloads/).
+
+The first step to download data is to discover which products are available. You can see the available datasets on the
+[OS Data Hub website](https://osdatahub.os.uk/downloads/) or using the following snippet of code:
+
+```python
+from osdatahub import OpenDataDownload
+
+OpenDataDownload.all_products()
+```
+
+You can also see all Premium Data Packages available to download using your premium API key:
+
+```python
+from osdatahub import DataPackageDownload
+
+key = "[YOUR KEY GOES HERE]"
+DataPackageDownload.all_products(key)
+```
+Note: For Premium Data Packages, this query will only return datasets if you have previously *ordered* the dataset on the OS Data Hub
+Website.
+
+Once you have found a package you'd like to download, you can get a list of the different products you can download:
+
+```python
+greenspace = OpenDataDownload("OpenGreenspace")
+greenspace.product_list()
+```
+
+Once you know the dataset and specific product you'd like to download, you can download the dataset locally:
+
+```python
+greenspace.download(file_name='opgrsp_essh_nj.zip')
+```
+
+
 # Tutorials
 
 Example notebooks, demonstrating various `osdatahub` features can be found in 
