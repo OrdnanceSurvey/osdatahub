@@ -98,7 +98,8 @@ class FeaturesAPI:
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
             raise_http_error(response)
-        return features_to_geojson(data.values, self.product.geometry, self.extent.crs)
+        return features_to_geojson(data.values, self.product.geometry,
+                                   self.extent.crs)
 
     def __construct_filter(self) -> str:
         filter_body = intersects(self.extent)
