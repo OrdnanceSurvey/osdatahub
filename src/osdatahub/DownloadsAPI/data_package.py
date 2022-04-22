@@ -40,6 +40,7 @@ class DataPackageDownload(_DownloadsAPIBase):
         """
         print(cls._ENDPOINT + f"?key={key}")
         response = requests.get(cls._ENDPOINT + f"?key={key}")
+        response.raise_for_status()
         return response.json()
 
     @property
@@ -48,7 +49,9 @@ class DataPackageDownload(_DownloadsAPIBase):
         """
         Get all the available versions for the data package
         """
-        return requests.get(self._endpoint(f"{self._id}/versions")).json()
+        response = requests.get(self._endpoint(f"{self._id}/versions"))
+        response.raise_for_status()
+        return response.json()
 
     @typechecked
     def product_list(self, version_id: str, file_name: str = None,
@@ -71,11 +74,13 @@ class DataPackageDownload(_DownloadsAPIBase):
             endpoint += "/downloads"
             params.update({"fileName": file_name})
             response = requests.get(url=endpoint, params=params)
+            response.raise_for_status()
             if return_downloadobj:
                 return [_DownloadObj(url=response.json()["Location"], file_name=file_name,
                                      size=response.json()["Size"])]
         else:
             response = requests.get(url=endpoint, params=params)
+            response.raise_for_status()
             if return_downloadobj:
                 return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=response.json()["Size"])
                         for download in response.json()["downloads"]]

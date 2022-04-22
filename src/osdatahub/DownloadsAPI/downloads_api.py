@@ -41,6 +41,7 @@ class _DownloadObj:
             return output_path
 
         r = requests.get(self.url, stream=True)
+        r.raise_for_status()
         size = int(r.headers.get('content-length'))
         chunk_size = 1024
         if r.status_code == 200:
@@ -91,7 +92,9 @@ class _DownloadsAPIBase(ABC):
         """
         Calls endpoint to return details about the product or data package
         """
-        return requests.get(self._endpoint(self._id)).json()
+        response = requests.get(self._endpoint(self._id))
+        response.raise_for_status()
+        return response.json()
 
     @classmethod
     def all_products(cls, **kwargs) -> list:
@@ -102,6 +105,7 @@ class _DownloadsAPIBase(ABC):
 
         """
         response = requests.get(cls._ENDPOINT)
+        response.raise_for_status()
         return response.json()
 
     @abstractmethod

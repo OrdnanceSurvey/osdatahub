@@ -50,6 +50,7 @@ class OpenDataDownload(_DownloadsAPIBase):
             params.update({"area": area})
 
         response = requests.get(url=self._endpoint(f"{self._id}/downloads"), params=params)
+        response.raise_for_status()
         if return_downloadobj:
             return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=download["size"])
                     for download in response.json()]
@@ -83,7 +84,7 @@ class OpenDataDownload(_DownloadsAPIBase):
                 multiple files will be downloaded (and download_multiple is set to True)
         """
         download_list = self.product_list(file_name=file_name, file_format=file_format, file_subformat=file_subformat,
-                                          area=area, return_dowloadobj=True)
+                                          area=area, return_downloadobj=True)
         return super()._download(download_list=download_list,
                                  output_dir=output_dir,
                                  overwrite=overwrite,
