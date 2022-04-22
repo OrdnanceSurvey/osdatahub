@@ -132,6 +132,13 @@ def test_query():
             id="bbox, topographic_area, limit=12",
         ),
         param(
+            "Topography_TopographicArea",
+            Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700"),
+            12,
+            12,
+            id="bbox, Topography_TopographicArea, limit=12",
+        ),
+        param(
             "topographic_area",
             Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700"),
             200,
