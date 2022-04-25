@@ -43,7 +43,7 @@ def product_list_fail():
         param(None, 123, None, None, False, TypeError),
         param(None, None, 123, None, False, TypeError),
         param(None, None, None, 123, False, TypeError),
-        param(None, None, None, "Wrong Area Code", False, TypeError),
+        param(None, None, None, "Wrong Area Code", False, ValueError),
         param(None, None, None, None, "wrong value", TypeError)
     ]
     return test_variables, test_data
