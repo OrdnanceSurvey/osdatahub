@@ -47,9 +47,8 @@ class TestOpenData:
     def test_product_list_live(self):
         greenspaces = OpenDataDownload("OpenGreenspace")
         greenspaces_info = greenspaces.product_list()
-        assert greenspaces_info["name"] == "OS Open Greenspace"
-        assert greenspaces_info["category"] == "Greenspace"
-        assert type(greenspaces_info["formats"]) is list
+        assert type(greenspaces_info) is list
+        assert type(greenspaces_info[0]) is dict
 
     # @pytest.mark.parametrize(*data.download_pass())
     # def test_download_pass(self, open_data_download, output_dir, download_multiple, overwrite, processes,
