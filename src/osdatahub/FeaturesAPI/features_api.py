@@ -9,7 +9,7 @@ from osdatahub.FeaturesAPI.feature_products import get_product, validate_product
 from osdatahub.filters import intersects
 from osdatahub.grow_list import GrowList
 from osdatahub.utils import features_to_geojson
-from typeguard import typechecked
+from typeguard import check_argument_types
 
 
 class FeaturesAPI:
@@ -29,7 +29,6 @@ class FeaturesAPI:
         extent = Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700")
         features = FeaturesAPI(key, "zoomstack_local_buildings", extent)
         results = features.query(limit=50)
-
     """
 
     ENDPOINT = r"https://api.os.uk/features/v1/wfs"
@@ -76,7 +75,6 @@ class FeaturesAPI:
     def xml_filter(self):
         return self.__construct_filter()
 
-    @typechecked
     def query(self, limit: int = 100) -> FeatureCollection:
         """Run a query of the OS Features API
 
@@ -87,6 +85,7 @@ class FeaturesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
+        assert check_argument_types()
         params = self.__params
         data = GrowList()
         n_required = min(limit, 100)
@@ -98,7 +97,8 @@ class FeaturesAPI:
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
             raise_http_error(response)
-        return features_to_geojson(data.values, self.product.geometry, self.extent.crs)
+        return features_to_geojson(data.values, self.product.geometry,
+                                   self.extent.crs)
 
     def __construct_filter(self) -> str:
         filter_body = intersects(self.extent)
@@ -117,13 +117,13 @@ class FeaturesAPI:
             "filter": self.__construct_filter(),
         }
 
-    @typechecked
     def add_filters(self, *xml_filters: str) -> None:
         """Add XML filter strings to the final query
 
         Args:
             xml_filters (str): Valid OGC XML filter objects
         """
+        assert check_argument_types()
         for xml_filter in xml_filters:
             self.filters.append(xml_filter)
 
@@ -136,10 +136,11 @@ if __name__ == "__main__":
 
     key = environ.get("OS_API_KEY")
 
-    extent = Extent.from_bbox((354000, 349000, 355000, 350000), "EPSG:27700")
+    bbox = (-1.1446, 52.6133, -1.0327, 52.6587)
+    extent = Extent.from_bbox(bbox, "EPSG:4326")
 
-    features = FeaturesAPI(key, "topographic_area", extent)
-
-    results = features.query(limit=1000000000)
+    product = "Zoomstack_Sites"
+    features = FeaturesAPI(key, product, extent)
+    results = features.query()
 
     print(len(results["features"]))

@@ -3,7 +3,7 @@ from typing import Union
 
 import requests
 from geojson import FeatureCollection
-from typeguard import typechecked, check_argument_types
+from typeguard import check_argument_types
 
 from osdatahub.NamesAPI.local_types import validate_local_type, get_local_type
 from osdatahub.errors import raise_http_error
@@ -97,6 +97,7 @@ class NamesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
+        assert check_argument_types()
         data = GrowList()
         if not all([str(p).isnumeric() for p in point]):
             raise TypeError("All values in argument \"point\" must be numeric")
