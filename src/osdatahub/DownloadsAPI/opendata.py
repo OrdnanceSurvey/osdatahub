@@ -29,7 +29,7 @@ class OpenDataDownload(_DownloadsAPIBase):
             file_format (str, optional): Filter the list of downloads to only include those with this format
             file_subformat (str, optional): Filter the list of downloads to only include those with this subformat
             area (str, optional) Filter the list of downloads to only include those that cover this area. Available
-                values can be found here - https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData/get_products__productId__downloads
+                values can be found `here <https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData/get_products__productId__downloads>`_
             return_downloadobj (bool, optional): Returns the downloadable files as _DownloadObj objects instead of as a
                 json. Defaults to False
 
@@ -75,8 +75,7 @@ class OpenDataDownload(_DownloadsAPIBase):
             file_format (str, optional): format of the file(s) to download
             file_subformat (str, optional): subformat of the file(s) to download
             area (str, optional): The area that the file must cover. Available values can be found in
-                osdatahub.codes.AREA_CODES or at
-                https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData/get_products__productId__downloads
+                osdatahub.codes.AREA_CODES or on the `OS Data Hub website <https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData/get_products__productId__downloads>`_
             download_multiple (bool, optional): whether to download multiple files if multiple products are within your
                 search criteria. Defaults to False
             overwrite (bool, optional): whether to overwrite existing files. Defaults to False
