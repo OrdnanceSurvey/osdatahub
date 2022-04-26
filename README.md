@@ -17,7 +17,7 @@ in Python. To see what data is available, you can use the [OS Data Hub Explorer]
 - Get access to Ordnance Survey data in as few as 2-3 lines of code
 - Easily query geographic extents using bounding boxes, radii and ONS geographies
 - Request as much data as you need with automatic API paging
-- Supports the OS Features and OS Places APIs
+- Supports the OS Features, Places, Names, Linked Identifiers, and Downloads APIs
 
 ## Links <!-- omit in toc -->
 - GitHub repo: https://github.com/OrdnanceSurvey/osdatahub
@@ -35,6 +35,7 @@ in Python. To see what data is available, you can use the [OS Data Hub Explorer]
   - [Places API](#places-api)
   - [Names API](#names-api)
   - [Linked Identifiers API](#linked-identifiers-api)
+  - [Downloads API](#downloads-api)
 - [Tutorials](#tutorials)
 - [Contribute](#contribute)
 
@@ -55,7 +56,7 @@ following steps:
 3. Click **Create a new project**, give your project a name, then click **Create project**
 4. Select **Add an API to this project**
 5. Choose the APIs you would like to use and click **Done** (Note: osdatahub supports 
-   the OS Features API and the OS Places API)
+   the OS Features, Places, Names, Linked Identifiers, and Downloads APIs)
 
 
 # Quick Start
@@ -189,8 +190,8 @@ results = linked_ids.query(200001025758)
 
 ## Downloads API
 
-If you'd like to download an entire dataset instead of querying the API on demand, the OS Data Hub has the Downloads
-API. This API allows you to search,m explore, and download both [Open Data Products](https://osdatahub.os.uk/downloads/open) (e.g. OS Open Rivers, Boundary-Line, and a 1:250,000 scale 
+If you'd like to download an entire dataset instead of querying the API on demand, the OS Data Hub has the 
+[Downloads API](https://osdatahub.os.uk/docs/downloads/technicalSpecification). This API allows you to search,m explore, and download both [Open Data Products](https://osdatahub.os.uk/downloads/open) (e.g. OS Open Rivers, Boundary-Line, and a 1:250,000 scale 
 colour raster of Great Britain) and Premium Data Packages using Python.
 
 It is possible to download Open Data products without an API key, but the Premium Data Packages require you to have
