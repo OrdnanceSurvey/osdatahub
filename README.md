@@ -20,6 +20,7 @@ in Python. To see what data is available, you can use the [OS Data Hub Explorer]
 - GitHub repo: https://github.com/OrdnanceSurvey/osdatahub
 - Documentation: https://osdatahub.readthedocs.io/en/latest/
 - PyPI: https://pypi.org/project/osdatahub/
+- conda-forge:  https://anaconda.org/conda-forge/osdatahub
 - Free Software: Open Government License
 
 **Note:** This package is under active development.
