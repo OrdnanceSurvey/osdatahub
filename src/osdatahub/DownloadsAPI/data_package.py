@@ -108,6 +108,7 @@ class DataPackageDownload(_DownloadsAPIBase):
             processes (int, optional): Number of processes with which to download multiple files. Only relevant if
                 multiple files will be downloaded (and download_multiple is set to True)
         """
+        # TODO: fix download_multiple for datapackage, given that most datapackages consist of multiple files
         download_list = self.product_list(version_id, file_name=file_name, return_downloadobj=True)
         return super()._download(download_list=download_list,
                                  output_dir=output_dir,
