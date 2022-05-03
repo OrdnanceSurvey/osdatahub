@@ -19,11 +19,14 @@ class BBox:
     def __getitem__(self, index):
         return list(self)[index]
 
-    def to_string(self) -> str:
+    def to_string(self, precision: int = None) -> str:
         """
         Converts bounding box into string
+
+        Args:
+            precision (int): Decimal point rounding precision. Defaults to None (no rounding)
 
         Returns:
             str: bounding box in string form
         """
-        return ",".join(str(c) for c in self)
+        return ",".join(str(round(c, precision) if precision is not None else c) for c in self)

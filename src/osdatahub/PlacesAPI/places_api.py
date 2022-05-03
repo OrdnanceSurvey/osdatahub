@@ -3,9 +3,9 @@ from geojson import FeatureCollection
 from osdatahub import Extent
 from osdatahub.grow_list import GrowList
 from osdatahub.utils import addresses_to_geojson
-from typeguard import typechecked
 from collections.abc import Iterable
 from typing import Union
+from typeguard import check_argument_types
 
 
 class PlacesAPI:
@@ -34,7 +34,6 @@ class PlacesAPI:
     def __endpoint(self, api_name: str) -> str:
         return self.__ENDPOINT + api_name + f"?key={self.key}"
 
-    @typechecked
     def query(
         self,
         extent: Extent,
@@ -56,6 +55,7 @@ class PlacesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
+        assert check_argument_types()
         if not output_crs:
             output_crs = extent.crs
         data = GrowList()
@@ -81,7 +81,6 @@ class PlacesAPI:
             response.raise_for_status()
         return addresses_to_geojson(data.values, output_crs)
 
-    @typechecked
     def find(
         self,
         text: str,
@@ -103,6 +102,7 @@ class PlacesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
+        assert check_argument_types()
         data = GrowList()
         params = {"query": text, "output_srs": output_crs}
         if classification_code or logical_status_code:
@@ -121,7 +121,6 @@ class PlacesAPI:
             response.raise_for_status()
         return addresses_to_geojson(data.values, output_crs)
 
-    @typechecked
     def postcode(
         self,
         postcode: str,
@@ -148,6 +147,7 @@ class PlacesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
+        assert check_argument_types()
         data = GrowList()
         params = {"postcode": postcode, "output_srs": output_crs}
         if classification_code or logical_status_code:
@@ -165,7 +165,6 @@ class PlacesAPI:
             response.raise_for_status()
         return addresses_to_geojson(data.values, output_crs)
 
-    @typechecked
     def uprn(
         self,
         uprn: int,
@@ -185,6 +184,7 @@ class PlacesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
+        assert check_argument_types()
         data = GrowList()
         params = {"uprn": uprn, "output_srs": output_crs}
         if classification_code or logical_status_code:
@@ -198,7 +198,6 @@ class PlacesAPI:
             response.raise_for_status()
         return addresses_to_geojson(data.values, output_crs)
 
-    @typechecked
     def nearest(
         self,
         point: tuple,
@@ -224,6 +223,7 @@ class PlacesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
+        assert check_argument_types()
         data = GrowList()
         point = point if point_crs.upper() != "EPSG:4326" else (point[1], point[0])
         params = {
@@ -248,7 +248,6 @@ class PlacesAPI:
         return [result["DPA"] for result in response.json()["results"]]
 
     @staticmethod
-    @typechecked
     def __format_fq(
         classification_code: Union[str, Iterable] = None,
         logical_status_code: Union[str, int] = None,
@@ -263,6 +262,7 @@ class PlacesAPI:
         Returns:
             list of fq filtering arguments
         """
+        assert check_argument_types()
         fq_args = []
         if classification_code:
             if isinstance(classification_code, str):

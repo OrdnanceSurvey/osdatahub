@@ -1,5 +1,8 @@
 # osdatahub <!-- omit in toc -->
 
+[![GitHub issues](https://img.shields.io/github/issues/OrdnanceSurvey/osdatahub)](https://github.com/OrdnanceSurvey/osdatahub/issues)
+[![Python package](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml/badge.svg)](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml)
+
 `osdatahub` is a python package from Ordnance Survey (OS) that makes it easier to interact with OS data via the [OS Data Hub APIs](https://osdatahub.os.uk/).
 
 
@@ -14,7 +17,7 @@ in Python. To see what data is available, you can use the [OS Data Hub Explorer]
 - Get access to Ordnance Survey data in as few as 2-3 lines of code
 - Easily query geographic extents using bounding boxes, radii and ONS geographies
 - Request as much data as you need with automatic API paging
-- Supports the OS Features and OS Places APIs
+- Supports the OS Features, Places, Names, Linked Identifiers, and Downloads APIs
 
 ## Links <!-- omit in toc -->
 - GitHub repo: https://github.com/OrdnanceSurvey/osdatahub
@@ -32,6 +35,8 @@ in Python. To see what data is available, you can use the [OS Data Hub Explorer]
   - [Features API](#features-api)
   - [Places API](#places-api)
   - [Names API](#names-api)
+  - [Linked Identifiers API](#linked-identifiers-api)
+  - [Downloads API](#downloads-api)
 - [Tutorials](#tutorials)
 - [Contribute](#contribute)
 
@@ -58,7 +63,7 @@ following steps:
 3. Click **Create a new project**, give your project a name, then click **Create project**
 4. Select **Add an API to this project**
 5. Choose the APIs you would like to use and click **Done** (Note: osdatahub supports 
-   the OS Features API and the OS Places API)
+   the OS Features, Places, Names, Linked Identifiers, and Downloads APIs)
 
 
 # Quick Start
@@ -175,6 +180,63 @@ geojson.dump(results, open("FILENAME.geojson", "w"))
 
 Note: The NamesAPI requires a *premium* API key!
 
+## Linked Identifiers API
+
+The [OS Linked Identifiers API](https://osdatahub.os.uk/docs/linkedIdentifiers/overview) allows you to access the valuable relationships between properties, streets and OS MasterMap identifiers for free. It's as easy as providing the identifier you are interested in and the API will return the related feature identifiers. This allows you to find what addresses exist on a given street, or the UPRN for a building on a map, or the USRN for a road and more.
+
+You can access the Linked Identifiers API via the **LinkedIdentifiersAPI** class. 
+In it's simplest form, queries can be made using just an API key and an identifier:
+
+```python
+from osdatahub import LinkedIdentifiersAPI
+
+key = "[YOUR KEY GOES HERE]"
+linked_ids = LinkedIdentifiersAPI(key)
+results = linked_ids.query(200001025758)
+```
+
+## Downloads API
+
+If you'd like to download an entire dataset instead of querying the API on demand, the OS Data Hub has the 
+[Downloads API](https://osdatahub.os.uk/docs/downloads/technicalSpecification). This API allows you to search,m explore, and download both [Open Data Products](https://osdatahub.os.uk/downloads/open) (e.g. OS Open Rivers, Boundary-Line, and a 1:250,000 scale 
+colour raster of Great Britain) and Premium Data Packages using Python.
+
+It is possible to download Open Data products without an API key, but the Premium Data Packages require you to have
+a premium API key and order the package you want to download on the [OS Data Hub website](https://osdatahub.os.uk/downloads/).
+
+The first step to download data is to discover which products are available. You can see the available datasets on the
+[OS Data Hub website](https://osdatahub.os.uk/downloads/) or using the following snippet of code:
+
+```python
+from osdatahub import OpenDataDownload
+
+OpenDataDownload.all_products()
+```
+
+You can also see all Premium Data Packages available to download using your premium API key:
+
+```python
+from osdatahub import DataPackageDownload
+
+key = "[YOUR KEY GOES HERE]"
+DataPackageDownload.all_products(key)
+```
+Note: For Premium Data Packages, this query will only return datasets if you have previously *ordered* the dataset on the OS Data Hub
+Website.
+
+Once you have found a package you'd like to download, you can get a list of the different products you can download:
+
+```python
+greenspace = OpenDataDownload("OpenGreenspace")
+greenspace.product_list()
+```
+
+Once you know the dataset and specific product you'd like to download, you can download the dataset locally:
+
+```python
+greenspace.download(file_name='opgrsp_essh_nj.zip')
+```
+
 
 # Tutorials
 
@@ -200,3 +262,7 @@ run the following in your environment:
 ```bash
 pip install -e .[dev]
 ```
+
+## Support
+
+For any kind of issues or suggestions please see the [**documentation**](https://osdatahub.readthedocs.io/en/latest/), open a **[github issue](https://github.com/OrdnanceSurvey/osdatahub/issues)** or contact us via Email **[rapidprototyping@os.uk](mailto:rapidprototyping@os.uk)**

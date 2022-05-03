@@ -25,7 +25,7 @@ class TestLinkedIdentifiersAPI:
         li_api = LinkedIdentifiersAPI("KEY")
 
         with pytest.raises(ValueError) as exc_info:
-            endpoint = li_api._LinkedIdentifiersAPI__get_endpoint(
+            li_api._LinkedIdentifiersAPI__get_endpoint(
                 "ID", "featureType", "identifierType"
             )
         # Assert

@@ -3,7 +3,7 @@ from typing import Union
 
 import requests
 from geojson import FeatureCollection
-from typeguard import typechecked, check_argument_types
+from typeguard import check_argument_types
 
 from osdatahub.NamesAPI.local_types import validate_local_type, get_local_type
 from osdatahub.errors import raise_http_error
@@ -66,7 +66,7 @@ class NamesAPI:
         if bounds:
             if not bounds.crs == "EPSG:27700":
                 raise TypeError("Bounds must be in British National Grid CRS (EPSG:27700)")
-            params.update({"bounds": bounds.bbox.to_string()})
+            params.update({"bounds": bounds.bbox.to_string(precision=2)})
         if bbox_filter or local_type:
             if bbox_filter and (not bbox_filter.crs == "EPSG:27700"):
                 raise TypeError("Bounding Box filter must be in British National Grid CRS (EPSG:27700)")
@@ -97,6 +97,7 @@ class NamesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
+        assert check_argument_types()
         data = GrowList()
         if not all([str(p).isnumeric() for p in point]):
             raise TypeError("All values in argument \"point\" must be numeric")
@@ -149,7 +150,7 @@ class NamesAPI:
             if not bbox_filter.crs == "EPSG:27700":
                 raise ValueError("'bbox_filter' argument must have CRS of British National Grid (EPSG:27700). Its CRS "
                                  f"is {bbox_filter.crs}")
-            fq_args.append("BBOX:" + str(bbox_filter.bbox.to_string()))
+            fq_args.append("BBOX:" + str(bbox_filter.bbox.to_string(precision=2)))
 
         return fq_args
 
