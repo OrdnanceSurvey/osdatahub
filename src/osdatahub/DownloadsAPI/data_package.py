@@ -24,8 +24,8 @@ class DataPackageDownload(_DownloadsAPIBase):
         super().__init__(product_id=product_id)
         self.key = key
 
-    def __endpoint(self, api_name: str) -> str:
-        return self._ENDPOINT + api_name + f"?key={self.key}"
+    def _endpoint(self, api_name: str) -> str:
+        return f"{self._ENDPOINT}/{api_name}" + f"?key={self.key}"
 
     @classmethod
     def all_products(cls, key) -> list:
@@ -38,7 +38,6 @@ class DataPackageDownload(_DownloadsAPIBase):
         Returns: A list of dictionaries containing all available Data Packages
 
         """
-        print(cls._ENDPOINT + f"?key={key}")
         response = requests.get(cls._ENDPOINT + f"?key={key}")
         response.raise_for_status()
         return response.json()
@@ -82,7 +81,7 @@ class DataPackageDownload(_DownloadsAPIBase):
             response = requests.get(url=endpoint, params=params)
             response.raise_for_status()
             if return_downloadobj:
-                return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=response.json()["Size"])
+                return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=download["size"])
                         for download in response.json()["downloads"]]
 
         return response.json()
