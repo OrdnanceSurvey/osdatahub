@@ -1,18 +1,18 @@
 {% set name = "osdatahub" %}
-{% set version = "0.1.0" %}
+{% set version = "1.0.2" %}
 
 package:
-  name: "{{ name|lower }}"
-  version: "{{ version }}"
+  name: {{ name|lower }}
+  version: {{ version }}
 
 source:
-  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
-  sha256: 95f3d6d884278f72bf5e17b9dd57b5c860de68fb936c075691c688d3b4e74a90
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: d09b2c7e4762c8584ed3c786f3149b0c20c25daa736d80fd3b30f2fc89889e3e
 
 build:
-  number: 0
+  number: 1
   noarch: python
-  script: "{{ PYTHON }} -m pip install . -vv"
+  script: {{ PYTHON }} -m pip install . -vv
 
 requirements:
   host:
@@ -24,6 +24,7 @@ requirements:
     - requests ==2.25.0
     - shapely ==1.8.0
     - typeguard ==2.13.0
+    - tqdm ~=4.62.3
 
 test:
   imports:
@@ -33,11 +34,11 @@ test:
     - osdatahub.PlacesAPI
 
 about:
-  home: "https://github.com/OrdnanceSurvey/osdatahub"
+  home: https://github.com/OrdnanceSurvey/osdatahub
   license: OGL-UK-3.0
   license_family: OTHER
   license_file: LICENSE.txt
-  summary: "osdatahub is Ordnance Survey's (OS) Python API wrapper, designed to make data from the OS Data Hub APIs readily accessible to developers."
+  summary: osdatahub is Ordnance Survey's (OS) Python API wrapper, designed to make data from the OS Data Hub APIs readily accessible to developers.
   doc_url: https://osdatahub.readthedocs.io/en/latest/
   dev_url: https://github.com/OrdnanceSurvey/osdatahub
 
@@ -45,3 +46,4 @@ extra:
   recipe-maintainers:
     - danhirstos
     - JEPooleyOS
+    - FHunt-OS
