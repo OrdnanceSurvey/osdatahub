@@ -24,9 +24,6 @@ class DataPackageDownload(_DownloadsAPIBase):
         super().__init__(product_id=product_id)
         self.key = key
 
-    def _endpoint(self, api_name: str) -> str:
-        return f"{self._ENDPOINT}/{api_name}" + f"?key={self.key}"
-
     @classmethod
     def all_products(cls, key) -> list:
         """
@@ -38,7 +35,7 @@ class DataPackageDownload(_DownloadsAPIBase):
         Returns: A list of dictionaries containing all available Data Packages
 
         """
-        response = requests.get(cls._ENDPOINT + f"?key={key}")
+        response = requests.get(cls._ENDPOINT, params={"key": key})
         response.raise_for_status()
         return response.json()
 
@@ -48,7 +45,7 @@ class DataPackageDownload(_DownloadsAPIBase):
         """
         Get all the available versions for the data package
         """
-        response = requests.get(self._endpoint(f"{self._id}/versions"))
+        response = requests.get(self._endpoint(f"{self._id}/versions"), params={"key": self.key})
         response.raise_for_status()
         return response.json()
 
@@ -68,12 +65,13 @@ class DataPackageDownload(_DownloadsAPIBase):
             List of downloadable files from Downloads API
         """
         endpoint = self._endpoint(f"{self._id}/versions/{version_id}")
-        params = {}
+        params = {"key": self.key}
         if file_name:
             endpoint += "/downloads"
             params.update({"fileName": file_name})
             response = requests.get(url=endpoint, params=params)
             response.raise_for_status()
+            # TODO: test the following three lines
             if return_downloadobj:
                 return [_DownloadObj(url=response.json()["Location"], file_name=file_name,
                                      size=response.json()["Size"])]
@@ -83,6 +81,7 @@ class DataPackageDownload(_DownloadsAPIBase):
             if return_downloadobj:
                 return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=download["size"])
                         for download in response.json()["downloads"]]
+        # TODO: add disclaimer if you get an empty list that you must first request the data package
 
         return response.json()
 
@@ -91,7 +90,6 @@ class DataPackageDownload(_DownloadsAPIBase):
                  version_id: str,
                  output_dir: Union[str, Path] = ".",
                  file_name: str = None,
-                 download_multiple: bool = False,
                  overwrite: bool = False,
                  processes: int = None) -> list:
         """
@@ -108,10 +106,9 @@ class DataPackageDownload(_DownloadsAPIBase):
             processes (int, optional): Number of processes with which to download multiple files. Only relevant if
                 multiple files will be downloaded (and download_multiple is set to True)
         """
-        # TODO: fix download_multiple for datapackage, given that most datapackages consist of multiple files
         download_list = self.product_list(version_id, file_name=file_name, return_downloadobj=True)
         return super()._download(download_list=download_list,
                                  output_dir=output_dir,
                                  overwrite=overwrite,
-                                 download_multiple=download_multiple,
+                                 download_multiple=True,
                                  processes=processes)

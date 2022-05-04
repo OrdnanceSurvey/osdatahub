@@ -18,6 +18,7 @@ class OpenDataDownload(_DownloadsAPIBase):
     """
     _ENDPOINT = _DownloadsAPIBase._ENDPOINT + "products"
 
+    # TODO: change name
     @typechecked
     def product_list(self, file_name: str = None, file_format: str = None, file_subformat: str = None,
                      area: str = None, return_downloadobj: bool = False) -> Union[list, dict]:
