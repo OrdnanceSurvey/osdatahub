@@ -1,4 +1,5 @@
 import functools
+import logging
 from pathlib import Path
 from typing import Union
 
@@ -37,7 +38,12 @@ class DataPackageDownload(_DownloadsAPIBase):
         """
         response = requests.get(cls._ENDPOINT, params={"key": key})
         response.raise_for_status()
-        return response.json()
+        content = response.json()
+        if not content:
+            logging.warning(f"You have no premium data packages available. "
+                            f"Make sure that you first ordered a data package at "
+                            f"https://osdatahub.os.uk/downloads/premium")
+        return content
 
     @property
     @functools.lru_cache()
@@ -50,14 +56,12 @@ class DataPackageDownload(_DownloadsAPIBase):
         return response.json()
 
     @typechecked
-    def product_list(self, version_id: str, file_name: str = None,
-                     return_downloadobj: bool = False) -> Union[list, dict]:
+    def product_list(self, version_id: str, return_downloadobj: bool = False) -> Union[list, dict]:
         """
         Returns a list of possible downloads for a specific OS Premium Data Package based on given filters
 
         Args:
             version_id (str): Filter the list of possible downloads by the version id of the given product
-            file_name (str, optional): Filter the list of downloads to only include those with this file name
             return_downloadobj (bool, optional): Returns the downloadable files as _DownloadObj objects instead of as a
                 json. Defaults to False
 
@@ -66,24 +70,18 @@ class DataPackageDownload(_DownloadsAPIBase):
         """
         endpoint = self._endpoint(f"{self._id}/versions/{version_id}")
         params = {"key": self.key}
-        if file_name:
-            endpoint += "/downloads"
-            params.update({"fileName": file_name})
-            response = requests.get(url=endpoint, params=params)
-            response.raise_for_status()
-            # TODO: test the following three lines
-            if return_downloadobj:
-                return [_DownloadObj(url=response.json()["Location"], file_name=file_name,
-                                     size=response.json()["Size"])]
-        else:
-            response = requests.get(url=endpoint, params=params)
-            response.raise_for_status()
-            if return_downloadobj:
-                return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=download["size"])
-                        for download in response.json()["downloads"]]
-        # TODO: add disclaimer if you get an empty list that you must first request the data package
+        response = requests.get(url=endpoint, params=params)
+        response.raise_for_status()
+        content = response.json()
+        if not content:
+            logging.warning(f"There are no premium data packages available with id={self.id} and "
+                            f"version_id={version_id}. Make sure that you first ordered a data package at"
+                            f"https://osdatahub.os.uk/downloads/premium")
+        if return_downloadobj:
+            return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=download["size"])
+                    for download in content["downloads"]]
 
-        return response.json()
+        return content
 
     @typechecked
     def download(self,
@@ -106,9 +104,14 @@ class DataPackageDownload(_DownloadsAPIBase):
             processes (int, optional): Number of processes with which to download multiple files. Only relevant if
                 multiple files will be downloaded (and download_multiple is set to True)
         """
-        download_list = self.product_list(version_id, file_name=file_name, return_downloadobj=True)
-        return super()._download(download_list=download_list,
-                                 output_dir=output_dir,
-                                 overwrite=overwrite,
-                                 download_multiple=True,
-                                 processes=processes)
+        if file_name is not None:
+            url = f'{self._endpoint(f"{self.id}/versions/{version_id}/downloads")}?fileName={file_name}&key={self.key}'
+            return [_DownloadObj(url=url, file_name=file_name, size=0).download(output_dir=output_dir,
+                                                                                overwrite=overwrite)]
+        else:
+            download_list = self.product_list(version_id, return_downloadobj=True)
+            return super()._download(download_list=download_list,
+                                     output_dir=output_dir,
+                                     overwrite=overwrite,
+                                     download_multiple=True,
+                                     processes=processes)
