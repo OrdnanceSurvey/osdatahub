@@ -98,8 +98,6 @@ class DataPackageDownload(_DownloadsAPIBase):
             output_dir (Union[str, Path], optional): the path where the downloaded files will be saved. Defaults to
                 current working directory
             file_name (str, optional): name of the file(s) to download
-            download_multiple (bool, optional): whether to download multiple files if multiple products are within your
-                search criteria. Defaults to False
             overwrite (bool, optional): whether to overwrite existing files. Defaults to False
             processes (int, optional): Number of processes with which to download multiple files. Only relevant if
                 multiple files will be downloaded (and download_multiple is set to True)
