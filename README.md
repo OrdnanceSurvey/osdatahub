@@ -24,6 +24,7 @@ in Python. To see what data is available, you can use the [OS Data Hub Explorer]
 - Documentation: https://osdatahub.readthedocs.io/en/latest/
 - PyPI: https://pypi.org/project/osdatahub/
 - conda-forge:  https://anaconda.org/conda-forge/osdatahub
+- Data Hub Explorer: https://labs.os.uk/prototyping/data-hub-explorer/
 - Free Software: Open Government License
 
 **Note:** This package is under active development.
