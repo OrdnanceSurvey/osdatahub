@@ -48,10 +48,10 @@ class _DownloadObj:
             with open(output_path, 'wb') as f:
                 if not pbar:
                     pbar = tqdm(total=size, desc=self.file_name, unit="B", unit_scale=True, leave=True)
-                    for chunk in r.iter_content(chunk_size=chunk_size):
-                        f.write(chunk)
-                        f.flush()
-                        pbar.update(chunk_size)
+                for chunk in r.iter_content(chunk_size=chunk_size):
+                    f.write(chunk)
+                    f.flush()
+                    pbar.update(chunk_size)
 
         pbar.write(f"Finished downloading {self.file_name} to {output_path}")
         return output_path
