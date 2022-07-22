@@ -91,8 +91,10 @@ class FeaturesAPI:
         n_required = min(limit, 100)
         try:
             while n_required > 0 and data.grown:
+                print(n_required, len(data), data.grown)
                 params.update({"count": n_required, "startIndex": len(data)})
                 response = requests.get(self.ENDPOINT, params=params)
+                print(response.json())
                 data.extend(response.json()["features"])
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
@@ -133,14 +135,37 @@ if __name__ == "__main__":
 
     from osdatahub import Extent, FeaturesAPI
     import geojson
+    import os
+    from shapely.geometry import shape
+    from shapely.geometry import Point
+    def get_nearest_road_buffer(point: Point):
+        # Get query extent
+        land_parcel = get_land_parcel_polygon(point)
+        query_extent = shape(land_parcel["features"][0]["geometry"]).buffer(20)
+        
+        # Query Highways
+        key = os.environ.get("OS_API_KEY")
+        extent = Extent(query_extent, "EPSG:27700")
+        features_api = FeaturesAPI(key, "Highways_RoadLink", extent)
+        return features_api.query(limit=500)
 
-    key = environ.get("OS_API_KEY")
+    def get_land_parcel_polygon(point: Point) -> dict:
+        key = os.environ.get("OS_API_KEY")
+        extent = Extent.from_bbox((point.x, point.y, point.x, point.y), "EPSG:27700")
+        features_api = FeaturesAPI(key, "Topography_TopographicArea", extent) 
+        return features_api.query(limit=100)
 
-    bbox = (-1.1446, 52.6133, -1.0327, 52.6587)
-    extent = Extent.from_bbox(bbox, "EPSG:4326")
+    
+    point = Point(495475, 324477)
+    # point = Point(450715, 211183)
+    print(get_nearest_road_buffer(point))
+    # key = environ.get("OS_API_KEY")
 
-    product = "Zoomstack_Sites"
-    features = FeaturesAPI(key, product, extent)
-    results = features.query()
+    # bbox = (-1.1446, 52.6133, -1.0327, 52.6587)
+    # extent = Extent.from_bbox(bbox, "EPSG:4326")
 
-    print(len(results["features"]))
+    # product = "Zoomstack_Sites"
+    # features = FeaturesAPI(key, product, extent)
+    # results = features.query()
+
+    # print(len(results["features"]))
