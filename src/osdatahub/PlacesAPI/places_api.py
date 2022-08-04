@@ -100,6 +100,8 @@ class PlacesAPI:
                 Defaults to 100.
             classification_code (str|Iterable[str], optional): Classification codes to filter query by
             logical_status_code (str|int, optional): logical status codes to filter query by
+            minmatch (float, optional): The minimum match score a result has to have to be returned
+            matchprecision (int, optional): The decimal point position at which the match score value is to be truncated
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -107,11 +109,13 @@ class PlacesAPI:
         assert check_argument_types()
         data = GrowList()
         params = {"query": text, "output_srs": output_crs}
+        if minmatch is not None:
+            params["minmatch"] = check_range(minmatch, 0.1, 1)
+        if matchprecision is not None:
+            params["matchprecision"] = str(check_range(matchprecision, 1, 10))
         if classification_code or logical_status_code:
             params.update(
-                {"fq": self.__format_fq(classification_code, logical_status_code),
-                 "minmatch": check_range(minmatch, 0.1, 1),
-                 "matchprecision": check_range(matchprecision, 1, 10)}
+                {"fq": self.__format_fq(classification_code, logical_status_code)}
             )
 
         try:
@@ -302,12 +306,13 @@ if __name__ == "__main__":
     # results = places.query(extent, limit=42)
     results = places.find(
         "Ordnance Survey Adanac Drive SO16",
-        classification_code=("CO01GV", "CI01"),
-        LOGICAL_STATUS_CODE=1,
+        minmatch=0.4,
+        matchprecision=9
     )
     # places.nearest((-3.2939550711619177,50.746391786819316), "EPSG:4326", 1000)
 
-    import json
+    print(results)
+    # import json
 
-    with open("test.json", "w") as f:
-        json.dump(results, f)
+    # with open("test.json", "w") as f:
+    #     json.dump(results, f)
