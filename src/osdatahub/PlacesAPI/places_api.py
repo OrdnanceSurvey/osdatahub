@@ -2,7 +2,7 @@ import requests
 from geojson import FeatureCollection
 from osdatahub import Extent
 from osdatahub.grow_list import GrowList
-from osdatahub.utils import addresses_to_geojson
+from osdatahub.utils import addresses_to_geojson, check_range
 from collections.abc import Iterable
 from typing import Union
 from typeguard import check_argument_types
@@ -88,6 +88,8 @@ class PlacesAPI:
         limit: int = 100,
         classification_code: Union[str, Iterable] = None,
         logical_status_code: Union[str, int] = None,
+        minmatch: float = None,
+        matchprecision: int = None
     ) -> FeatureCollection:
         """A free text query of the OS Places API
 
@@ -107,7 +109,9 @@ class PlacesAPI:
         params = {"query": text, "output_srs": output_crs}
         if classification_code or logical_status_code:
             params.update(
-                {"fq": self.__format_fq(classification_code, logical_status_code)}
+                {"fq": self.__format_fq(classification_code, logical_status_code),
+                 "minmatch": check_range(minmatch, 0.1, 1),
+                 "matchprecision": check_range(matchprecision, 1, 10)}
             )
 
         try:
@@ -273,7 +277,7 @@ class PlacesAPI:
                 )
             else:
                 raise TypeError(
-                    f"'classification_code' argument must be Iterable or str, but was type {type(logical_status_code)}"
+                    f"'classification_code' argument must be Iterable or str, but was type {type(classification_code)}"
                 )
 
             fq_args.append(class_codes)

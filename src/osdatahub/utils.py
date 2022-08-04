@@ -174,3 +174,9 @@ def address_to_feature(address, crs):
         "geometry": {"type": "Point", "coordinates": [x, y]},
         "properties": {**address},
     }
+
+
+def check_range(value: float, minimum: float, maximum:float) -> float:
+    if value < minimum or value > maximum:
+        raise ValueError(f"Value should be between {minimum} and {maximum}, got {value}.")
+    return value
