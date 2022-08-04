@@ -26,6 +26,31 @@ def intersects(extent: Extent) -> str:
         "</gml:Polygon>"
         "</ogc:Intersects>"
     )
+    
+
+def touches(extent: Extent) -> str:
+    """Constructs an OGC XML filter for data that touches the given extent
+
+    Args:
+        extent (Extent): The desired region to be filtered, given as an Extent object
+
+    Returns:
+        str: A valid OGC XML filter
+    """
+    coords = extent.xml_coords
+    crs = extent.crs.upper()
+    return (
+        "<ogc:Touches>"
+        "<ogc:PropertyName>SHAPE</ogc:PropertyName>"
+        f"<gml:Polygon xmlns:gml='http://www.opengis.net/gml' srsName='{crs}'>"
+        "<gml:outerBoundaryIs>"
+        "<gml:LinearRing>"
+        f'<gml:coordinates decimal="." cs="," ts=" ">{coords}</gml:coordinates>'
+        "</gml:LinearRing>"
+        "</gml:outerBoundaryIs>"
+        "</gml:Polygon>"
+        "</ogc:Touches>"
+    )
 
 
 def single_attribute_filter(property_name, filter_name, value):
