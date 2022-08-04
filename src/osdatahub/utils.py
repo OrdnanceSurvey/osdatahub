@@ -176,7 +176,21 @@ def address_to_feature(address, crs):
     }
 
 
-def check_range(value: float, minimum: float, maximum:float) -> float:
+def validate_in_range(value: float, minimum: float, maximum: float) -> float:
+    """Checks that the input value is between the maximum and minimum values 
+    and returns the original value if it is.
+
+    Args:
+        value (float): value to check
+        minimum (float): minimum value in range (inclusive)
+        maximum (float): maximum value in range (inclusive)
+
+    Returns:
+        float: returns input value if check passed
+
+    Raises:
+        ValueError: Value should be between {minimum} and {maximum}, got {value}.
+    """
     if value < minimum or value > maximum:
         raise ValueError(f"Value should be between {minimum} and {maximum}, got {value}.")
     return value

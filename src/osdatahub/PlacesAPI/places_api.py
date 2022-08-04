@@ -2,7 +2,7 @@ import requests
 from geojson import FeatureCollection
 from osdatahub import Extent
 from osdatahub.grow_list import GrowList
-from osdatahub.utils import addresses_to_geojson, check_range
+from osdatahub.utils import addresses_to_geojson, validate_in_range
 from collections.abc import Iterable
 from typing import Union
 from typeguard import check_argument_types
@@ -110,9 +110,9 @@ class PlacesAPI:
         data = GrowList()
         params = {"query": text, "output_srs": output_crs}
         if minmatch is not None:
-            params["minmatch"] = check_range(minmatch, 0.1, 1)
+            params["minmatch"] = validate_in_range(minmatch, 0.1, 1)
         if matchprecision is not None:
-            params["matchprecision"] = str(check_range(matchprecision, 1, 10))
+            params["matchprecision"] = str(validate_in_range(matchprecision, 1, 10))
         if classification_code or logical_status_code:
             params.update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
