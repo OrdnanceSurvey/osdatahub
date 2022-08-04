@@ -1,6 +1,6 @@
 import pytest
 
-from osdatahub.utils import address_to_feature
+from osdatahub.utils import address_to_feature, validate_in_range
 from tests.data import utils_data as data
 
 
@@ -17,3 +17,15 @@ class TestAddressToFeature:
         # Act
         with pytest.raises(ValueError):
             address_feature = address_to_feature(address, crs)
+
+    def test_validate_in_range(self):
+        # Assert
+        assert validate_in_range(10, 5, 15) == 10
+
+    def test_validate_in_range_fail(self,):
+        # Act
+        with pytest.raises(ValueError) as error:
+            validate_in_range(80, 5, 15) == 10
+
+        #Assert
+        assert str(error.value) == "Value should be between 5 and 15, got 80."

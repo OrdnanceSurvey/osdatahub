@@ -2,7 +2,7 @@ import requests
 from geojson import FeatureCollection
 from osdatahub import Extent
 from osdatahub.grow_list import GrowList
-from osdatahub.utils import addresses_to_geojson
+from osdatahub.utils import addresses_to_geojson, validate_in_range
 from collections.abc import Iterable
 from typing import Union
 from typeguard import check_argument_types
@@ -88,6 +88,8 @@ class PlacesAPI:
         limit: int = 100,
         classification_code: Union[str, Iterable] = None,
         logical_status_code: Union[str, int] = None,
+        minmatch: float = None,
+        matchprecision: int = None
     ) -> FeatureCollection:
         """A free text query of the OS Places API
 
@@ -98,6 +100,8 @@ class PlacesAPI:
                 Defaults to 100.
             classification_code (str|Iterable[str], optional): Classification codes to filter query by
             logical_status_code (str|int, optional): logical status codes to filter query by
+            minmatch (float, optional): The minimum match score a result has to have to be returned
+            matchprecision (int, optional): The decimal point position at which the match score value is to be truncated
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -105,6 +109,10 @@ class PlacesAPI:
         assert check_argument_types()
         data = GrowList()
         params = {"query": text, "output_srs": output_crs}
+        if minmatch is not None:
+            params["minmatch"] = validate_in_range(minmatch, 0.1, 1)
+        if matchprecision is not None:
+            params["matchprecision"] = str(validate_in_range(matchprecision, 1, 10))
         if classification_code or logical_status_code:
             params.update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
@@ -273,7 +281,7 @@ class PlacesAPI:
                 )
             else:
                 raise TypeError(
-                    f"'classification_code' argument must be Iterable or str, but was type {type(logical_status_code)}"
+                    f"'classification_code' argument must be Iterable or str, but was type {type(classification_code)}"
                 )
 
             fq_args.append(class_codes)
@@ -298,12 +306,13 @@ if __name__ == "__main__":
     # results = places.query(extent, limit=42)
     results = places.find(
         "Ordnance Survey Adanac Drive SO16",
-        classification_code=("CO01GV", "CI01"),
-        LOGICAL_STATUS_CODE=1,
+        minmatch=0.4,
+        matchprecision=9
     )
     # places.nearest((-3.2939550711619177,50.746391786819316), "EPSG:4326", 1000)
 
-    import json
+    print(results)
+    # import json
 
-    with open("test.json", "w") as f:
-        json.dump(results, f)
+    # with open("test.json", "w") as f:
+    #     json.dump(results, f)
