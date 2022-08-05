@@ -22,6 +22,7 @@ class FeaturesAPI:
         key (str): A valid OS API Key. Get a free key here - https://osdatahub.os.uk/
         product_name (str): A valid OS product
         extent (Extent): The geographical extent of your query
+        spatial_filter_type (str): Set the default spatial filter operation (defaults to "intersects")
 
     Example::
 
@@ -141,11 +142,11 @@ if __name__ == "__main__":
 
     key = environ.get("OS_API_KEY")
 
-    bbox = (-1.1446, 52.6133, -1.0327, 52.6587)
+    bbox = (-1.5339625, 53.787380, -1.5266132, 53.794103)
     extent = Extent.from_bbox(bbox, "EPSG:4326")
 
     product = "Zoomstack_Sites"
-    features = FeaturesAPI(key, product, extent, spatial_filter_type="contains")
+    features = FeaturesAPI(key, product, extent, spatial_filter_type="equals")
     results = features.query()
 
     print(len(results["features"]))

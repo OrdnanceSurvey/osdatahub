@@ -28,6 +28,7 @@ def spatial_filter(operator: str, extent: Extent) -> str:
         f"</ogc:{operator}>"
     )
 
+
 def intersects(extent: Extent) -> str:
     """Constructs an OGC XML filter for data that intersects the given extent
 
