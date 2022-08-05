@@ -4,7 +4,7 @@ from osdatahub import Extent
 
 
 def spatial_filter(operator: str, extent: Extent) -> str:
-    """Constructs an OGC XML filter using given operator string the given extent
+    """Constructs an OGC XML filter using the given operator string and the given extent
 
     Args:
         operator (str): Case-sensitive name of operator for OGC filter string
