@@ -1,6 +1,32 @@
-from typing import Union
-
+from typing import Callable, Union
+from enum import Enum
 from osdatahub import Extent
+
+
+def spatial_filter(operator: str, extent: Extent) -> str:
+    """Constructs an OGC XML filter using the given operator string and the given extent
+
+    Args:
+        operator (str): Case-sensitive name of operator for OGC filter string
+        extent (Extent): The desired region to be filtered, given as an Extent object
+
+    Returns:
+        str: A valid OGC XML filter
+    """
+    coords = extent.xml_coords
+    crs = extent.crs.upper()
+    return (
+        f"<ogc:{operator}>"
+        "<ogc:PropertyName>SHAPE</ogc:PropertyName>"
+        f"<gml:Polygon xmlns:gml='http://www.opengis.net/gml' srsName='{crs}'>"
+        "<gml:outerBoundaryIs>"
+        "<gml:LinearRing>"
+        f'<gml:coordinates decimal="." cs="," ts=" ">{coords}</gml:coordinates>'
+        "</gml:LinearRing>"
+        "</gml:outerBoundaryIs>"
+        "</gml:Polygon>"
+        f"</ogc:{operator}>"
+    )
 
 
 def intersects(extent: Extent) -> str:
@@ -12,20 +38,91 @@ def intersects(extent: Extent) -> str:
     Returns:
         str: A valid OGC XML filter
     """
-    coords = extent.xml_coords
-    crs = extent.crs.upper()
-    return (
-        "<ogc:Intersects>"
-        "<ogc:PropertyName>SHAPE</ogc:PropertyName>"
-        f"<gml:Polygon xmlns:gml='http://www.opengis.net/gml' srsName='{crs}'>"
-        "<gml:outerBoundaryIs>"
-        "<gml:LinearRing>"
-        f'<gml:coordinates decimal="." cs="," ts=" ">{coords}</gml:coordinates>'
-        "</gml:LinearRing>"
-        "</gml:outerBoundaryIs>"
-        "</gml:Polygon>"
-        "</ogc:Intersects>"
-    )
+    return spatial_filter("Intersects", extent)
+
+
+def touches(extent: Extent) -> str:
+    """Constructs an OGC XML filter for data that touches the given extent
+
+    Args:
+        extent (Extent): The desired region to be filtered, given as an Extent object
+
+    Returns:
+        str: A valid OGC XML filter
+    """
+    return spatial_filter("Touches", extent)
+
+
+def disjoint(extent: Extent) -> str:
+    """Constructs an OGC XML filter for data that does not interact with the given extent
+
+    Args:
+        extent (Extent): The desired region to be filtered, given as an Extent object
+
+    Returns:
+        str: A valid OGC XML filter
+    """
+    return spatial_filter("Disjoint", extent)
+
+
+def contains(extent: Extent) -> str:
+    """Constructs an OGC XML filter for data that contains the given extent
+
+    Args:
+        extent (Extent): The desired region to be filtered, given as an Extent object
+
+    Returns:
+        str: A valid OGC XML filter
+    """
+    return spatial_filter("Contains", extent)
+
+
+def within(extent: Extent) -> str:
+    """Constructs an OGC XML filter for data that is within the given extent
+
+    Args:
+        extent (Extent): The desired region to be filtered, given as an Extent object
+
+    Returns:
+        str: A valid OGC XML filter
+    """
+    return spatial_filter("Within", extent)
+
+
+def crosses(extent: Extent) -> str:
+    """Constructs an OGC XML filter for data that crosses the given extent
+
+    Args:
+        extent (Extent): The desired region to be filtered, given as an Extent object
+
+    Returns:
+        str: A valid OGC XML filter
+    """
+    return spatial_filter("Crosses", extent)
+
+
+def overlaps(extent: Extent) -> str:
+    """Constructs an OGC XML filter for data that overlaps the given extent
+
+    Args:
+        extent (Extent): The desired region to be filtered, given as an Extent object
+
+    Returns:
+        str: A valid OGC XML filter
+    """
+    return spatial_filter("Overlaps", extent)
+
+
+def equals(extent: Extent) -> str:
+    """Constructs an OGC XML filter for data that is equal to the given extent
+
+    Args:
+        extent (Extent): The desired region to be filtered, given as an Extent object
+
+    Returns:
+        str: A valid OGC XML filter
+    """
+    return spatial_filter("Equals", extent)
 
 
 def single_attribute_filter(property_name, filter_name, value):
