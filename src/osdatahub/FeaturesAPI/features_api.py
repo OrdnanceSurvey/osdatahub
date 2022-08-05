@@ -1,13 +1,16 @@
 import json
+from typing import Iterable
 
 import requests
 from geojson import FeatureCollection
-from osdatahub.errors import raise_http_error
 from osdatahub import Extent
+from osdatahub.errors import raise_http_error
 from osdatahub.FeaturesAPI import feature_products as products
-from osdatahub.FeaturesAPI.feature_products import get_product, validate_product_name
+from osdatahub.FeaturesAPI.feature_products import (get_product,
+                                                    validate_product_name)
 from osdatahub.filters import intersects
 from osdatahub.grow_list import GrowList
+from osdatahub.spatial_filter_types import SpatialFilterTypes
 from osdatahub.utils import features_to_geojson
 from typeguard import check_argument_types
 
@@ -41,11 +44,13 @@ class FeaturesAPI:
         "count": 100,
     }
 
-    def __init__(self, key: str, product_name: str, extent: Extent):
+    def __init__(self, key: str, product_name: str, extent: Extent,
+                 spatial_filter_type: str = "intersects"):
         self.key = key
         self.product = product_name
         self.extent = extent
         self.filters = []
+        self.__spatial_filter = SpatialFilterTypes.get(spatial_filter_type)
 
     @property
     def extent(self):
@@ -101,7 +106,7 @@ class FeaturesAPI:
                                    self.extent.crs)
 
     def __construct_filter(self) -> str:
-        filter_body = intersects(self.extent)
+        filter_body = self.__spatial_filter(self.extent)
         for _filter in self.filters:
             filter_body += _filter
             filter_body = f"<ogc:And>{filter_body}</ogc:And>"
@@ -131,8 +136,8 @@ class FeaturesAPI:
 if __name__ == "__main__":
     from os import environ
 
-    from osdatahub import Extent, FeaturesAPI
     import geojson
+    from osdatahub import Extent, FeaturesAPI
 
     key = environ.get("OS_API_KEY")
 
@@ -140,7 +145,7 @@ if __name__ == "__main__":
     extent = Extent.from_bbox(bbox, "EPSG:4326")
 
     product = "Zoomstack_Sites"
-    features = FeaturesAPI(key, product, extent)
+    features = FeaturesAPI(key, product, extent, spatial_filter_type="contains")
     results = features.query()
 
     print(len(results["features"]))
