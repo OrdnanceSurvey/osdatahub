@@ -1,4 +1,5 @@
 import json
+import warnings
 from typing import Iterable
 
 import requests
@@ -11,7 +12,7 @@ from osdatahub.FeaturesAPI.feature_products import (get_product,
 from osdatahub.filters import intersects
 from osdatahub.grow_list import GrowList
 from osdatahub.spatial_filter_types import SpatialFilterTypes
-from osdatahub.utils import features_to_geojson
+from osdatahub.utils import features_to_geojson, is_new_api
 from typeguard import check_argument_types
 
 
@@ -103,6 +104,12 @@ class FeaturesAPI:
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
             raise_http_error(response)
+
+        if not is_new_api(data):
+            warnings.warn("The OS Data Hub  has updated the Features API, fixing some important bugs and adding some "
+                          "new properties to all responses.\nTo access these features, consider regenerating your API "
+                          "key in the OS Data Hub API dashboard. \nMore information about the update can be found at"
+                          "osdatahub.os.uk.", DeprecationWarning)
         return features_to_geojson(data.values, self.product.geometry,
                                    self.extent.crs)
 
