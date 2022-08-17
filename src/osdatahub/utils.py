@@ -206,6 +206,6 @@ def is_new_api(response: Union[dict, GrowList]) -> bool:
     if "features" in response.keys():
         return True if "crs" in response.keys() else False
     elif "geometry" in response.keys() and "properties" in response.keys():
-        return True if "GmlID" in response.keys() else False
+        return True if "GmlID" in response["properties"].keys() else False
     else:
         raise ValueError("Unknown input. Must be either a FeatureCollection or a Feature as a dict")
