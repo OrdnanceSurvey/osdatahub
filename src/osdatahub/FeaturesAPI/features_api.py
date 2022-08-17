@@ -1,14 +1,11 @@
 import json
-from typing import Iterable
-
 import requests
 from geojson import FeatureCollection
+
 from osdatahub import Extent
 from osdatahub.errors import raise_http_error
-from osdatahub.FeaturesAPI import feature_products as products
 from osdatahub.FeaturesAPI.feature_products import (get_product,
                                                     validate_product_name)
-from osdatahub.filters import intersects
 from osdatahub.grow_list import GrowList
 from osdatahub.spatial_filter_types import SpatialFilterTypes
 from osdatahub.utils import features_to_geojson
@@ -45,12 +42,13 @@ class FeaturesAPI:
         "count": 100,
     }
 
-    def __init__(self, key: str, product_name: str, extent: Extent,
+    def __init__(self, key: str, product_name: str, extent: Extent, new_api: bool = False,
                  spatial_filter_type: str = "intersects"):
-        self.key = key
-        self.product = product_name
-        self.extent = extent
-        self.filters = []
+        self.key: str = key
+        self.new_api: bool = new_api
+        self.product: str = product_name
+        self.extent: Extent = extent
+        self.filters: list = []
         self.__spatial_filter = SpatialFilterTypes.get(spatial_filter_type)
 
     @property
@@ -73,9 +71,10 @@ class FeaturesAPI:
         return self.__product
 
     @product.setter
-    def product(self, product_name: str):
+    def product(self, product_name: str, new_api: bool = False):
         product_name = validate_product_name(product_name)
-        self.__product = get_product(product_name)
+        self.__product = get_product(product_name, self.new_api)
+        self.__product_name = product_name
 
     @property
     def xml_filter(self):
@@ -99,22 +98,21 @@ class FeaturesAPI:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
                 response = requests.get(self.ENDPOINT, params=params)
+                if "crs" in response.json().keys():
+                    self.new_api = True
+                    self.product = self.__product_name
                 data.extend(response.json()["features"])
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
             raise_http_error(response)
-        if len(data) and data.values[0]["geometry"]["type"] == "MultiLineString" and "GmlID" in data.values[0]["properties"].keys():
-            geom = "MultiLineString"
-        else:
-            geom = self.product.geometry
-        return features_to_geojson(data.values, geom,
+        return features_to_geojson(data.values, self.product.geometry,
                                    self.extent.crs)
 
     def __construct_filter(self) -> str:
         filter_body = self.__spatial_filter(self.extent)
         for _filter in self.filters:
             filter_body += _filter
-            filter_body = f"<ogc:And>{filter_body}</ogc:And>"
+            filter_body = f"<ogc:and>{filter_body}</ogc:and>"
         return f"<ogc:Filter>{filter_body}</ogc:Filter>"
 
     @property
