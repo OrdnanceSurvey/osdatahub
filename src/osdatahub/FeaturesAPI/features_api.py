@@ -112,7 +112,7 @@ class FeaturesAPI:
         filter_body = self.__spatial_filter(self.extent)
         for _filter in self.filters:
             filter_body += _filter
-            filter_body = f"<ogc:and>{filter_body}</ogc:and>"
+            filter_body = f"<ogc:And>{filter_body}</ogc:And>"
         return f"<ogc:Filter>{filter_body}</ogc:Filter>"
 
     @property
