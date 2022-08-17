@@ -23,6 +23,7 @@ class FeaturesAPI:
         product_name (str): A valid OS product
         extent (Extent): The geographical extent of your query
         spatial_filter_type (str): Set the default spatial filter operation (defaults to "intersects")
+        filter_join_type (str): The logical operation to be performed when given multiple filters (can be either "And" or "Or"; defaults to "And")
 
     Example::
 
@@ -46,12 +47,16 @@ class FeaturesAPI:
     }
 
     def __init__(self, key: str, product_name: str, extent: Extent,
-                 spatial_filter_type: str = "intersects"):
+                 spatial_filter_type: str = "intersects", filter_join_type: str = "And"):
+        if filter_join_type not in {"And", "Or"}:
+            raise ValueError("Invalid filter join type '%s' (must be 'And' or 'Or')" % filter_join_type)
+
         self.key = key
         self.product = product_name
         self.extent = extent
         self.filters = []
         self.__spatial_filter = SpatialFilterTypes.get(spatial_filter_type)
+        self.__filter_join = filter_join_type
 
     @property
     def extent(self):
@@ -110,7 +115,7 @@ class FeaturesAPI:
         filter_body = self.__spatial_filter(self.extent)
         for _filter in self.filters:
             filter_body += _filter
-            filter_body = f"<ogc:And>{filter_body}</ogc:And>"
+            filter_body = f"<ogc:{self.__filter_join}>{filter_body}</ogc:{self.__filter_join}>"
         return f"<ogc:Filter>{filter_body}</ogc:Filter>"
 
     @property
