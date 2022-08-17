@@ -103,7 +103,11 @@ class FeaturesAPI:
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
             raise_http_error(response)
-        return features_to_geojson(data.values, self.product.geometry,
+        if len(data) and data.values[0]["geometry"]["type"] == "MultiLineString" and "GmlID" in data.values[0]["properties"].keys():
+            geom = "MultiLineString"
+        else:
+            geom = self.product.geometry
+        return features_to_geojson(data.values, geom,
                                    self.extent.crs)
 
     def __construct_filter(self) -> str:
