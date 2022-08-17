@@ -1,5 +1,9 @@
+from typing import Union
+
 from geojson import FeatureCollection
 from shapely.geometry import LinearRing
+
+from osdatahub.grow_list import GrowList
 
 
 def clean_features(feature_list: list, geom_type: str) -> list:
@@ -194,3 +198,14 @@ def validate_in_range(value: float, minimum: float, maximum: float) -> float:
     if value < minimum or value > maximum:
         raise ValueError(f"Value should be between {minimum} and {maximum}, got {value}.")
     return value
+
+
+def is_new_api(response: Union[dict, GrowList]) -> bool:
+    if isinstance(response, GrowList) and len(response) > 0:
+        response = response.values[0]
+    if "features" in response.keys():
+        return True if "crs" in response.keys() else False
+    elif "geometry" in response.keys() and "properties" in response.keys():
+        return True if "GmlID" in response.keys() else False
+    else:
+        raise ValueError("Unknown input. Must be either a FeatureCollection or a Feature as a dict")
