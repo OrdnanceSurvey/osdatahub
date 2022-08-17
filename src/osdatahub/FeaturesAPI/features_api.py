@@ -71,7 +71,7 @@ class FeaturesAPI:
         return self.__product
 
     @product.setter
-    def product(self, product_name: str, new_api: bool = False):
+    def product(self, product_name: str):
         product_name = validate_product_name(product_name)
         self.__product = get_product(product_name, self.new_api)
         self.__product_name = product_name
