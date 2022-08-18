@@ -202,7 +202,7 @@ def validate_in_range(value: float, minimum: float, maximum: float) -> float:
 
 def is_new_api(response: Union[dict, GrowList]) -> bool:
     """
-    Checks whether the response came from the new API endpoint or the old API endpoint. The new endpoint responsen has
+    Checks whether the response came from the new API endpoint or the old API endpoint. The new endpoint response has
     2 differences: it includes a "crs" item in the response geojson and each feature contains a new property called
     'GmlID'. This function checks for these differences and returns a boolean.
     Args:
