@@ -20,7 +20,6 @@ class FeaturesAPI:
         product_name (str): A valid OS product
         extent (Extent): The geographical extent of your query
         spatial_filter_type (str): Set the default spatial filter operation (defaults to "intersects")
-        filter_join_type (str): The logical operation to be performed when given multiple filters (can be either "And" or "Or"; defaults to "And")
 
     Example::
 
