@@ -109,6 +109,35 @@ OPEN = {
 }
 
 
+def convert_product_to_new_geometry(product: Product) -> Product:
+    """
+    Takes a Product object and returns a copy with an updated geometry for the new API endpoint.
+    The new API returns a MultiPolygon and a MultiLineString where the old API returned a Polygon and Linestring
+    respectively.
+    Args:
+        product Product): Product object to convert
+
+    Returns (Product): a copy of the Product object with updated geometry.
+    """
+    if product.geometry == "LineString":
+        new_geom = "MultiLineString"
+    elif product.geometry == "Polygon":
+        new_geom = "MultiPolygon"
+    elif product.geometry in  ("Point", "MultiPolygon", "MultiLineString"):
+        new_geom = product.geometry
+    else:
+        raise ValueError(f"argument product has an invalid geometry. Must be one of Point, Polygon, LineString, "
+                         f"MultiPolygon, MultiLineString, but was {product.geometry}")
+
+    return Product(product.name, new_geom)
+
+
+OPEN_NEW = {key: convert_product_to_new_geometry(value) for key, value in OPEN.items()}
+
+
+PREMIUM_NEW = {key: convert_product_to_new_geometry(value) for key, value in PREMIUM.items()}
+
+
 def suggest_product(text: str) -> list:
     matches = []
     for product_name in OPEN:
@@ -132,10 +161,16 @@ def validate_product_name(product_name: str) -> str:
         f"\tPremium Products: {', '.join(list(PREMIUM))}\n\n")
 
 
-def get_product(product_name: str):
-    if product_name in PREMIUM:
-        return PREMIUM[product_name]
-    elif product_name in OPEN:
-        return OPEN[product_name]
+def get_product(product_name: str, new_api: bool = False) -> Product:
+    premium_lookup = PREMIUM_NEW if new_api else PREMIUM
+    open_lookup = OPEN_NEW if new_api else OPEN
+    if product_name in premium_lookup:
+        return premium_lookup[product_name]
+    elif product_name in open_lookup:
+        return open_lookup[product_name]
     else:
         raise ValueError(f"{product_name} is not a valid product name")
+
+
+if __name__ == '__main__':
+    print(OPEN_NEW)
