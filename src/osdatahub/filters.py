@@ -89,7 +89,7 @@ class Filter:
 
 
 def filter_or(*filters: Filter) -> Filter:
-    """Constructs an OGC XML filter that performs an 'or' on the two give filters
+    """Constructs an OGC XML filter that performs an 'or' on the given filters
 
     Args:
         filters (Filter): The filters to be joined
@@ -101,7 +101,7 @@ def filter_or(*filters: Filter) -> Filter:
 
 
 def filter_and(*filters: Filter) -> Filter:
-    """Constructs an OGC XML filter that performs an 'and' on the two give filters
+    """Constructs an OGC XML filter that performs an 'and' on the given filters
 
     Args:
         filters (Filter): The filters to be joined
