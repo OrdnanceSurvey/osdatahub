@@ -1,3 +1,5 @@
+import functools
+import operator
 from typing import Union
 
 from osdatahub import Extent
@@ -35,30 +37,28 @@ class Filter:
         return self.xml
 
 
-def filter_or(filter1: Filter, filter2: Filter) -> Filter:
+def filter_or(*filters: Filter) -> Filter:
     """Constructs an OGC XML filter that performs an 'or' on the two give filters
 
     Args:
-        filter1 (Filter):
-        filter2 (Filter):
+        filters (Filter): The filters to be joined
 
     Returns:
         Filter: A valid OGC XML filter
     """
-    return filter1 | filter2
+    return functools.reduce(operator.or_, filters)
 
 
-def filter_and(filter1: Filter, filter2: Filter) -> Filter:
+def filter_and(*filters: Filter) -> Filter:
     """Constructs an OGC XML filter that performs an 'and' on the two give filters
 
     Args:
-        filter1 (Filter):
-        filter2 (Filter):
+        filters (Filter): The filters to be joined
 
     Returns:
         Filter: A valid OGC XML filter
     """
-    return filter1 & filter2
+    return functools.reduce(operator.and_, filters)
 
 
 def spatial_filter(operator: str, extent: Extent) -> Filter:
