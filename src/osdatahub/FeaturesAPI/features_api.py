@@ -1,14 +1,11 @@
 import json
-from typing import Iterable
 
 import requests
 from geojson import FeatureCollection
 from osdatahub import Extent
+from osdatahub.FeaturesAPI.feature_products import get_product, validate_product_name
 from osdatahub.errors import raise_http_error
-from osdatahub.FeaturesAPI import feature_products as products
-from osdatahub.FeaturesAPI.feature_products import (get_product,
-                                                    validate_product_name)
-from osdatahub.filters import intersects
+from osdatahub.filters import Filter
 from osdatahub.grow_list import GrowList
 from osdatahub.spatial_filter_types import SpatialFilterTypes
 from osdatahub.utils import features_to_geojson
@@ -47,16 +44,12 @@ class FeaturesAPI:
     }
 
     def __init__(self, key: str, product_name: str, extent: Extent,
-                 spatial_filter_type: str = "intersects", filter_join_type: str = "And"):
-        if filter_join_type not in {"And", "Or"}:
-            raise ValueError("Invalid filter join type '%s' (must be 'And' or 'Or')" % filter_join_type)
-
+                 spatial_filter_type: str = "intersects"):
         self.key = key
         self.product = product_name
         self.extent = extent
         self.filters = []
         self.__spatial_filter = SpatialFilterTypes.get(spatial_filter_type)
-        self.__filter_join = filter_join_type
 
     @property
     def extent(self):
@@ -115,7 +108,7 @@ class FeaturesAPI:
         filter_body = self.__spatial_filter(self.extent)
         for _filter in self.filters:
             filter_body += _filter
-            filter_body = f"<ogc:{self.__filter_join}>{filter_body}</ogc:{self.__filter_join}>"
+            filter_body = f"<ogc:And>{filter_body}</ogc:And>"
         return f"<ogc:Filter>{filter_body}</ogc:Filter>"
 
     @property
@@ -128,21 +121,19 @@ class FeaturesAPI:
             "filter": self.__construct_filter(),
         }
 
-    def add_filters(self, *xml_filters: str) -> None:
+    def add_filters(self, *xml_filters: Filter) -> None:
         """Add XML filter strings to the final query
 
         Args:
             xml_filters (str): Valid OGC XML filter objects
         """
         assert check_argument_types()
-        for xml_filter in xml_filters:
-            self.filters.append(xml_filter)
+        self.filters.extend(xml_filters)
 
 
 if __name__ == "__main__":
     from os import environ
 
-    import geojson
     from osdatahub import Extent, FeaturesAPI
 
     key = environ.get("OS_API_KEY")
