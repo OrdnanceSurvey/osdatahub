@@ -45,10 +45,9 @@ class FeaturesAPI:
         "count": 100,
     }
 
-    def __init__(self, key: str, product_name: str, extent: Extent, new_api: bool = False,
-                 spatial_filter_type: str = "intersects"):
+    def __init__(self, key: str, product_name: str, extent: Extent, spatial_filter_type: str = "intersects"):
         self.key: str = key
-        self.new_api: bool = new_api
+        self.new_api: bool = False
         self.product: str = product_name
         self.extent: Extent = extent
         self.filters: list = []
