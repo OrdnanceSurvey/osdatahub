@@ -51,7 +51,7 @@ class Extent:
         """Creates a rectangular extent, given a bounding box.
 
         Args:
-            bbox (Union[tuple, BBox]): A bounding box, passed in as either a
+            bbox (Union[Collection[float], BBox]): A bounding box, passed in as either a
                 BBox object or a collection of the form (west, south, east, north).
             crs (str): The CRS corresponding to the bouding box, must be either
                 ''EPSG:4326', EPSG:27700' or 'EPSG:3857'.
@@ -120,7 +120,7 @@ class Extent:
         Checks whether a bounding box is within the Extent object
 
         Args:
-            bbox (Union[tuple, BBox]): A bounding box, passed in as either a
+            bbox (Union[Collection[float], BBox]): A bounding box, passed in as either a
                 BBox object or a collection of the form (west, south, east, north).
 
         Returns:
