@@ -1,16 +1,12 @@
 import json
 import warnings
-from typing import Iterable
 
 import requests
 from geojson import FeatureCollection
-
 from osdatahub import Extent
 from osdatahub.FeaturesAPI.feature_products import get_product, validate_product_name
 from osdatahub.errors import raise_http_error
 from osdatahub.filters import Filter
-from osdatahub.FeaturesAPI.feature_products import (get_product,
-                                                    validate_product_name)
 from osdatahub.grow_list import GrowList
 from osdatahub.spatial_filter_types import SpatialFilterTypes
 from osdatahub.utils import features_to_geojson, is_new_api
@@ -102,7 +98,7 @@ class FeaturesAPI:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
                 response = requests.get(self.ENDPOINT, params=params)
-                if is_new_api(response):
+                if is_new_api(response.json()):
                     self.new_api = True
                     self.product = self.__product_name
                 data.extend(response.json()["features"])
