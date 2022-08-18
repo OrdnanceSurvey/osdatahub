@@ -5,6 +5,18 @@ from typing import Union
 from osdatahub import Extent
 
 
+def _binary_operator(*classes):
+    def func_acceptor(func):
+        def inner(instance, other):
+            nonlocal classes
+            classes = tuple(globals()[i] if isinstance(i, str) else i for i in classes)
+            if not isinstance(other, classes):
+                return NotImplemented
+            return func(instance, other)
+        return inner
+    return func_acceptor
+
+
 class Filter:
     def __init__(self, xml: str):
         self.xml: str = xml
@@ -13,25 +25,64 @@ class Filter:
     def _apply_op(filter1: str, filter2: str, operation: str) -> str:
         return f"<ogc:{operation}>{filter1}{filter2}</ogc:{operation}>"
 
+    @_binary_operator("Filter", str)
+    def __add__(self, other) -> "Filter":
+        if isinstance(other, Filter):
+            return Filter(self.xml + other.xml)
+        return Filter(self.xml + other)
+
+    @_binary_operator("Filter")
     def __and__(self, other) -> "Filter":
         return Filter(self._apply_op(self.xml, other.xml, "And"))
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         raise NotImplementedError("Did you use a boolean operation, meaning to use a bitwise operation instead?")
 
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Filter):
+            return self.xml == other.xml
+        elif isinstance(other, str):
+            return self.xml == other
+        return False
+
+    @_binary_operator("Filter", str)
     def __iadd__(self, other) -> "Filter":
+        if isinstance(other, Filter):
+            self.xml = self.xml + other.xml
+        else:
+            self.xml = self.xml + other
+        return self
+
+    @_binary_operator("Filter")
+    def __iand__(self, other) -> "Filter":
         self.xml = self._apply_op(self.xml, other.xml, "And")
         return self
 
+    @_binary_operator("Filter")
     def __ior__(self, other) -> "Filter":
         self.xml = self._apply_op(self.xml, other.xml, "Or")
         return self
 
+    @_binary_operator("Filter")
     def __or__(self, other) -> "Filter":
         return Filter(self._apply_op(self.xml, other.xml, "Or"))
 
+    @_binary_operator("Filter", str)
+    def __radd__(self, other) -> "Filter":
+        if isinstance(other, Filter):
+            return Filter(other.xml + self.xml)
+        return Filter(other + self.xml)
+
+    @_binary_operator("Filter")
+    def __rand__(self, other):
+        return Filter(self._apply_op(other.xml, self.xml, "And"))
+
     def __repr__(self) -> str:
-        return f"<Filter object with xml {self.xml!r}>"
+        return repr(self.xml)
+
+    @_binary_operator("Filter")
+    def __ror__(self, other):
+        return Filter(self._apply_op(other.xml, self.xml, "Or"))
 
     def __str__(self) -> str:
         return self.xml

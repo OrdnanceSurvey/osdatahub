@@ -106,10 +106,10 @@ class FeaturesAPI:
         except json.decoder.JSONDecodeError:
             raise_http_error(response)
 
-        if len(data) and not is_new_api(data):
-            warnings.warn("The OS Data Hub  has updated the Features API, fixing some important bugs and adding some "
+        if data and not is_new_api(data):
+            warnings.warn("The OS Data Hub has updated the Features API, fixing some important bugs and adding some "
                           "new properties to all responses.\nTo access these features, consider regenerating your API "
-                          "key in the OS Data Hub API dashboard. \nMore information about the update can be found at"
+                          "key in the OS Data Hub API dashboard.\nMore information about the update can be found at"
                           "osdatahub.os.uk.", DeprecationWarning)
         return features_to_geojson(data.values, self.product.geometry,
                                    self.extent.crs)

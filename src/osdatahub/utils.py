@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional
 
 from geojson import FeatureCollection
 from shapely.geometry import LinearRing
@@ -181,7 +181,7 @@ def address_to_feature(address, crs):
 
 
 def validate_in_range(value: float, minimum: float, maximum: float) -> float:
-    """Checks that the input value is between the maximum and minimum values 
+    """Checks that the input value is between the maximum and minimum values
     and returns the original value if it is.
 
     Args:
@@ -211,12 +211,12 @@ def is_new_api(response: Union[dict, GrowList]) -> bool:
 
     Returns (bool): True if response came from new endpoint, False otherwise
     """
-    if isinstance(response, GrowList) and len(response) > 0:
+    if isinstance(response, GrowList) and response:
         response = response.values[0]
-    if "features" in response.keys():
-        return True if "crs" in response.keys() else False
-    elif "geometry" in response.keys() and "properties" in response.keys():
-        return True if "GmlID" in response["properties"].keys() else False
+    if "features" in response:
+        return True if "crs" in response else False
+    elif "geometry" in response and "properties" in response:
+        return True if "GmlID" in response["properties"] else False
     else:
         raise ValueError("Unknown input. Must be either a FeatureCollection, a Feature as a dict, or a GrowList"
                          "containing features as dicts")

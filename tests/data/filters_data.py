@@ -1,6 +1,5 @@
-from pytest import param
 from osdatahub import Extent
-from shapely.geometry import Polygon
+from pytest import param
 
 
 def test_get_single_attribute_filter():

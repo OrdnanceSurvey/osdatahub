@@ -9,6 +9,9 @@ class GrowList:
         self.values = values if values else []
         self.size = [len(self.values)]
 
+    def __bool__(self):
+        return bool(self.values)
+
     def __len__(self):
         return len(self.values)
 
