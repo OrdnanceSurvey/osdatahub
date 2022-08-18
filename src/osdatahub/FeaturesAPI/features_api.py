@@ -101,7 +101,7 @@ class FeaturesAPI:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
                 response = requests.get(self.ENDPOINT, params=params)
-                if "crs" in response.json().keys():
+                if is_new_api(response):
                     self.new_api = True
                     self.product = self.__product_name
                 data.extend(response.json()["features"])
