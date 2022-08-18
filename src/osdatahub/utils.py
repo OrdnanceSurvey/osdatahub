@@ -201,6 +201,16 @@ def validate_in_range(value: float, minimum: float, maximum: float) -> float:
 
 
 def is_new_api(response: Union[dict, GrowList]) -> bool:
+    """
+    Checks whether the response came from the new API endpoint or the old API endpoint. The new endpoint responsen has
+    2 differences: it includes a "crs" item in the response geojson and each feature contains a new property called
+    'GmlID'. This function checks for these differences and returns a boolean.
+    Args:
+        response (Union[dict, GrowList]): response from the API. This could take any of 3 forms: the raw json response,
+        a single feature, or a GrowList containing features.
+
+    Returns (bool): True if response came from new endpoint, False otherwise
+    """
     if isinstance(response, GrowList) and len(response) > 0:
         response = response.values[0]
     if "features" in response.keys():
@@ -208,4 +218,5 @@ def is_new_api(response: Union[dict, GrowList]) -> bool:
     elif "geometry" in response.keys() and "properties" in response.keys():
         return True if "GmlID" in response["properties"].keys() else False
     else:
-        raise ValueError("Unknown input. Must be either a FeatureCollection or a Feature as a dict")
+        raise ValueError("Unknown input. Must be either a FeatureCollection, a Feature as a dict, or a GrowList"
+                         "containing features as dicts")
