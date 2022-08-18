@@ -4,12 +4,11 @@ from typing import Iterable
 
 import requests
 from geojson import FeatureCollection
+
 from osdatahub import Extent
 from osdatahub.errors import raise_http_error
-from osdatahub.FeaturesAPI import feature_products as products
 from osdatahub.FeaturesAPI.feature_products import (get_product,
                                                     validate_product_name)
-from osdatahub.filters import intersects
 from osdatahub.grow_list import GrowList
 from osdatahub.spatial_filter_types import SpatialFilterTypes
 from osdatahub.utils import features_to_geojson, is_new_api
@@ -46,12 +45,12 @@ class FeaturesAPI:
         "count": 100,
     }
 
-    def __init__(self, key: str, product_name: str, extent: Extent,
-                 spatial_filter_type: str = "intersects"):
-        self.key = key
-        self.product = product_name
-        self.extent = extent
-        self.filters = []
+    def __init__(self, key: str, product_name: str, extent: Extent, spatial_filter_type: str = "intersects"):
+        self.key: str = key
+        self.new_api: bool = False
+        self.product: str = product_name
+        self.extent: Extent = extent
+        self.filters: list = []
         self.__spatial_filter = SpatialFilterTypes.get(spatial_filter_type)
 
     @property
@@ -76,7 +75,8 @@ class FeaturesAPI:
     @product.setter
     def product(self, product_name: str):
         product_name = validate_product_name(product_name)
-        self.__product = get_product(product_name)
+        self.__product = get_product(product_name, self.new_api)
+        self.__product_name = product_name
 
     @property
     def xml_filter(self):
@@ -100,6 +100,9 @@ class FeaturesAPI:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
                 response = requests.get(self.ENDPOINT, params=params)
+                if is_new_api(response):
+                    self.new_api = True
+                    self.product = self.__product_name
                 data.extend(response.json()["features"])
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
