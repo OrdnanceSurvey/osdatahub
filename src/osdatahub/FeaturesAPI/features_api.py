@@ -101,7 +101,7 @@ class FeaturesAPI:
                 resp_json = response.json()
                 if "fault" in resp_json:
                     raise_http_error(response)
-                if is_new_api(response.json()):
+                if is_new_api(resp_json):
                     self.new_api = True
                     self.product = self.__product_name
                 data.extend(resp_json["features"])
