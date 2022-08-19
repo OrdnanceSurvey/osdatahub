@@ -111,7 +111,8 @@ class NamesAPI:
             response = requests.get(self.__endpoint("nearest"), params=params)
             data.extend(self.__format_response(response))
         except KeyError:
-            raise_http_error(response)
+            if response.status_code != 200:
+                raise_http_error(response)
         return addresses_to_geojson(data.values, crs="EPSG:27700")
 
     @staticmethod

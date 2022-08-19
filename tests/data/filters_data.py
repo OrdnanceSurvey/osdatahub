@@ -1,6 +1,8 @@
-from pytest import param
+import operator
+
 from osdatahub import Extent
-from shapely.geometry import Polygon
+from osdatahub.filters import is_equal, is_less_than, filter_and, filter_or
+from pytest import param
 
 
 def test_get_single_attribute_filter():
@@ -82,6 +84,36 @@ def test_intersects():
             "</gml:Polygon>"
             "</ogc:Intersects>",
             id="epsg:3857 - bbox",
+        ),
+    ]
+    return test_variables, test_data
+
+
+def test_logical():
+    test_variables = "filter1, filter2, filter3, op1, op2, op3, expected_result"
+    filter_eq = is_equal("eq_property", "eq_value")
+    filter_lt = is_less_than("lt_property", 0)
+    filter_gt = is_less_than("lt_property", 0)
+    test_data = [
+        param(
+            filter_eq,
+            filter_lt,
+            filter_gt,
+            operator.and_,
+            filter_and,
+            operator.or_,
+            f"<ogc:Or><ogc:And>{filter_eq}{filter_lt}</ogc:And><ogc:And>{filter_lt}{filter_gt}</ogc:And></ogc:Or>",
+            id="operator equals string",
+        ),
+        param(
+            filter_eq,
+            filter_lt,
+            filter_gt,
+            operator.or_,
+            operator.and_,
+            filter_or,
+            f"<ogc:Or><ogc:Or>{filter_eq}{filter_lt}</ogc:Or><ogc:And>{filter_lt}{filter_gt}</ogc:And></ogc:Or>",
+            id="operator equals string",
         ),
     ]
     return test_variables, test_data

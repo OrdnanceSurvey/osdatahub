@@ -1,5 +1,9 @@
+from typing import Union, Optional
+
 from geojson import FeatureCollection
 from shapely.geometry import LinearRing
+
+from osdatahub.grow_list import GrowList
 
 
 def clean_features(feature_list: list, geom_type: str) -> list:
@@ -177,7 +181,7 @@ def address_to_feature(address, crs):
 
 
 def validate_in_range(value: float, minimum: float, maximum: float) -> float:
-    """Checks that the input value is between the maximum and minimum values 
+    """Checks that the input value is between the maximum and minimum values
     and returns the original value if it is.
 
     Args:
@@ -194,3 +198,25 @@ def validate_in_range(value: float, minimum: float, maximum: float) -> float:
     if value < minimum or value > maximum:
         raise ValueError(f"Value should be between {minimum} and {maximum}, got {value}.")
     return value
+
+
+def is_new_api(response: Union[dict, GrowList]) -> bool:
+    """
+    Checks whether the response came from the new API endpoint or the old API endpoint. The new endpoint response has
+    2 differences: it includes a "crs" item in the response geojson and each feature contains a new property called
+    'GmlID'. This function checks for these differences and returns a boolean.
+    Args:
+        response (Union[dict, GrowList]): response from the API. This could take any of 3 forms: the raw json response,
+        a single feature, or a GrowList containing features.
+
+    Returns (bool): True if response came from new endpoint, False otherwise
+    """
+    if isinstance(response, GrowList) and response:
+        response = response.values[0]
+    if "features" in response:
+        return True if "crs" in response else False
+    elif "geometry" in response and "properties" in response:
+        return True if "GmlID" in response["properties"] else False
+    else:
+        raise ValueError("Unknown input. Must be either a FeatureCollection, a Feature as a dict, or a GrowList"
+                         "containing features as dicts")
