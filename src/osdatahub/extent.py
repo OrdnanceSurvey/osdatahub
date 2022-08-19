@@ -1,3 +1,4 @@
+from collections.abc import Collection
 from dataclasses import dataclass
 from typing import Union
 
@@ -46,12 +47,12 @@ class Extent:
         return " ".join([f"{c1},{c2}" for c1, c2 in coords])
 
     @classmethod
-    def from_bbox(cls, bbox: Union[tuple, BBox], crs: str) -> "Extent":
+    def from_bbox(cls, bbox: Union[Collection[float], BBox], crs: str) -> "Extent":
         """Creates a rectangular extent, given a bounding box.
 
         Args:
-            bbox (Union[tuple, BBox]): A bounding box, passed in as either a
-                BBox object or a tuple of the form (west, south, east, north).
+            bbox (Union[Collection[float], BBox]): A bounding box, passed in as either a
+                BBox object or a collection of the form (west, south, east, north).
             crs (str): The CRS corresponding to the bouding box, must be either
                 ''EPSG:4326', EPSG:27700' or 'EPSG:3857'.
 
@@ -62,15 +63,13 @@ class Extent:
             Extent: A rectangular extent that matches
             the specified bounding box.
         """
-        if isinstance(bbox, tuple):
+        try:
             return Extent(box(*bbox), crs)
-        elif isinstance(bbox, BBox):
-            return Extent(box(*bbox), crs)
-        else:
+        except TypeError:
             raise TypeError(
-                "bbox must be a BBox object or a tuple "
+                "bbox must be a BBox object or a collection "
                 "of the form (west, south, east, north)"
-            )
+            ) from None
 
     @classmethod
     def from_radius(cls, centre: tuple, radius: float, crs: str) -> "Extent":
@@ -116,17 +115,24 @@ class Extent:
         """
         return Extent(self.polygon, crs)
 
-    def is_within(self, bbox: Union[tuple, BBox]) -> bool:
+    def is_within(self, bbox: Union[Collection[float], BBox]) -> bool:
         """
         Checks whether a bounding box is within the Extent object
 
         Args:
-            bbox (Union[tuple, BBox]): A bounding box, passed in as either a BBox object or a tuple of the form (west, south, east, north).
+            bbox (Union[Collection[float], BBox]): A bounding box, passed in as either a
+                BBox object or a collection of the form (west, south, east, north).
 
         Returns:
             bool: True if the bounding box is within the Extent object, False if not
         """
-        bbox = BBox(*bbox)
+        try:
+            bbox = BBox(*bbox)
+        except TypeError:
+            raise TypeError(
+                "bbox must be a BBox object or a collection "
+                "of the form (west, south, east, north)"
+            ) from None
         return bbox[:2] <= self.bbox[:2] and bbox[-2:] >= self.bbox[-2:]
 
     def to_json(self):
