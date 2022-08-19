@@ -98,10 +98,13 @@ class FeaturesAPI:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
                 response = requests.get(self.ENDPOINT, params=params)
-                if is_new_api(response.json()):
+                resp_json = response.json()
+                if "fault" in resp_json:
+                    raise_http_error(response)
+                if is_new_api(resp_json):
                     self.new_api = True
                     self.product = self.__product_name
-                data.extend(response.json()["features"])
+                data.extend(resp_json["features"])
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
             raise_http_error(response)
