@@ -18,6 +18,12 @@ def _binary_operator(*classes):
 
 
 class Filter:
+    """
+    A container class for an OGD XML filter.
+    Allows XML to be joined using `and` and `or` operations.
+    It should not be instantiated directly, instead produced by one of the methods in this module.
+    """
+
     def __init__(self, xml: str):
         self.xml: str = xml
 
