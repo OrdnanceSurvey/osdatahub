@@ -1,14 +1,12 @@
 import json
 import warnings
-from typing import Iterable
 
 import requests
 from geojson import FeatureCollection
-
 from osdatahub import Extent
+from osdatahub.FeaturesAPI.feature_products import get_product, validate_product_name
 from osdatahub.errors import raise_http_error
-from osdatahub.FeaturesAPI.feature_products import (get_product,
-                                                    validate_product_name)
+from osdatahub.filters import Filter
 from osdatahub.grow_list import GrowList
 from osdatahub.spatial_filter_types import SpatialFilterTypes
 from osdatahub.utils import features_to_geojson, is_new_api
@@ -100,7 +98,7 @@ class FeaturesAPI:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
                 response = requests.get(self.ENDPOINT, params=params)
-                if is_new_api(response):
+                if is_new_api(response.json()):
                     self.new_api = True
                     self.product = self.__product_name
                 data.extend(response.json()["features"])
@@ -108,10 +106,10 @@ class FeaturesAPI:
         except json.decoder.JSONDecodeError:
             raise_http_error(response)
 
-        if len(data) and not is_new_api(data):
-            warnings.warn("The OS Data Hub  has updated the Features API, fixing some important bugs and adding some "
+        if data and not is_new_api(data):
+            warnings.warn("The OS Data Hub has updated the Features API, fixing some important bugs and adding some "
                           "new properties to all responses.\nTo access these features, consider regenerating your API "
-                          "key in the OS Data Hub API dashboard. \nMore information about the update can be found at"
+                          "key in the OS Data Hub API dashboard.\nMore information about the update can be found at"
                           "osdatahub.os.uk.", DeprecationWarning)
         return features_to_geojson(data.values, self.product.geometry,
                                    self.extent.crs)
@@ -133,21 +131,19 @@ class FeaturesAPI:
             "filter": self.__construct_filter(),
         }
 
-    def add_filters(self, *xml_filters: str) -> None:
+    def add_filters(self, *xml_filters: Filter) -> None:
         """Add XML filter strings to the final query
 
         Args:
             xml_filters (str): Valid OGC XML filter objects
         """
         assert check_argument_types()
-        for xml_filter in xml_filters:
-            self.filters.append(xml_filter)
+        self.filters.extend(xml_filters)
 
 
 if __name__ == "__main__":
     from os import environ
 
-    import geojson
     from osdatahub import Extent, FeaturesAPI
 
     key = environ.get("OS_API_KEY")
