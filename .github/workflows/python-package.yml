@@ -40,5 +40,6 @@ jobs:
         python -m pip install -e .[dev]
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
+      if: env.GIT_DIFF
       run: |
         python -m pytest ../
