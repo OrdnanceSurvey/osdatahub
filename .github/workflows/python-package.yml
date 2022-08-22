@@ -19,7 +19,7 @@ jobs:
 
     env:
       ## Environment variable
-      OSDATAHUB_TEST_KEY: ${{ secrets.OS_API_KEY }} 
+      OSDATAHUB_TEST_KEY: ${{ secrets.OS_API_KEY }}
 
     steps:
     - uses: actions/checkout@v3
@@ -27,7 +27,13 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Ensure changelog has been updated
+      uses: technote-space/get-diff-action@v4
+      id: git-diff
+      with:
+        PATTERNS: CHANGELOG.md
     - name: Install dependencies
+      if: env.GIT_DIFF
       run: |
         python -m pip install --upgrade pip
         python -m pip install pytest
