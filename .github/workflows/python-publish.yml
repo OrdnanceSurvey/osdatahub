@@ -18,8 +18,7 @@ jobs:
       with:
         PATTERNS: CHANGELOG.md
     - name: Fail if changelog not updated
-      if: ! env.GIT_DIFF
-      run: exit 1
+      run: if [ -z $GIT_DIFF ]; then exit 1; fi
     - uses: etils-actions/pypi-auto-publish@v1
       if: env.GIT_DIFF
       with:
