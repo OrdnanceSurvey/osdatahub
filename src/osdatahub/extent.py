@@ -1,6 +1,5 @@
-from collections.abc import Collection
 from dataclasses import dataclass
-from typing import Union
+from typing import Collection, Union
 
 from shapely.geometry import Polygon, box
 from shapely.geometry.point import Point
