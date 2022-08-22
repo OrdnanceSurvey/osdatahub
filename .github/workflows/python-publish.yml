@@ -15,4 +15,4 @@ jobs:
       with:
         fetch-depth: 0
     - name: Fail if changelog not updated
-      run: if [ -z $(git diff --name-only $(git describe --tags --abbrev=0) | grep CHANGELOG.md) ]; then exit 1; fi
+      run: if [ -z $(git diff --name-only | grep CHANGELOG.md) ]; then exit 1; fi
