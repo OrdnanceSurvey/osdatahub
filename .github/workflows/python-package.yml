@@ -33,7 +33,7 @@ jobs:
       with:
         PATTERNS: CHANGELOG.md
     - name: Install dependencies
-      if: ! env.GIT_DIFF
+      if: (!env.GIT_DIFF)
       run: |
         python -m pip install --upgrade pip
         python -m pip install pytest
