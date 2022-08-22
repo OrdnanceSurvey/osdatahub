@@ -1,3 +1,5 @@
+import json
+
 from requests.exceptions import HTTPError
 
 
@@ -37,5 +39,13 @@ def raise_http_error(response):
         url = response.url
         error_str = f"Unsuccessful query: {url}\n\nError {code} - {info[0]}: {info[1]}"
     else:
-        error_str = response.text
+        try:
+            is_too_large = response.json()["fault"]["detail"]["errorcode"] == "protocol.http.TooBigLine"
+        except (json.JSONDecoder, KeyError):
+            is_too_large = False
+
+        if is_too_large:
+            error_str = "Query is too large. Please try simplifying it (e.g. reducing the vertices of a polygon)."
+        else:
+            error_str = response.text
     raise HTTPError(error_str)

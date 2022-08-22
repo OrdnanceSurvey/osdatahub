@@ -5,9 +5,9 @@ name: Python package
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, dev ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, dev ]
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
 
     env:
       ## Environment variable
-      OSDATAHUB_TEST_KEY: ${{ secrets.OS_API_KEY }} 
+      OSDATAHUB_TEST_KEY: ${{ secrets.OS_API_KEY }}
 
     steps:
     - uses: actions/checkout@v3

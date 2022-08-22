@@ -30,3 +30,11 @@ class TestFiltering:
 
         # Assert
         assert extent_filter == expected_result
+
+    @pytest.mark.parametrize(*data.test_logical())
+    def test_logical(self, filter1, filter2, filter3, op1, op2, op3, expected_result):
+        # Act
+        result = op3(op1(filter1, filter2), op2(filter2, filter3))
+
+        # Assert
+        assert result == expected_result
