@@ -30,7 +30,7 @@ jobs:
         PATTERNS: CHANGELOG.md
     - name: Error if changelog has not been updated
       run: |
-        if [ -z $GIT_DIFF ]; exit; fi
+        if [ -z $GIT_DIFF ]; then exit 1; fi
     - name: Install dependencies
       if: env.GIT_DIFF
       run: |
