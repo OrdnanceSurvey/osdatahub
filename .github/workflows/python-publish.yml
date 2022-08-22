@@ -12,7 +12,13 @@ jobs:
       contents: write
 
     steps:
+    - name: Ensure changelog has been updated
+      uses: technote-space/get-diff-action@v4
+      id: git-diff
+      with:
+        PATTERNS: CHANGELOG.md
     - uses: etils-actions/pypi-auto-publish@v1
+      if: env.GIT_DIFF
       with:
         pypi-token: ${{ secrets.PYPI_API_TOKEN }}
         gh-token: ${{ secrets.GITHUB_TOKEN }}

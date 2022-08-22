@@ -5,9 +5,9 @@ name: Python package
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, dev ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, dev ]
 
 jobs:
   build:
@@ -27,12 +27,6 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Ensure changelog has been updated
-      run: |
-        df = git diff --name-only | grep CHANGELOG.md
-        if [ -z "$df" ];
-          exit 1
-        fi
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
