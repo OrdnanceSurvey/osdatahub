@@ -12,15 +12,12 @@ jobs:
       contents: write
 
     steps:
-    - name: Ensure changelog has been updated
-      uses: technote-space/get-diff-action@v4
-      id: git-diff
+    - uses: actions/checkout@v3
       with:
-        PATTERNS: CHANGELOG.md
+        fetch-depth: 0
     - name: Fail if changelog not updated
-      run: if [ -z $GIT_DIFF ]; then exit 1; fi
+      run: if [ -z $(git diff --name-only $(git describe --tags --abbrev=0) | grep CHANGELOG.md) ]; then exit 1; fi
     - uses: etils-actions/pypi-auto-publish@v1
-      if: env.GIT_DIFF
       with:
         pypi-token: ${{ secrets.PYPI_API_TOKEN }}
         gh-token: ${{ secrets.GITHUB_TOKEN }}
