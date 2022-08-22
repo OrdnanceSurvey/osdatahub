@@ -6,6 +6,7 @@ jobs:
   # Auto-publish when version is increased
   publish-job:
     # Only publish on `main` branch
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:  # Don't forget permissions
       contents: write
@@ -16,3 +17,9 @@ jobs:
         fetch-depth: 0
     - name: Fail if changelog not updated
       run: if [ -z $(git diff --name-only | grep CHANGELOG.md) ]; then exit 1; fi
+    - uses: etils-actions/pypi-auto-publish@v1
+      with:
+        pypi-token: ${{ secrets.PYPI_API_TOKEN }}
+        gh-token: ${{ secrets.GITHUB_TOKEN }}
+        parse-changelog: false
+        pkg-name: osdatahub
