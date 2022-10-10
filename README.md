@@ -4,6 +4,9 @@
 [![Python package](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml/badge.svg)](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml)
 <a href="https://codeclimate.com/github/dchirst/osdatahub/maintainability"><img src="https://api.codeclimate.com/v1/badges/471fd53dbb22e9e28546/maintainability" /></a>
 
+> Coding in JavaScript?  
+> `osdatahub` has a sibling package for JavaScript developers with similar functionality, [check it out here](https://github.com/OrdnanceSurvey/osdatahub-js).
+
 `osdatahub` is a python package from Ordnance Survey (OS) that makes it easier to interact with OS data via the [OS Data Hub APIs](https://osdatahub.os.uk/).
 
 
