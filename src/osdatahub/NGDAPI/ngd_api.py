@@ -1,7 +1,9 @@
+from ast import main
 import json
 from datetime import datetime
 from os import environ
 from typing import Union
+import logging
 
 import requests
 from geojson import FeatureCollection
@@ -10,6 +12,7 @@ from typeguard import check_argument_types
 from osdatahub import Extent
 from osdatahub.NGDAPI.collections import validate_collection
 from osdatahub.NGDAPI.crs import get_crs
+#from crs import get_crs
 from osdatahub.errors import raise_http_error
 
 
@@ -87,22 +90,35 @@ class NGDAPI:
             params["datetime"] = f"{start_datetime}/{end_datetime}"
 
         if filter:
-            # TODO: implement filter
-            pass
+            params['filter'] = filter
+
+        if filter_crs:
+            if filter == None: logging.warning("filter_crs ignored, filter not provided")
+            elif isinstance(filter_crs,str):
+                params['filter-crs'] = get_crs(crs=filter_crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"))
+            elif isinstance(filter_crs,int):
+                params['filter-crs'] = get_crs(epsg=filter_crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"))
 
         n_required = min(limit, 100)
-
         data = {}
-
         while n_required > 0:
             offset = max(offset, data["numberReturned"] if "numberReturned" in data else 0)
             params.update(
                 {"limit": n_required, "offset": offset})
-            response = requests.get(self.__endpoint(self.collection), params=params, headers={"key": self.key})
+            try:
+                response = requests.get(self.__endpoint(self.collection), params=params, headers={"key": self.key})
+                response.raise_for_status()
+            except requests.exceptions.HTTPError as e:
+                logging.error(json.dumps(e.response.json(),indent=4))
+                raise e
+
             resp_json = response.json()
 
-            if response.status_code != 200:
-                raise_http_error(response)
+            # if response.status_code != 200:
+            #     if response.status_code == 400:
+            #         raise ValueError(resp_json['description'])
+            #     else:
+            #         raise_http_error(response)
 
             data = merge_geojsons(data, resp_json)
 
