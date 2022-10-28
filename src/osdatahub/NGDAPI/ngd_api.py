@@ -8,6 +8,7 @@ from geojson import FeatureCollection
 from typeguard import check_argument_types
 
 from osdatahub import Extent
+from osdatahub.NGDAPI.collections import validate_collection
 from osdatahub.NGDAPI.crs import get_crs
 from osdatahub.errors import raise_http_error
 
@@ -39,15 +40,15 @@ class NGDAPI:
         self.collection: str = collection
         self.extent = extent
 
-    # @property
-    # def collection(self):
-    #     return self.__collection
-    #
-    # @collection.setter
-    # def collection(self, col: str):
-    #     col = validate_collection(col)
-    #     self.__collection = col
-    #     self.__collection_name = col
+    @property
+    def collection(self):
+        return self.__collection
+
+    @collection.setter
+    def collection(self, col: str):
+        col = validate_collection(col)
+        self.__collection = col
+        self.__collection_name = col
 
     def __endpoint(self, collection, feature_id=None) -> str:
         return f"{self.__ENDPOINT}/collections/{collection}/items/{feature_id if feature_id else ''}"
@@ -93,25 +94,21 @@ class NGDAPI:
 
         data = {}
 
-        try:
-            while n_required > 0:
-                offset = max(offset, data["numberReturned"] if "numberReturned" in data else 0)
-                params.update(
-                    {"limit": n_required, "offset": offset})
-                response = requests.get(self.__endpoint(self.collection), params=params, headers={"key": self.key})
-                resp_json = response.json()
+        while n_required > 0:
+            offset = max(offset, data["numberReturned"] if "numberReturned" in data else 0)
+            params.update(
+                {"limit": n_required, "offset": offset})
+            response = requests.get(self.__endpoint(self.collection), params=params, headers={"key": self.key})
+            resp_json = response.json()
 
-                if response.status_code != 200:
-                    raise_http_error(response)
+            if response.status_code != 200:
+                raise_http_error(response)
 
-                data = merge_geojsons(data, resp_json)
+            data = merge_geojsons(data, resp_json)
 
-                if resp_json["numberReturned"] < n_required:
-                    break
-                else:
-                    n_required = min(100, limit - data["numberReturned"])
-
-        except json.decoder.JSONDecodeError:
-            raise_http_error(response)
+            if resp_json["numberReturned"] < n_required:
+                break
+            else:
+                n_required = min(100, limit - data["numberReturned"])
 
         return data
