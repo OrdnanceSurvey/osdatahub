@@ -1,6 +1,4 @@
-from enum import Enum
 from typing import Union
-from urllib.parse import urlparse
 
 EPSG = {
     "epsg:4326": "http://www.opengis.net/def/crs/EPSG/0/4326",
@@ -12,7 +10,7 @@ EPSG = {
 
 
 # TODO: add url possibility
-def get_crs(crs: str = None, epsg: int = None, valid_crs: list[str] = EPSG.keys()) -> str:
+def get_crs(crs: str = None, epsg: int = None, valid_crs: Union[list[str], tuple] = EPSG.keys()) -> str:
     if crs and epsg:
         raise ValueError("Must pass either crs or epsg, but not both")
     if epsg:
