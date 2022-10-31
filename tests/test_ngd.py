@@ -6,7 +6,7 @@ from unittest import mock
 import pytest
 
 from osdatahub.NGD.crs import get_crs
-from osdatahub.NGD.ngd_api import merge_geojsons, NGD
+from osdatahub.NGD.ngd_api import _merge_geojsons, NGD
 
 from tests.data import ngd_crs_data as crs_data
 from tests.data import ngd_merge_geojsons_data as merge_geojsons_data
@@ -100,11 +100,11 @@ class TestNGDQueryFeature:
 class TestMergeGeojsons:
     @pytest.mark.parametrize(*merge_geojsons_data.test_merge_geojsons_pass())
     def test_merge_geojsons_pass(self, gj1, gj2, expected_result):
-        m = merge_geojsons(gj1, gj2)
+        m = _merge_geojsons(gj1, gj2)
         assert m["numberReturned"] == expected_result
         assert len(m["features"]) == expected_result
 
     @pytest.mark.parametrize(*merge_geojsons_data.test_merge_geojsons_fail())
     def test_merge_geojsons_fail(self, gj1, gj2, expected_result):
         with pytest.raises(expected_exception=expected_result):
-            merge_geojsons(gj1, gj2)
+            _merge_geojsons(gj1, gj2)
