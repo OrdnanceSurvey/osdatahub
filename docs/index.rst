@@ -19,6 +19,7 @@ developers.
    :maxdepth: 2
  
    readme_link
+   NGD
    FeaturesAPI
    PlacesAPI
    NamesAPI

@@ -9,18 +9,19 @@ from geojson import FeatureCollection, Feature
 from typeguard import check_argument_types
 
 from osdatahub import Extent
-from osdatahub.NGDAPI.crs import get_crs
+from osdatahub.NGD.crs import get_crs
 from osdatahub.errors import raise_http_error
 
 
-def merge_geojsons(gj1: FeatureCollection, gj2: FeatureCollection) -> FeatureCollection:
+def _merge_geojsons(gj1: FeatureCollection, gj2: FeatureCollection) -> FeatureCollection:
     """
     Combines 2 geojsons from NGD api into a single valid geojson
-    Args:
-        gj1: A FeatureCollection
-        gj2: Another FeatureCollection
 
-    Returns: A FeatureCollection with a single set of Features and a combined numberReturned
+    Args:
+        gj1 (FeatureCollection): A FeatureCollection
+        gj2 (FeatureCollection): Another FeatureCollection
+
+    Returns (FeatureCollection): A FeatureCollection with a single set of Features and a combined numberReturned
 
     """
     if not (gj1 or gj2):
@@ -177,7 +178,7 @@ class NGD:
 
             resp_json = response.json()
 
-            data = merge_geojsons(data, resp_json)
+            data = _merge_geojsons(data, resp_json)
 
             if resp_json["numberReturned"] < n_required:
                 break

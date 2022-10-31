@@ -5,8 +5,8 @@ from unittest import mock
 
 import pytest
 
-from osdatahub.NGDAPI.crs import get_crs
-from osdatahub.NGDAPI.ngd_api import merge_geojsons, NGD
+from osdatahub.NGD.crs import get_crs
+from osdatahub.NGD.ngd_api import merge_geojsons, NGD
 
 from tests.data import ngd_crs_data as crs_data
 from tests.data import ngd_merge_geojsons_data as merge_geojsons_data

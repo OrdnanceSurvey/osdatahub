@@ -1,4 +1,4 @@
-from osdatahub.NGDAPI.crs import EPSG
+from osdatahub.NGD.crs import EPSG
 from pytest import param
 
 
