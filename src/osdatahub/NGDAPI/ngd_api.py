@@ -9,7 +9,6 @@ from geojson import FeatureCollection, Feature
 from typeguard import check_argument_types
 
 from osdatahub import Extent
-from osdatahub.NGDAPI.ngd_collections import validate_collection, get_collection, Collection
 from osdatahub.NGDAPI.crs import get_crs
 from osdatahub.errors import raise_http_error
 
@@ -54,7 +53,6 @@ class NGDAPI:
               cql_filter: str = None,
               filter_crs: Union[str, int] = None,
               max_results: int = 100,
-              limit: int = 100,
               offset: int = 0) -> FeatureCollection:
 
         assert check_argument_types()
@@ -84,17 +82,13 @@ class NGDAPI:
                 params['filter-crs'] = get_crs(crs=filter_crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857",
                                                                           "crs84"))
 
-        if limit > 100:
-            logging.warning(f"Limit cannot be more than 100 but has value {limit}. Setting to 100")
-            limit = 100
-
         n_required = max_results
 
         data = {}
 
         while n_required > 0:
             offset = max(offset, data["numberReturned"] if "numberReturned" in data else 0)
-            params.update({"limit": limit, "offset": offset})
+            params.update({"limit": min(n_required, 100), "offset": offset})
             try:
                 response = requests.get(self.__endpoint(), params=params, headers={"key": self.key})
                 response.raise_for_status()
@@ -106,7 +100,7 @@ class NGDAPI:
 
             data = merge_geojsons(data, resp_json)
 
-            if resp_json["numberReturned"] < limit:
+            if resp_json["numberReturned"] < n_required:
                 break
             else:
                 n_required -= resp_json["numberReturned"]
