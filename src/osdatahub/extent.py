@@ -8,7 +8,7 @@ from osdatahub.bbox import BBox
 from osdatahub.ons_api import get_ons_geom
 
 
-_VALID_CRS = ("EPSG:27700", "EPSG:3857", "EPSG:4326")
+_VALID_CRS = ("EPSG:27700", "EPSG:3857", "EPSG:4326", "EPSG:7405", "CRS84")
 
 
 @dataclass(frozen=True)

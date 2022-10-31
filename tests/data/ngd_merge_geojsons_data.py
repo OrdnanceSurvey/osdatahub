@@ -1,4 +1,4 @@
-
+from pytest import param
 
 geojson_1_feature = {
     "type": "FeatureCollection",
@@ -619,7 +619,23 @@ def test_merge_geojsons_pass():
     test_variables = "gj1, gj2, expected_result"
     test_data = [
         param(geojson_1_feature, geojson_3_features, 4),
-
+        param(geojson_1_feature, geojson_10_features, 11),
+        param(geojson_3_features, geojson_10_features, 13),
+        param(geojson_3_features, {}, 3),
+        param({}, geojson_10_features, 10)
     ]
     return test_variables, test_data
+
+
+def test_merge_geojsons_fail():
+    test_variables = "gj1, gj2, expected_result"
+    test_data = [
+        param({}, {}, ValueError),
+        param({"hello": "world"}, {"hello": "world"}, ValueError),
+        param({"hello": "world"}, geojson_10_features, ValueError)
+    ]
+    return test_variables, test_data
+
+
+
 

@@ -30,11 +30,17 @@ def merge_geojsons(gj1: FeatureCollection, gj2: FeatureCollection) -> FeatureCol
     elif not gj2:
         return gj1
 
-    gj1["features"] += gj2["features"]
-    gj1["numberReturned"] += gj2["numberReturned"]
-    gj1["links"] += gj2["links"]
+    required_keys = {"features", "numberReturned", "links"}
+    if not (gj1.keys() >= required_keys and gj2.keys() >= required_keys):
+        raise ValueError(f"Both geojsons must contain keys {required_keys}")
 
-    return gj1
+    merged_geojson = gj1.copy()
+    merged_geojson["features"] = merged_geojson["features"] + gj2["features"]
+    merged_geojson["numberReturned"] += gj2["numberReturned"]
+    merged_geojson["links"] += gj2["links"]
+
+
+    return merged_geojson
 
 
 class NGD:
@@ -109,7 +115,8 @@ class NGD:
         """
 
         assert check_argument_types()
-
+        assert max_results > 0, f"Argument max_results must be greater than 0 but was {max_results}"
+        assert offset >= 0, f"Argument offset must be greater than 0 but was {offset}"
         params = {}
 
         # Checking validity and preformatting arguments
@@ -128,24 +135,25 @@ class NGD:
         if extent:
             # If extent is a bounding box, pass it as a bbox parameter
             if extent.is_bbox:
-                params["bbox"] = extent.bbox
+                params["bbox"] = extent.bbox.to_string(precision=5)
                 params["bbox-crs"] = get_crs(extent.crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"))
             # If extent is a polygon, implement spatial filter as an Intersects CQL filter
             else:
-                bbox_filter = f"INTERSECTS(geometry, {extent.polygon.wkt}"
-                extent_crs = get_crs(extent.crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"))
+                bbox_filter = f"INTERSECTS(geometry, {extent.polygon.wkt})"
+
                 # ADD INTERSECTS QUERY
                 if cql_filter:
                     if filter_crs:
-                        assert extent_crs == filter_crs, "If passing extent as a polygon, the filter_crs must be " \
-                                                         "same as the extent crs"
+                        assert get_crs(extent.crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84")) == \
+                               get_crs(filter_crs), "If passing extent as a polygon, the filter_crs must be " \
+                                                    "same as the extent crs"
                     else:
-                        filter_crs = extent_crs
+                        filter_crs = extent.crs
 
                     cql_filter += f" AND {bbox_filter}"
                 else:
                     cql_filter = bbox_filter
-                    filter_crs = extent_crs
+                    filter_crs = extent.crs
 
         if cql_filter:
             params['filter'] = cql_filter
@@ -178,7 +186,7 @@ class NGD:
 
         return data
 
-    def query_feature(self, feature_id: str, crs: Union[str, int] = "CRS84") -> Feature:
+    def query_feature(self, feature_id: str, crs: Union[str, int] = None) -> Feature:
         """
         Retrieves a single feature from a collection
 
@@ -189,19 +197,9 @@ class NGD:
         Returns:
             Feature: A GeoJSON Feature containing the requested feature
         """
-        crs = get_crs(crs)
+        params = {"crs": get_crs(crs)} if crs else {}
 
-        response = requests.get(self.__endpoint(feature_id), params={"crs": crs}, headers={"key": self.key})
+        response = requests.get(self.__endpoint(feature_id), params=params, headers={"key": self.key})
         response.raise_for_status()
 
         return response.json()
-
-
-if __name__ == '__main__':
-    from os import environ
-
-    key = environ.get("OS_API_KEY")
-    extent = Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700")
-    features = NGDAPI(key, "bld-fts-buildingline")
-    results = features.query(max_results=50, extent=extent)
-    print(results)
