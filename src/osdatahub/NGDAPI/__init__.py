@@ -1,2 +1,2 @@
-from .collections import DATASETS
+from .ngd_collections import COLLECTIONS
 from .ngd_api import NGDAPI

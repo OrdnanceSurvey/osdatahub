@@ -1,14 +1,14 @@
 import re
 from collections import namedtuple
 
-Dataset = namedtuple("Dataset", "name short_code")
+Collection = namedtuple("Dataset", "name short_code")
 
 # TODO: add rest of collections
 COLLECTIONS = {
-    "buildingline": Dataset("Building Line", "bld-fts-buildingline"),
-    "buildingpart": Dataset("Building Part", "bld-fts-buildingpart"),
-    "namedarea": Dataset("Named Area", "gnm-fts-namedarea"),
-    "namedpoint": Dataset("Named Point", "gnm-fts-namedpoint"),
+    "buildingline": Collection("Building Line", "bld-fts-buildingline"),
+    "buildingpart": Collection("Building Part", "bld-fts-buildingpart"),
+    "namedarea": Collection("Named Area", "gnm-fts-namedarea"),
+    "namedpoint": Collection("Named Point", "gnm-fts-namedpoint"),
 }
 
 SHORT_CODES = {
@@ -22,9 +22,9 @@ SHORT_CODES = {
 
 
 def preformat_collection(col: str) -> str:
-    if re.match(r"/(\w+-\w+-\w+)/", col):
+    if re.match(r"(\w+-\w+-\w+)", col):
         col = col.split("-")[-1]
-    elif re.match(r"/(\w+_\w+)", col):
+    elif re.match(r"(\w+_\w+)", col):
         col = col.replace("_", "")
 
     return col
@@ -41,3 +41,8 @@ def get_collection(col: str) -> str:
         return COLLECTIONS[col]
     else:
         raise ValueError(f"Unknown collection {col}")
+
+
+if __name__ == '__main__':
+    col = "bld-fts-buildingline"
+    print(re.match(r"(\w+-\w+-\w+)", col))

@@ -1,4 +1,3 @@
-from ast import main
 import json
 from datetime import datetime
 from os import environ
@@ -10,9 +9,8 @@ from geojson import FeatureCollection
 from typeguard import check_argument_types
 
 from osdatahub import Extent
-from osdatahub.NGDAPI.collections import validate_collection
+from osdatahub.NGDAPI.ngd_collections import validate_collection, get_collection, Collection
 from osdatahub.NGDAPI.crs import get_crs
-#from crs import get_crs
 from osdatahub.errors import raise_http_error
 
 
@@ -32,7 +30,7 @@ def merge_geojsons(gj1, gj2):
 
 
 class NGDAPI:
-    __ENDPOINT = r"https://api.os.uk/features/ngd/ofa/v1/"
+    __ENDPOINT = r"https://api.os.uk/features/ngd/ofa/v1/collections"
 
     DEFAULTS = {
 
@@ -43,38 +41,33 @@ class NGDAPI:
         self.collection: str = collection
         self.extent = extent
 
-    @property
-    def collection(self):
-        return self.__collection
+    def __endpoint(self, feature_id=None) -> str:
+        return f"{self.__ENDPOINT}/{self.collection}/items/{feature_id if feature_id else ''}"
 
-    @collection.setter
-    def collection(self, col: str):
-        col = validate_collection(col)
-        self.__collection = col
-        self.__collection_name = col
-
-    def __endpoint(self, collection, feature_id=None) -> str:
-        return f"{self.__ENDPOINT}/collections/{collection}/items/{feature_id if feature_id else ''}"
+    @classmethod
+    def get_collections(cls) -> dict:
+        response = requests.get(cls.__ENDPOINT)
+        response.raise_for_status()
+        return response.json()
 
     def query(self,
               extent: Extent = None,
               crs: str = None,
               start_datetime: datetime = None,
               end_datetime: datetime = None,
-              filter=None,
+              cql_filter: str = None,
               filter_crs: Union[str, int] = None,
+              max_results: int = 100,
               limit: int = 100,
-              offset: int = 0,
-              epsg: int = None) -> FeatureCollection:
+              offset: int = 0) -> FeatureCollection:
 
         assert check_argument_types()
 
         params = {}
 
-        # Checking validity of arguments
-        # Add arguments to params
-        if crs or epsg:
-            params["crs"] = get_crs(crs=crs, epsg=epsg)
+        # Checking validity and preformatting arguments
+        if crs:
+            params["crs"] = get_crs(crs=crs)
 
         if extent:
             params["bbox"] = extent.bbox
@@ -89,42 +82,44 @@ class NGDAPI:
 
             params["datetime"] = f"{start_datetime}/{end_datetime}"
 
-        if filter:
-            params['filter'] = filter
+        if cql_filter:
+            params['filter'] = cql_filter
+            if filter_crs:
+                params['filter-crs'] = get_crs(crs=filter_crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857",
+                                                                          "crs84"))
 
-        if filter_crs:
-            if filter == None: logging.warning("filter_crs ignored, filter not provided")
-            elif isinstance(filter_crs,str):
-                params['filter-crs'] = get_crs(crs=filter_crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"))
-            elif isinstance(filter_crs,int):
-                params['filter-crs'] = get_crs(epsg=filter_crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"))
+        if limit > 100:
+            logging.warning(f"Limit cannot be more than 100 but has value {limit}. Setting to 100")
+            limit = 100
 
-        n_required = min(limit, 100)
+        n_required = max_results
+
         data = {}
+
         while n_required > 0:
             offset = max(offset, data["numberReturned"] if "numberReturned" in data else 0)
-            params.update(
-                {"limit": n_required, "offset": offset})
+            params.update({"limit": limit, "offset": offset})
             try:
-                response = requests.get(self.__endpoint(self.collection), params=params, headers={"key": self.key})
+                response = requests.get(self.__endpoint(), params=params, headers={"key": self.key})
                 response.raise_for_status()
             except requests.exceptions.HTTPError as e:
-                logging.error(json.dumps(e.response.json(),indent=4))
+                logging.error(json.dumps(e.response.json(), indent=4))
                 raise e
 
             resp_json = response.json()
 
-            # if response.status_code != 200:
-            #     if response.status_code == 400:
-            #         raise ValueError(resp_json['description'])
-            #     else:
-            #         raise_http_error(response)
-
             data = merge_geojsons(data, resp_json)
 
-            if resp_json["numberReturned"] < n_required:
+            if resp_json["numberReturned"] < limit:
                 break
             else:
-                n_required = min(100, limit - data["numberReturned"])
+                n_required -= resp_json["numberReturned"]
 
         return data
+
+
+if __name__ == '__main__':
+    coll = "bld-fts-buildingline"
+    key = environ.get("OS_API_KEY")
+    ngd = NGDAPI(key, coll)
+    print(json.dumps(ngd.get_collections(), indent=4))

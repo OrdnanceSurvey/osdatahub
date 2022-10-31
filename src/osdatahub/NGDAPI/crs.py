@@ -10,14 +10,13 @@ EPSG = {
 
 
 # TODO: add url possibility
-def get_crs(crs: str = None, epsg: int = None, valid_crs: Union[list[str], tuple] = EPSG.keys()) -> str:
+def get_crs(crs: str = None, valid_crs: Union[list[str], tuple] = EPSG.keys()) -> str:
     if not set(valid_crs).issubset(set(EPSG)):
         raise ValueError(f"`valid_crs` parameter is not valid. Must be an iterable containing only {EPSG.keys()} but"
                          f"had value {valid_crs}")
-    if crs and epsg:
-        raise ValueError("Must pass either crs or epsg, but not both")
-    if epsg:
-        crs = f"epsg:{epsg}"
+
+    if isinstance(crs, int):
+        crs = f"epsg:{crs}"
 
     crs = crs.lower()
     if crs in EPSG and crs in valid_crs:
