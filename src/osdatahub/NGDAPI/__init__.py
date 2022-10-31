@@ -1,1 +1,1 @@
-from .ngd_api import NGDAPI
+from .ngd_api import NGD

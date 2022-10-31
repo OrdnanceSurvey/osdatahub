@@ -37,19 +37,41 @@ def merge_geojsons(gj1: FeatureCollection, gj2: FeatureCollection) -> FeatureCol
     return gj1
 
 
-class NGDAPI:
+class NGD:
+    """
+    Main class for querying OS NGD Features API (https://osdatahub.os.uk/docs/ofa/overview)
+
+    Args:
+        key (str): A valid OS Data Hub API key. Get a free key here - https://osdatahub.os.uk/
+        collection (str): ID for the desired NGD Feature Collection. Learn about the possible collection ids here -
+            https://osdatahub.os.uk/docs/ofa/technicalSpecification
+
+    Example::
+
+        from osdatahub import NGD
+        from os import environ
+
+        key = environ.get("OS_API_KEY")
+        extent = Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700")
+        features = NGD(key, "bld-fts-buildingline")
+        results = features.query(max_results=50, extent=extent)
+    """
     __ENDPOINT = r"https://api.os.uk/features/ngd/ofa/v1/collections"
 
-    def __init__(self, key: str, collection: str, extent: Extent = None):
+    def __init__(self, key: str, collection: str):
         self.key: str = key
         self.collection: str = collection
-        self.extent = extent
 
     def __endpoint(self, feature_id=None) -> str:
         return f"{self.__ENDPOINT}/{self.collection}/items/{feature_id if feature_id else ''}"
 
     @classmethod
     def get_collections(cls) -> dict:
+        """
+        Retrieves all OS NGD Feature Collections
+        Returns:
+            Dict: Dictionary containing all Feature Collections currently supported with details for each
+        """
         response = requests.get(cls.__ENDPOINT)
         response.raise_for_status()
         return response.json()
@@ -63,6 +85,28 @@ class NGDAPI:
               filter_crs: Union[str, int] = None,
               max_results: int = 100,
               offset: int = 0) -> FeatureCollection:
+        """
+        Retrieves features from a Collection
+
+        Args:
+            extent (Extent, optional): An extent, either from a bounding box or a Polygon. Only features within this
+                extent will be returned
+            crs (str|int, optional): The CRS for the returned features, either in the format "epsg:xxxx" or an epsg
+                number. e.g. British National Grid can be supplied as "epsg:27700" or 27700
+            start_datetime (datetime, optional): Selects features that have a temporal property after the given start
+                time
+            end_datetime (datetime, optional): Selects features that have a temporal property before the given end
+                time
+            cql_filter (str, optional): A filter query in the CQL format. More information about supported CQL operators
+                can be found at https://osdatahub.os.uk/docs/ofa/technicalSpecification
+            filter_crs (str|int, optional): The CRS for a given CQL query, either in the format "epsg:xxxx" or an epsg
+                number. e.g. British National Grid can be supplied as "epsg:27700" or 27700
+            max_results (int, optional): The maximum number of features to return
+            offset (int, optional): The offset number skips past the specified number of features in the collection
+
+        Returns:
+            FeatureCollection: The results of the query in GeoJSON format
+        """
 
         assert check_argument_types()
 
@@ -135,7 +179,16 @@ class NGDAPI:
         return data
 
     def query_feature(self, feature_id: str, crs: Union[str, int] = "CRS84") -> Feature:
+        """
+        Retrieves a single feature from a collection
 
+        Args:
+            feature_id: An identifier ID for a feature
+            crs (str|int, optional): A valid CRS for the returned feature
+
+        Returns:
+            Feature: A GeoJSON Feature containing the requested feature
+        """
         crs = get_crs(crs)
 
         response = requests.get(self.__endpoint(feature_id), params={"crs": crs}, headers={"key": self.key})
@@ -145,7 +198,10 @@ class NGDAPI:
 
 
 if __name__ == '__main__':
-    coll = "bld-fts-buildingline"
+    from os import environ
+
     key = environ.get("OS_API_KEY")
-    ngd = NGDAPI(key, coll)
-    print(json.dumps(ngd.query_feature("00003b73-ab7d-4fc4-bedf-ac91830400a1"), indent=4))
+    extent = Extent.from_bbox((600000, 310200, 600900, 310900), "EPSG:27700")
+    features = NGDAPI(key, "bld-fts-buildingline")
+    results = features.query(max_results=50, extent=extent)
+    print(results)
