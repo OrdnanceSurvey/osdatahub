@@ -5,7 +5,7 @@ from typing import Union
 import logging
 
 import requests
-from geojson import FeatureCollection
+from geojson import FeatureCollection, Feature
 from typeguard import check_argument_types
 
 from osdatahub import Extent
@@ -32,10 +32,6 @@ def merge_geojsons(gj1, gj2):
 class NGDAPI:
     __ENDPOINT = r"https://api.os.uk/features/ngd/ofa/v1/collections"
 
-    DEFAULTS = {
-
-    }
-
     def __init__(self, key: str, collection: str, extent: Extent = None):
         self.key: str = key
         self.collection: str = collection
@@ -52,7 +48,7 @@ class NGDAPI:
 
     def query(self,
               extent: Extent = None,
-              crs: str = None,
+              crs: Union[str, int] = None,
               start_datetime: datetime = None,
               end_datetime: datetime = None,
               cql_filter: str = None,
@@ -117,9 +113,18 @@ class NGDAPI:
 
         return data
 
+    def query_feature(self, feature_id: str, crs: Union[str, int] = "CRS84") -> Feature:
+
+        crs = get_crs(crs)
+
+        response = requests.get(self.__endpoint(feature_id), params={"crs": crs}, headers={"key": self.key})
+        response.raise_for_status()
+
+        return response.json()
+
 
 if __name__ == '__main__':
     coll = "bld-fts-buildingline"
     key = environ.get("OS_API_KEY")
     ngd = NGDAPI(key, coll)
-    print(json.dumps(ngd.get_collections(), indent=4))
+    print(json.dumps(ngd.query_feature("00003b73-ab7d-4fc4-bedf-ac91830400a1"), indent=4))
