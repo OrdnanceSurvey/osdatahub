@@ -94,9 +94,8 @@ class FeaturesAPI:
         params = self.__params
         data = GrowList()
         n_required = min(limit, 100)
-
-        if "srsName='EPSG:4329'" in params["filter"]:
-            warnings.warn("The features API does not support EPSG:4329 and will return an empty features list.")
+        if "srsName='EPSG:4326'" in params["filter"]:
+            warnings.warn("The features API does not support EPSG:4326 and will return an empty features list.")
 
         try:
             while n_required > 0 and data.grown:

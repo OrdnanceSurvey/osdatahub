@@ -1,5 +1,5 @@
 {% set name = "osdatahub" %}
-{% set version = "1.0.2" %}
+{% set version = "1.1.0" %}
 
 package:
   name: {{ name|lower }}
@@ -41,9 +41,8 @@ about:
   summary: osdatahub is Ordnance Survey's (OS) Python API wrapper, designed to make data from the OS Data Hub APIs readily accessible to developers.
   doc_url: https://osdatahub.readthedocs.io/en/latest/
   dev_url: https://github.com/OrdnanceSurvey/osdatahub
-
 extra:
   recipe-maintainers:
-    - danhirstos
-    - JEPooleyOS
+    - dchirst
+    - JEPooley
     - FHunt-OS
