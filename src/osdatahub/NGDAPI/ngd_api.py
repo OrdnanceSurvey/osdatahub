@@ -13,7 +13,16 @@ from osdatahub.NGDAPI.crs import get_crs
 from osdatahub.errors import raise_http_error
 
 
-def merge_geojsons(gj1, gj2):
+def merge_geojsons(gj1: FeatureCollection, gj2: FeatureCollection) -> FeatureCollection:
+    """
+    Combines 2 geojsons from NGD api into a single valid geojson
+    Args:
+        gj1: A FeatureCollection
+        gj2: Another FeatureCollection
+
+    Returns: A FeatureCollection with a single set of Features and a combined numberReturned
+
+    """
     if not (gj1 or gj2):
         raise ValueError("Inputs were both empty")
     elif not gj1:
@@ -63,10 +72,6 @@ class NGDAPI:
         if crs:
             params["crs"] = get_crs(crs=crs)
 
-        if extent:
-            params["bbox"] = extent.bbox
-            params["bbox-crs"] = get_crs(extent.crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"))
-
         if start_datetime or end_datetime:
             if start_datetime and end_datetime and start_datetime > end_datetime:
                 raise ValueError("Start time must be before end time")
@@ -75,6 +80,28 @@ class NGDAPI:
             end_datetime = end_datetime.isoformat() + "Z" if end_datetime else ".."
 
             params["datetime"] = f"{start_datetime}/{end_datetime}"
+
+        if extent:
+            # If extent is a bounding box, pass it as a bbox parameter
+            if extent.is_bbox:
+                params["bbox"] = extent.bbox
+                params["bbox-crs"] = get_crs(extent.crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"))
+            # If extent is a polygon, implement spatial filter as an Intersects CQL filter
+            else:
+                bbox_filter = f"INTERSECTS(geometry, {extent.polygon.wkt}"
+                extent_crs = get_crs(extent.crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"))
+                # ADD INTERSECTS QUERY
+                if cql_filter:
+                    if filter_crs:
+                        assert extent_crs == filter_crs, "If passing extent as a polygon, the filter_crs must be " \
+                                                         "same as the extent crs"
+                    else:
+                        filter_crs = extent_crs
+
+                    cql_filter += f" AND {bbox_filter}"
+                else:
+                    cql_filter = bbox_filter
+                    filter_crs = extent_crs
 
         if cql_filter:
             params['filter'] = cql_filter
