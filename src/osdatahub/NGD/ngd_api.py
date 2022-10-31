@@ -98,8 +98,10 @@ class NGD:
         Args:
             extent (Extent, optional): An extent, either from a bounding box or a Polygon. Only features within this
                 extent will be returned
+                Available CRS values are: EPSG:27700, EPSG:4326, EPSG:3857, and CRS84. Defaults to CRS84
             crs (str|int, optional): The CRS for the returned features, either in the format "epsg:xxxx" or an epsg
-                number. e.g. British National Grid can be supplied as "epsg:27700" or 27700
+                number. e.g. British National Grid can be supplied as "epsg:27700" or 27700.
+                Available CRS values are: EPSG:27700, EPSG:4326, EPSG:7405, EPSG:3857, and CRS84. Defaults to CRS84
             start_datetime (datetime, optional): Selects features that have a temporal property after the given start
                 time
             end_datetime (datetime, optional): Selects features that have a temporal property before the given end
@@ -108,8 +110,10 @@ class NGD:
                 can be found at https://osdatahub.os.uk/docs/ofa/technicalSpecification
             filter_crs (str|int, optional): The CRS for a given CQL query, either in the format "epsg:xxxx" or an epsg
                 number. e.g. British National Grid can be supplied as "epsg:27700" or 27700
-            max_results (int, optional): The maximum number of features to return
-            offset (int, optional): The offset number skips past the specified number of features in the collection
+                Available CRS values are: EPSG:27700, EPSG:4326, EPSG:7405, EPSG:3857, and CRS84. Defaults to CRS84
+            max_results (int, optional): The maximum number of features to return. Defaults to 100
+            offset (int, optional): The offset number skips past the specified number of features in the collection.
+                Defaults to 0
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -193,7 +197,9 @@ class NGD:
 
         Args:
             feature_id: An identifier ID for a feature
-            crs (str|int, optional): A valid CRS for the returned feature
+            crs (str|int, optional): The CRS for the returned feature, either in the format "epsg:xxxx" or an epsg
+                number. e.g. British National Grid can be supplied as "epsg:27700" or 27700.
+                Available CRS values are: EPSG:27700, EPSG:4326, EPSG:7405, EPSG:3857, and CRS84. Defaults to CRS84
 
         Returns:
             Feature: A GeoJSON Feature containing the requested feature
