@@ -1,16 +1,13 @@
 import json
-from datetime import datetime
-from os import environ
-from typing import Union
 import logging
+from datetime import datetime
+from typing import Union
 
 import requests
 from geojson import FeatureCollection, Feature
-from typeguard import check_argument_types
-
 from osdatahub import Extent
 from osdatahub.NGD.crs import get_crs
-from osdatahub.errors import raise_http_error
+from typeguard import check_argument_types
 
 
 def _merge_geojsons(gj1: FeatureCollection, gj2: FeatureCollection) -> FeatureCollection:
@@ -39,7 +36,6 @@ def _merge_geojsons(gj1: FeatureCollection, gj2: FeatureCollection) -> FeatureCo
     merged_geojson["features"] = merged_geojson["features"] + gj2["features"]
     merged_geojson["numberReturned"] += gj2["numberReturned"]
     merged_geojson["links"] += gj2["links"]
-
 
     return merged_geojson
 

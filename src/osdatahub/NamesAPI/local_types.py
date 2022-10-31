@@ -82,4 +82,3 @@ def validate_local_type(local_type: Union[str, Iterable]) -> set:
 
 def get_local_type(local_type_name: str) -> str:
     return LOCAL_TYPE[local_type_name].local_type
-

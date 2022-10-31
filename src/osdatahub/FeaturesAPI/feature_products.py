@@ -1,8 +1,6 @@
 from collections import namedtuple
 
-
 Product = namedtuple("Product", "name geometry")
-
 
 PREMIUM = {
     "topographic_area": Product("Topography_TopographicArea", "Polygon"),
@@ -53,7 +51,6 @@ PREMIUM = {
     "Topography_CartographicSymbol": Product("Topography_CartographicSymbol", "Point"),
     "Topography_CartographicText": Product("Topography_CartographicText", "Point")
 }
-
 
 OPEN = {
     "zoomstack_district_buildings": Product("Zoomstack_DistrictBuildings", "Polygon"),
@@ -123,7 +120,7 @@ def convert_product_to_new_geometry(product: Product) -> Product:
         new_geom = "MultiLineString"
     elif product.geometry == "Polygon":
         new_geom = "MultiPolygon"
-    elif product.geometry in  ("Point", "MultiPolygon", "MultiLineString"):
+    elif product.geometry in ("Point", "MultiPolygon", "MultiLineString"):
         new_geom = product.geometry
     else:
         raise ValueError(f"argument product has an invalid geometry. Must be one of Point, Polygon, LineString, "
@@ -133,7 +130,6 @@ def convert_product_to_new_geometry(product: Product) -> Product:
 
 
 OPEN_NEW = {key: convert_product_to_new_geometry(value) for key, value in OPEN.items()}
-
 
 PREMIUM_NEW = {key: convert_product_to_new_geometry(value) for key, value in PREMIUM.items()}
 
@@ -155,10 +151,10 @@ def validate_product_name(product_name: str) -> str:
     suggested_products = suggest_product(product_name)
     suggestion_str = ", ".join(suggested_products) \
         if len(suggested_products) > 0 else "Can't find a match..."
-    raise ValueError(f"Unrecognised product '{product_name}'.\n\n"\
-        f"\tBest Matches: {suggestion_str}\n\n"\
-        f"\tOpen Products: {', '.join(list(OPEN))}\n\n"\
-        f"\tPremium Products: {', '.join(list(PREMIUM))}\n\n")
+    raise ValueError(f"Unrecognised product '{product_name}'.\n\n" \
+                     f"\tBest Matches: {suggestion_str}\n\n" \
+                     f"\tOpen Products: {', '.join(list(OPEN))}\n\n" \
+                     f"\tPremium Products: {', '.join(list(PREMIUM))}\n\n")
 
 
 def get_product(product_name: str, new_api: bool = False) -> Product:

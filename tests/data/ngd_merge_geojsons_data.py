@@ -635,7 +635,3 @@ def test_merge_geojsons_fail():
         param({"hello": "world"}, geojson_10_features, ValueError)
     ]
     return test_variables, test_data
-
-
-
-

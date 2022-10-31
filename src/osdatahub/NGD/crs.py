@@ -21,7 +21,5 @@ def get_crs(crs: str = None, valid_crs: Union[list, tuple] = EPSG.keys()) -> str
     crs = crs.lower()
     if crs in EPSG and crs in valid_crs:
         return EPSG[crs]
-    
-    raise ValueError("Unknown CRS. Must be...")
-    
 
+    raise ValueError("Unknown CRS. Must be...")

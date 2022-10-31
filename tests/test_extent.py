@@ -1,8 +1,8 @@
 import pytest
-from tests.data import extent_data as data
+import requests_mock
 from osdatahub import Extent
 
-import requests_mock
+from tests.data import extent_data as data
 
 
 class TestExtent:
@@ -25,7 +25,7 @@ class TestExtent:
 
     @pytest.mark.parametrize(*data.test_set_crs())
     def test_set_crs(
-        self, initital_polygon, initital_crs, updated_crs, expected_result
+            self, initital_polygon, initital_crs, updated_crs, expected_result
     ):
         # Arrange
         extent = Extent(initital_polygon, initital_crs)

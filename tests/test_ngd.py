@@ -1,10 +1,6 @@
-from os import environ
 from unittest import mock
 
-
-
 import pytest
-
 from osdatahub.NGD.crs import get_crs
 from osdatahub.NGD.ngd_api import _merge_geojsons, NGD
 
@@ -28,7 +24,6 @@ class TestNGDQuery:
     @pytest.mark.parametrize(*query_data.test_ngd_instantiation())
     @mock.patch('requests.get')
     def test_ngd_instantiation(self, request_mocked, api_key, collection, expected_url, expected_headers):
-
         request_mocked.return_value.configure_mock(json=lambda: {"features": [], "numberReturned": 0})
 
         ngd = NGD(key=api_key, collection=collection)
@@ -59,7 +54,7 @@ class TestNGDQuery:
 
     @pytest.mark.parametrize(*query_data.test_ngd_query_fail())
     def test_ngd_api_call_fail(self, extent, crs, start_datetime, end_datetime, cql_filter, filter_crs,
-                          max_results, offset, expected_error):
+                               max_results, offset, expected_error):
         ngd = NGD("API_KEY", "blt-fts-buildingline")
         with pytest.raises(expected_exception=expected_error):
             ngd.query(extent=extent,
@@ -94,7 +89,6 @@ class TestNGDQueryFeature:
         request_mocked.assert_called_with(expected_url,
                                           params=expected_params,
                                           headers={"key": "api_key"})
-
 
 
 class TestMergeGeojsons:

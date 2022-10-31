@@ -1,6 +1,5 @@
-from pytest import param
-
 from osdatahub.extent import Extent
+from pytest import param
 
 
 def test_format_fq():
@@ -19,13 +18,13 @@ def test_format_fq():
               ["hill_or_mountain", "heliport", "postcode", "bay", "electricity_distribution"],
               ["LOCAL_TYPE:Hill_Or_Mountain LOCAL_TYPE:Heliport LOCAL_TYPE:Postcode LOCAL_TYPE:Bay "
                "LOCAL_TYPE:Electricity_Distribution"]),
-        param(Extent.from_bbox((1000,1000,2000,2000), crs="EPSG:27700"),
+        param(Extent.from_bbox((1000, 1000, 2000, 2000), crs="EPSG:27700"),
               None,
               ["BBOX:1000.0,1000.0,2000.0,2000.0"]),
-        param(Extent.from_bbox((10000,20000,30000,40000), crs="EPSG:27700"),
+        param(Extent.from_bbox((10000, 20000, 30000, 40000), crs="EPSG:27700"),
               None,
               ["BBOX:10000.0,20000.0,30000.0,40000.0"]),
-        param(Extent.from_bbox((10000,20000,30000,40000), crs="EPSG:27700"),
+        param(Extent.from_bbox((10000, 20000, 30000, 40000), crs="EPSG:27700"),
               "estuary",
               ["LOCAL_TYPE:Estuary", "BBOX:10000.0,20000.0,30000.0,40000.0"]),
         param(Extent.from_bbox((1000, 1000, 2000, 2000), crs="EPSG:27700"),
@@ -116,25 +115,27 @@ def test_find_pass():
               None,
               ("suburban_area", "tramway"),
               'https://api.os.uk/search/names/v1/find?key=test',
-              {"query": "Buckingham Palace", "offset": 0, "fq": ["LOCAL_TYPE:Suburban_Area LOCAL_TYPE:Tramway"], "maxresults": 50}
+              {"query": "Buckingham Palace", "offset": 0, "fq": ["LOCAL_TYPE:Suburban_Area LOCAL_TYPE:Tramway"],
+               "maxresults": 50}
               ),
-          param("Buckingham Palace",
-                50,
-                Extent.from_bbox((100, 200, 300, 400), crs="EPSG:27700"),
-                None,
-                "suburban_area",
-                'https://api.os.uk/search/names/v1/find?key=test',
-                {"query": "Buckingham Palace", "offset": 0, "bounds": "100.0,200.0,300.0,400.0", "fq": ["LOCAL_TYPE:Suburban_Area"], "maxresults": 50}
-                ),
-          param("Buckingham Palace",
-                50,
-                Extent.from_bbox((100, 200, 300, 400), crs="EPSG:27700"),
-                Extent.from_bbox((100, 200, 300, 400), crs="EPSG:27700"),
-                "suburban_area",
-                'https://api.os.uk/search/names/v1/find?key=test',
-                {"query": "Buckingham Palace", "offset": 0, "bounds": "100.0,200.0,300.0,400.0",
-                 "fq": ["LOCAL_TYPE:Suburban_Area", "BBOX:100.0,200.0,300.0,400.0"], "maxresults": 50}
-                )
+        param("Buckingham Palace",
+              50,
+              Extent.from_bbox((100, 200, 300, 400), crs="EPSG:27700"),
+              None,
+              "suburban_area",
+              'https://api.os.uk/search/names/v1/find?key=test',
+              {"query": "Buckingham Palace", "offset": 0, "bounds": "100.0,200.0,300.0,400.0",
+               "fq": ["LOCAL_TYPE:Suburban_Area"], "maxresults": 50}
+              ),
+        param("Buckingham Palace",
+              50,
+              Extent.from_bbox((100, 200, 300, 400), crs="EPSG:27700"),
+              Extent.from_bbox((100, 200, 300, 400), crs="EPSG:27700"),
+              "suburban_area",
+              'https://api.os.uk/search/names/v1/find?key=test',
+              {"query": "Buckingham Palace", "offset": 0, "bounds": "100.0,200.0,300.0,400.0",
+               "fq": ["LOCAL_TYPE:Suburban_Area", "BBOX:100.0,200.0,300.0,400.0"], "maxresults": 50}
+              )
     ]
     return test_variables, test_data
 

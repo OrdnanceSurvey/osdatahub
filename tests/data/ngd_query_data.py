@@ -1,9 +1,8 @@
 from datetime import datetime
 
+from osdatahub import Extent
 from pytest import param
 from shapely.geometry import Polygon
-
-from osdatahub import Extent
 
 
 def test_ngd_query():
@@ -55,7 +54,7 @@ def test_ngd_query():
                 "offset": 20
             }
         ),
-        param(Extent.from_bbox((-2.503510,53.578646,-2.432785,53.600655), crs="EPSG:4326"),
+        param(Extent.from_bbox((-2.503510, 53.578646, -2.432785, 53.600655), crs="EPSG:4326"),
               None,
               None,
               None,
@@ -70,8 +69,8 @@ def test_ngd_query():
                   "bbox": "-2.50351,53.57865,-2.43278,53.60066",
                   "bbox-crs": "http://www.opengis.net/def/crs/EPSG/0/4326"
               }
-        ),
-        param(Extent.from_bbox((-278689.4051,7090757.3659,-270816.3912,7094884.9654), crs="EPSG:3857"),
+              ),
+        param(Extent.from_bbox((-278689.4051, 7090757.3659, -270816.3912, 7094884.9654), crs="EPSG:3857"),
               None,
               None,
               None,
@@ -86,7 +85,7 @@ def test_ngd_query():
                   "bbox": "-278689.4051,7090757.3659,-270816.3912,7094884.9654",
                   "bbox-crs": "http://www.opengis.net/def/crs/EPSG/0/3857"
               }
-        ),
+              ),
         param(Extent(Polygon([[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]), crs="EPSG:3857"),
               None,
               None,
@@ -202,7 +201,7 @@ def test_ngd_query():
                   "filter": "HELLO WORLD AND INTERSECTS(geometry, POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)))",
                   "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/3857"
               }
-        ),
+              ),
         param(Extent(Polygon([[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]), crs="EPSG:3857"),
               None,
               None,
@@ -218,7 +217,7 @@ def test_ngd_query():
                   "filter": "HELLO WORLD AND INTERSECTS(geometry, POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)))",
                   "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/3857"
               }
-        ),
+              ),
         param(Extent(Polygon([[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]), crs="EPSG:3857"),
               7405,
               datetime(2013, 1, 3, 12, 13, 14),

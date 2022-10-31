@@ -2,7 +2,6 @@ import json
 
 from requests.exceptions import HTTPError
 
-
 RESPONSE_CODES = {
     200: ("OK", "Request has been successful."),
     304: (

@@ -1,8 +1,9 @@
-import pytest
-from os import environ
 import unittest.mock as mock
+from os import environ
 
+import pytest
 from osdatahub.NamesAPI.names_api import NamesAPI
+
 from tests.data import names_data as data
 
 
@@ -16,7 +17,7 @@ class TestFind:
     @pytest.mark.usefixtures("names")
     @mock.patch('requests.get')
     def test_find_pass(self, request_mocked, names, text, limit, bounds, bbox_filter, local_type,
-                     expected_url, expected_params):
+                       expected_url, expected_params):
         names.find(text, limit=limit, bounds=bounds, bbox_filter=bbox_filter, local_type=local_type)
         request_mocked.assert_called_with(expected_url,
                                           params=expected_params)

@@ -1,12 +1,12 @@
 from typing import Union
 
 import requests
-from osdatahub.errors import raise_http_error
 from osdatahub.LinkedIdentifiersAPI.linked_identifier_options import (
     correlation_methods,
     feature_types,
     identifier_types,
 )
+from osdatahub.errors import raise_http_error
 from typeguard import typechecked
 
 
@@ -39,7 +39,7 @@ class LinkedIdentifiersAPI:
         return response.json()
 
     def __get_endpoint(
-        self, identifier: Union[int, str], feature_type: str, identifier_type: str
+            self, identifier: Union[int, str], feature_type: str, identifier_type: str
     ) -> str:
         if feature_type is not None and identifier_type is not None:
             raise ValueError(
@@ -58,10 +58,10 @@ class LinkedIdentifiersAPI:
 
     @typechecked
     def query(
-        self,
-        identifier: Union[int, str],
-        feature_type: str = None,
-        identifier_type: str = None,
+            self,
+            identifier: Union[int, str],
+            feature_type: str = None,
+            identifier_type: str = None,
     ) -> dict:
         """Run a query of the OS Linked Identifiers API - looks up an
         identifier and finds its associated identifiers.
@@ -94,6 +94,6 @@ class LinkedIdentifiersAPI:
         """
         correlation_methods.validate(correlation_method)
         endpoint = (
-            self.__ENDPOINT + f"productVersionInfo/{correlation_method}?key={self.key}"
+                self.__ENDPOINT + f"productVersionInfo/{correlation_method}?key={self.key}"
         )
         return self.__request(endpoint)

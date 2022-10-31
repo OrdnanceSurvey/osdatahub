@@ -1,9 +1,8 @@
-from typing import Union, Optional
+from typing import Union
 
 from geojson import FeatureCollection
-from shapely.geometry import LinearRing
-
 from osdatahub.grow_list import GrowList
+from shapely.geometry import LinearRing
 
 
 def clean_features(feature_list: list, geom_type: str) -> list:
