@@ -71,7 +71,7 @@ class NGD:
 
     @classmethod
     @functools.lru_cache()
-    def collections(cls) -> dict:
+    def get_collections(cls) -> dict:
         """
         Retrieves all OS NGD Feature Collections
         Returns:

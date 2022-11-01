@@ -66,8 +66,9 @@ def test_ngd_query():
               {
                   "limit": 100,
                   "offset": 0,
-                  "bbox": "-2.50351,53.57865,-2.43278,53.60066",
-                  "bbox-crs": "http://www.opengis.net/def/crs/EPSG/0/4326"
+                  "filter": "INTERSECTS(geometry, POLYGON ((-2.432785 53.578646, -2.432785 53.600655, "
+                            "-2.50351 53.600655, -2.50351 53.578646, -2.432785 53.578646)))",
+                  "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/4326"
               }
               ),
         param(Extent.from_bbox((-278689.4051, 7090757.3659, -270816.3912, 7094884.9654), crs="EPSG:3857"),
@@ -82,8 +83,9 @@ def test_ngd_query():
               {
                   "limit": 100,
                   "offset": 0,
-                  "bbox": "-278689.4051,7090757.3659,-270816.3912,7094884.9654",
-                  "bbox-crs": "http://www.opengis.net/def/crs/EPSG/0/3857"
+                  "filter": "INTERSECTS(geometry, POLYGON ((-270816.3912 7090757.3659, -270816.3912 7094884.9654, "
+                            "-278689.4051 7094884.9654, -278689.4051 7090757.3659, -270816.3912 7090757.3659)))",
+                  "filter-crs": "http://www.opengis.net/def/crs/EPSG/0/3857"
               }
               ),
         param(Extent(Polygon([[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]), crs="EPSG:3857"),
