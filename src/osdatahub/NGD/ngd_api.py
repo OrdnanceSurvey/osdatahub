@@ -1,3 +1,4 @@
+import functools
 import json
 import logging
 from datetime import datetime
@@ -68,9 +69,9 @@ class NGD:
     def __endpoint(self, feature_id=None) -> str:
         return f"{self.__ENDPOINT}/{self.collection}/items/{feature_id if feature_id else ''}"
 
-    # TODO: add caching
     @classmethod
-    def get_collections(cls) -> dict:
+    @functools.lru_cache()
+    def collections(cls) -> dict:
         """
         Retrieves all OS NGD Feature Collections
         Returns:
