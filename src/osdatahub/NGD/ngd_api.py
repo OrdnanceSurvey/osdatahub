@@ -137,27 +137,21 @@ class NGD:
             params["datetime"] = f"{start_datetime}/{end_datetime}"
 
         if extent:
-            # If extent is a bounding box, pass it as a bbox parameter
-            if extent.is_bbox:
-                params["bbox"] = extent.bbox.to_string(precision=5)
-                params["bbox-crs"] = get_crs(extent.crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"))
-            # If extent is a polygon, implement spatial filter as an Intersects CQL filter
-            else:
-                bbox_filter = f"INTERSECTS(geometry, {extent.polygon.wkt})"
+            bbox_filter = f"INTERSECTS(geometry, {extent.polygon.wkt})"
 
-                # ADD INTERSECTS QUERY
-                if cql_filter:
-                    if filter_crs:
-                        assert get_crs(extent.crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84")) == \
-                               get_crs(filter_crs), "If passing extent as a polygon, the filter_crs must be " \
-                                                    "same as the extent crs"
-                    else:
-                        filter_crs = extent.crs
-
-                    cql_filter += f" AND {bbox_filter}"
+            # ADD INTERSECTS QUERY
+            if cql_filter:
+                if filter_crs:
+                    assert get_crs(extent.crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84")) == \
+                           get_crs(filter_crs), "If passing extent and a cql filter with a crs, the filter_crs must " \
+                                                "be same as the extent crs"
                 else:
-                    cql_filter = bbox_filter
                     filter_crs = extent.crs
+
+                cql_filter += f" AND {bbox_filter}"
+            else:
+                cql_filter = bbox_filter
+                filter_crs = extent.crs
 
         if cql_filter:
             params['filter'] = cql_filter

@@ -23,7 +23,6 @@ class Extent:
 
     polygon: Polygon
     crs: str
-    is_bbox: bool = False
 
     def __post_init__(self):
         if not isinstance(self.polygon, Polygon):
@@ -62,7 +61,7 @@ class Extent:
             the specified bounding box.
         """
         try:
-            return Extent(box(*bbox), crs, is_bbox=True)
+            return Extent(box(*bbox), crs)
         except TypeError:
             raise TypeError(
                 "bbox must be a BBox object or a collection "
