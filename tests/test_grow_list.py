@@ -1,4 +1,3 @@
-import pytest
 from osdatahub.grow_list import GrowList
 
 

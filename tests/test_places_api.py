@@ -1,7 +1,8 @@
-import pytest
 from os import environ
 
+import pytest
 from osdatahub.PlacesAPI.places_api import PlacesAPI
+
 from tests.data import places_data as data
 
 
@@ -15,7 +16,7 @@ class TestFormatFq:
     @pytest.mark.parametrize(*data.test_format_fq())
     @pytest.mark.usefixtures("places")
     def test_format_fq_pass(
-        self, places, classification_codes, logical_states, expected_result
+            self, places, classification_codes, logical_states, expected_result
     ):
         # Act
         fq_args = places._PlacesAPI__format_fq(
@@ -27,7 +28,7 @@ class TestFormatFq:
     @pytest.mark.parametrize(*data.test_format_fq_errors())
     @pytest.mark.usefixtures("places")
     def test_format_fq_errors(
-        self, places, classification_codes, logical_states, expected_result
+            self, places, classification_codes, logical_states, expected_result
     ):
         # Act
         with pytest.raises(expected_result):

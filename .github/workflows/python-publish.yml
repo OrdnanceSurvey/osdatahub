@@ -1,6 +1,6 @@
 name: Auto-publish
 
-on: [push, workflow_dispatch]
+on: [ push, workflow_dispatch ]
 
 jobs:
   # Auto-publish when version is increased
@@ -8,22 +8,22 @@ jobs:
     # Only publish on `main` branch
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-    permissions:  # Don't forget permissions
+    permissions: # Don't forget permissions
       contents: write
 
     steps:
-    - name: Ensure changelog has been updated
-      uses: technote-space/get-diff-action@v4
-      id: git-diff
-      with:
-        PATTERNS: CHANGELOG.md
-    - name: Fail if changelog not updated
-      if: ! env.GIT_DIFF
-      run: exit 1
-    - uses: etils-actions/pypi-auto-publish@v1
-      if: env.GIT_DIFF
-      with:
-        pypi-token: ${{ secrets.PYPI_API_TOKEN }}
-        gh-token: ${{ secrets.GITHUB_TOKEN }}
-        parse-changelog: false
-        pkg-name: osdatahub
+      - name: Ensure changelog has been updated
+        uses: technote-space/get-diff-action@v4
+        id: git-diff
+        with:
+          PATTERNS: CHANGELOG.md
+      - name: Fail if changelog not updated
+        if: ! env.GIT_DIFF
+        run: exit 1
+      - uses: etils-actions/pypi-auto-publish@v1
+        if: env.GIT_DIFF
+        with:
+          pypi-token: ${{ secrets.PYPI_API_TOKEN }}
+          gh-token: ${{ secrets.GITHUB_TOKEN }}
+          parse-changelog: false
+          pkg-name: osdatahub

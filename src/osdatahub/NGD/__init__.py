@@ -1,0 +1,1 @@
+from .ngd_api import NGD
