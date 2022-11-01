@@ -265,7 +265,7 @@ class PlacesAPI:
         Formats optional fq arguments for Places API query
 
         Args:
-            classifcation_code (str|Iterable[str], optional): The classification codes to filter query
+            classification_code (str|Iterable[str], optional): The classification codes to filter query
             logical_status_code (str|Number, optional): Logical status code to filter query
 
         Returns:
