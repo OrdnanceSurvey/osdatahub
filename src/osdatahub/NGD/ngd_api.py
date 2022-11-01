@@ -68,6 +68,7 @@ class NGD:
     def __endpoint(self, feature_id=None) -> str:
         return f"{self.__ENDPOINT}/{self.collection}/items/{feature_id if feature_id else ''}"
 
+    # TODO: add caching
     @classmethod
     def get_collections(cls) -> dict:
         """
@@ -99,9 +100,11 @@ class NGD:
                 number. e.g. British National Grid can be supplied as "epsg:27700" or 27700.
                 Available CRS values are: EPSG:27700, EPSG:4326, EPSG:7405, EPSG:3857, and CRS84. Defaults to CRS84
             start_datetime (datetime, optional): Selects features that have a temporal property after the given start
-                time
+                time. If you want to query a single timestamp, provide the same value to both start_datetime
+                and end_datetime
             end_datetime (datetime, optional): Selects features that have a temporal property before the given end
-                time
+                time. If you want to query a single timestamp, provide the same value to both start_datetime
+                and end_datetime
             cql_filter (str, optional): A filter query in the CQL format. More information about supported CQL operators
                 can be found at https://osdatahub.os.uk/docs/ofa/technicalSpecification
             filter_crs (str|int, optional): The CRS for a given CQL query, either in the format "epsg:xxxx" or an epsg
