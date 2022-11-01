@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0]
+
+### Features
+
+- Added NGD API [dchirst] [BenDickens]
+- Fixed typos in Features and Places APIs [dchirst]
+
 ## [1.1.0]
 
 ### Features
