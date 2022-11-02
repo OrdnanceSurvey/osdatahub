@@ -12,7 +12,7 @@ EPSG = {
 # TODO: add url possibility
 def get_crs(crs: str = None, valid_crs: Union[list, tuple] = EPSG.keys()) -> str:
     if not set(valid_crs).issubset(set(EPSG)):
-        raise ValueError(f"`valid_crs` parameter is not valid. Must be an iterable containing only {EPSG.keys()} but"
+        raise ValueError(f"`valid_crs` parameter is not valid. Must be an iterable containing only {EPSG.keys()} but "
                          f"had value {valid_crs}")
 
     if isinstance(crs, int):
@@ -22,4 +22,7 @@ def get_crs(crs: str = None, valid_crs: Union[list, tuple] = EPSG.keys()) -> str
     if crs in EPSG and crs in valid_crs:
         return EPSG[crs]
 
-    raise ValueError("Unknown CRS. Must be...")
+    raise ValueError(f"Unknown CRS. Must be in format \"epsg:4326\", \"EPSG:4326\", 4326, or "
+                     f"\"http://www.opengis.net/def/crs/EPSG/0/4326\". See documentation for available crs.")
+
+
