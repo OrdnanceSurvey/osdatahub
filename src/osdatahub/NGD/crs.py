@@ -1,5 +1,4 @@
 from typing import Union
-# import re
 
 EPSG = {
     "epsg:4326": "http://www.opengis.net/def/crs/EPSG/0/4326",
@@ -23,7 +22,7 @@ def get_crs(crs: Union[str,int] = None, valid_crs: Union[list, tuple] = EPSG.key
     else:
         #Checks if the url provided is or closely corresponds to a valid crs url as defined by NGD API spec
         for key, url in EPSG.items():
-            if url[7:].casefold() in crs.casefold() and len(crs)<50:
+            if url[7:].casefold() in crs.casefold() and len(crs)<46:
                 crs = key
                 return EPSG[crs]
 
