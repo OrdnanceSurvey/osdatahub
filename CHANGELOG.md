@@ -4,9 +4,9 @@
 
 ### Features
 
-- Added NGD API [dchirst] [BenDickens]
+- Added NGD API [dchirst] [BenDickens] [JEPooley]
 - Fixed typos in Features and Places APIs [dchirst]
-- Added NGD quick start to README
+- Added NGD quick start to README [dchirst] [JEPooley]
 
 ## [1.1.0] - 2022/08/22
 
