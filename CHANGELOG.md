@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.0]
+## [1.2.0] - 2022/11/07
 
 ### Features
 
@@ -8,7 +8,7 @@
 - Fixed typos in Features and Places APIs [dchirst]
 - Added NGD quick start to README
 
-## [1.1.0]
+## [1.1.0] - 2022/08/22
 
 ### Features
 
