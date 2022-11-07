@@ -1,9 +1,9 @@
 import json
 
-from pytest import param
-from shapely.geometry import box, Polygon, Point
 from osdatahub import Extent
 from osdatahub.bbox import BBox
+from pytest import param
+from shapely.geometry import box, Polygon, Point
 
 
 def test_from_bbox():

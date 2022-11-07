@@ -2,9 +2,9 @@ from pathlib import Path
 from typing import Union
 
 import requests
+from osdatahub.codes import AREA_CODES
 from typeguard import typechecked
 
-from osdatahub.codes import AREA_CODES
 from .downloads_api import _DownloadsAPIBase, _DownloadObj
 
 

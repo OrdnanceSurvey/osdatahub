@@ -13,7 +13,9 @@ def _binary_operator(*classes):
             if not isinstance(other, classes):
                 return NotImplemented
             return func(instance, other)
+
         return inner
+
     return func_acceptor
 
 
@@ -274,11 +276,11 @@ def is_between(property_name: str, lower: float, upper: float) -> Filter:
 
 
 def is_like(
-    property_name: str,
-    value: str,
-    wildcard: str = "*",
-    single_char: str = "#",
-    escape_char: str = "!",
+        property_name: str,
+        value: str,
+        wildcard: str = "*",
+        single_char: str = "#",
+        escape_char: str = "!",
 ) -> Filter:
     """Constructs an OGC XML filter for a string attribute that is similar to
     the input value

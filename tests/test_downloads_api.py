@@ -1,14 +1,11 @@
-import pytest
-import unittest.mock as mock
 import os
+import unittest.mock as mock
 
-import requests.exceptions
-import tqdm
-
+import pytest
 from osdatahub import OpenDataDownload, DataPackageDownload
 from osdatahub.DownloadsAPI.downloads_api import _DownloadObj
-from tests.data import downloads_data as data
 
+from tests.data import downloads_data as data
 
 API_KEY = os.environ.get("OSDATAHUB_TEST_KEY")
 
@@ -26,7 +23,7 @@ class TestOpenData:
     @pytest.mark.parametrize(*data.product_list_pass("test_id"))
     @pytest.mark.usefixtures("open_data_download")
     @mock.patch('requests.get')
-    def test_product_list_pass(self, request_mocked,open_data_download, file_name, file_format, file_subformat, area,
+    def test_product_list_pass(self, request_mocked, open_data_download, file_name, file_format, file_subformat, area,
                                return_downloadobj, expected_url, expected_params):
         open_data_download.product_list(file_name=file_name, file_format=file_format, file_subformat=file_subformat,
                                         area=area, return_downloadobj=return_downloadobj)
@@ -40,8 +37,8 @@ class TestOpenData:
                                return_downloadobj, expected_result):
         with pytest.raises(expected_exception=expected_result):
             open_data_download.product_list(file_name=file_name, file_format=file_format,
-                                                 file_subformat=file_subformat,
-                                                 area=area, return_downloadobj=return_downloadobj)
+                                            file_subformat=file_subformat,
+                                            area=area, return_downloadobj=return_downloadobj)
 
     @pytest.mark.skipif(API_KEY is None, reason="Test API key not available")
     def test_product_list_live(self):

@@ -7,7 +7,7 @@ from tests.data import filters_data as data
 class TestFiltering:
     @pytest.mark.parametrize(*data.test_get_single_attribute_filter())
     def test_get_single_attribute_filter(
-        self, property_name, filter_type, a, expected_result
+            self, property_name, filter_type, a, expected_result
     ):
         # Act
         extent_filter = single_attribute_filter(property_name, filter_type, a)

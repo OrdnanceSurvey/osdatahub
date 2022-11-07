@@ -1,10 +1,11 @@
+from collections.abc import Iterable
+from typing import Union
+
 import requests
 from geojson import FeatureCollection
 from osdatahub import Extent
 from osdatahub.grow_list import GrowList
 from osdatahub.utils import addresses_to_geojson, validate_in_range
-from collections.abc import Iterable
-from typing import Union
 from typeguard import check_argument_types
 
 
@@ -35,12 +36,12 @@ class PlacesAPI:
         return self.__ENDPOINT + api_name + f"?key={self.key}"
 
     def query(
-        self,
-        extent: Extent,
-        output_crs: str = None,
-        limit: int = 100,
-        classification_code: Union[str, Iterable] = None,
-        logical_status_code: Union[str, int] = None,
+            self,
+            extent: Extent,
+            output_crs: str = None,
+            limit: int = 100,
+            classification_code: Union[str, Iterable] = None,
+            logical_status_code: Union[str, int] = None,
     ) -> FeatureCollection:
         """Run a query of the OS Places API within a given extent
 
@@ -82,14 +83,14 @@ class PlacesAPI:
         return addresses_to_geojson(data.values, output_crs)
 
     def find(
-        self,
-        text: str,
-        output_crs: str = "EPSG:27700",
-        limit: int = 100,
-        classification_code: Union[str, Iterable] = None,
-        logical_status_code: Union[str, int] = None,
-        minmatch: float = None,
-        matchprecision: int = None
+            self,
+            text: str,
+            output_crs: str = "EPSG:27700",
+            limit: int = 100,
+            classification_code: Union[str, Iterable] = None,
+            logical_status_code: Union[str, int] = None,
+            minmatch: float = None,
+            matchprecision: int = None
     ) -> FeatureCollection:
         """A free text query of the OS Places API
 
@@ -130,12 +131,12 @@ class PlacesAPI:
         return addresses_to_geojson(data.values, output_crs)
 
     def postcode(
-        self,
-        postcode: str,
-        output_crs: str = "EPSG:27700",
-        limit: int = 100,
-        classification_code: Union[str, Iterable] = None,
-        logical_status_code: Union[str, int] = None,
+            self,
+            postcode: str,
+            output_crs: str = "EPSG:27700",
+            limit: int = 100,
+            classification_code: Union[str, Iterable] = None,
+            logical_status_code: Union[str, int] = None,
     ) -> FeatureCollection:
         """A query based on a property’s postcode. The minimum for the
         resource is the area and district
@@ -174,11 +175,11 @@ class PlacesAPI:
         return addresses_to_geojson(data.values, output_crs)
 
     def uprn(
-        self,
-        uprn: int,
-        output_crs: str = "EPSG:27700",
-        classification_code: Union[str, Iterable] = None,
-        logical_status_code: Union[str, int] = None,
+            self,
+            uprn: int,
+            output_crs: str = "EPSG:27700",
+            classification_code: Union[str, Iterable] = None,
+            logical_status_code: Union[str, int] = None,
     ) -> FeatureCollection:
         """A query that takes a UPRN as the search parameter
 
@@ -207,13 +208,13 @@ class PlacesAPI:
         return addresses_to_geojson(data.values, output_crs)
 
     def nearest(
-        self,
-        point: tuple,
-        point_crs: str,
-        radius: float = 100,
-        output_crs: str = "EPSG:27700",
-        classification_code: Union[str, Iterable] = None,
-        logical_status_code: Union[str, int] = None,
+            self,
+            point: tuple,
+            point_crs: str,
+            radius: float = 100,
+            output_crs: str = "EPSG:27700",
+            classification_code: Union[str, Iterable] = None,
+            logical_status_code: Union[str, int] = None,
     ) -> FeatureCollection:
         """Takes a pair of coordinates (X, Y)/(Lon, Lat) as an input
         to determine the closest address.
@@ -257,14 +258,14 @@ class PlacesAPI:
 
     @staticmethod
     def __format_fq(
-        classification_code: Union[str, Iterable] = None,
-        logical_status_code: Union[str, int] = None,
+            classification_code: Union[str, Iterable] = None,
+            logical_status_code: Union[str, int] = None,
     ) -> list:
         """
         Formats optional fq arguments for Places API query
 
         Args:
-            classifcation_code (str|Iterable[str], optional): The classification codes to filter query
+            classification_code (str|Iterable[str], optional): The classification codes to filter query
             logical_status_code (str|Number, optional): Logical status code to filter query
 
         Returns:

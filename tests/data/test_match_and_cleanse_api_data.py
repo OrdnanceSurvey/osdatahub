@@ -81,7 +81,8 @@ def test_match_pass():
             None,
             None,
             "https://api.os.uk/search/match/v1/match?key=test",
-            {"query": "test2 test2 test2", "maxresults": 100, "output_srs": "EPSG:27700", "dataset": "DPA,LPI", "offset": 0}
+            {"query": "test2 test2 test2", "maxresults": 100, "output_srs": "EPSG:27700", "dataset": "DPA,LPI",
+             "offset": 0}
         ),
         param(
             "test2 test2 test2",
@@ -133,7 +134,8 @@ def test_match_pass():
             None,
             None,
             "https://api.os.uk/search/match/v1/match?key=test",
-            {"query": "test2 test2 test2", "maxresults": 100, "output_srs": "EPSG:27700", "matchprecision": "8", "offset": 0}
+            {"query": "test2 test2 test2", "maxresults": 100, "output_srs": "EPSG:27700", "matchprecision": "8",
+             "offset": 0}
         ),
         param(
             "test3",
@@ -146,7 +148,8 @@ def test_match_pass():
             None,
             None,
             "https://api.os.uk/search/match/v1/match?key=test",
-            {"query": "test3", "maxresults": 100, "output_srs": "EPSG:27700", "fq": ["CLASSIFICATION_CODE:test1"], "offset": 0}
+            {"query": "test3", "maxresults": 100, "output_srs": "EPSG:27700", "fq": ["CLASSIFICATION_CODE:test1"],
+             "offset": 0}
         ),
         param(
             "test2 test2 test2",
@@ -244,7 +247,8 @@ def test_match_pass():
             "M",
             "https://api.os.uk/search/match/v1/match?key=test",
             {"query": "test2 test2 test2", "maxresults": 100, "output_srs": "EPSG:27700",
-             "fq": ["CLASSIFICATION_CODE:test1 CLASSIFICATION_CODE:test2", "LOGICAL_STATUS_CODE:8", "COUNTRY_CODE:M"], "offset": 0}
+             "fq": ["CLASSIFICATION_CODE:test1 CLASSIFICATION_CODE:test2", "LOGICAL_STATUS_CODE:8", "COUNTRY_CODE:M"],
+             "offset": 0}
         ),
         param(
             "test2 test2 test2",
@@ -549,4 +553,3 @@ def test_match_fail():
         ),
     ]
     return test_variables, test_data
-

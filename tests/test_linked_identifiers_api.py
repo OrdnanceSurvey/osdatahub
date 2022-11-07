@@ -1,14 +1,14 @@
 import pytest
-
 from osdatahub import LinkedIdentifiersAPI
 from osdatahub.LinkedIdentifiersAPI.linked_identifier_options import Options
+
 from tests.data import linked_identifiers_api_data as data
 
 
 class TestLinkedIdentifiersAPI:
     @pytest.mark.parametrize(*data.test_get_endpoint())
     def test_get_endpoint(
-        self, key, identifier, feature_type, identifier_type, expected_result
+            self, key, identifier, feature_type, identifier_type, expected_result
     ):
         # Arrange
         li_api = LinkedIdentifiersAPI(key)
@@ -30,9 +30,9 @@ class TestLinkedIdentifiersAPI:
             )
         # Assert
         assert (
-            str(exc_info.value)
-            == "It is possible to query by the feature_type "
-            + "OR the identifier type, but not both"
+                str(exc_info.value)
+                == "It is possible to query by the feature_type "
+                + "OR the identifier type, but not both"
         )
 
 
@@ -46,6 +46,6 @@ class TestOptions:
 
         # Assert
         assert str(exc_info.value) == (
-            f"'option4' is not a valid test options, "
-            + f"please choose from one of the following:\n- option1\n- option2\n- option3"
+                f"'option4' is not a valid test options, "
+                + f"please choose from one of the following:\n- option1\n- option2\n- option3"
         )

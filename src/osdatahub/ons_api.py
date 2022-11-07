@@ -1,6 +1,6 @@
-from typing import List
-import requests
 import json
+
+import requests
 
 ID_ENDPOINT = "http://statistics.data.gov.uk/geometry?resource=http://statistics.data.gov.uk/id/statistical-geography/"
 

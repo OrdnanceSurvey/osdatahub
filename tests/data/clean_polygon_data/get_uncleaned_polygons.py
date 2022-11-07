@@ -4,9 +4,9 @@ from os import environ
 import geojson
 import requests
 from geojson import FeatureCollection
-from osdatahub.errors import raise_http_error
 from osdatahub import Extent
 from osdatahub import FeaturesAPI
+from osdatahub.errors import raise_http_error
 from osdatahub.filters import is_equal
 from osdatahub.grow_list import GrowList
 from typeguard import typechecked

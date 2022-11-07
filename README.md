@@ -7,23 +7,27 @@
 > Coding in JavaScript?  
 > `osdatahub` has a sibling package for JavaScript developers with similar functionality, [check it out here](https://github.com/OrdnanceSurvey/osdatahub-js).
 
-`osdatahub` is a python package from Ordnance Survey (OS) that makes it easier to interact with OS data via the [OS Data Hub APIs](https://osdatahub.os.uk/).
-
+`osdatahub` is a python package from Ordnance Survey (OS) that makes it easier to interact with OS data via
+the [OS Data Hub APIs](https://osdatahub.os.uk/).
 
 OS is the national mapping agency for Great Britain and produces a large variety of mapping
 and geospatial products. Much of OS's data is available via the [OS Data Hub](https://osdatahub.os.uk/), a platform
-that hosts both free and premium data products. `osdatahub` provides a user-friendly way to interact with these data products
-in Python. To see what data is available, you can use the [OS Data Hub Explorer](https://labs.os.uk/public/data-hub-explorer/).
+that hosts both free and premium data products. `osdatahub` provides a user-friendly way to interact with these data
+products
+in Python. To see what data is available, you can use
+the [OS Data Hub Explorer](https://labs.os.uk/public/data-hub-explorer/).
 
 ![The OS Logo](https://github.com/OrdnanceSurvey/osdatahub/blob/master/media/os-logo.png)
 
 ## Features <!-- omit in toc -->
+
 - Get access to Ordnance Survey data in as few as 2-3 lines of code
 - Easily query geographic extents using bounding boxes, radii and ONS geographies
 - Request as much data as you need with automatic API paging
 - Supports the OS Features, Places, Names, Linked Identifiers, and Downloads APIs
 
 ## Links <!-- omit in toc -->
+
 - GitHub repo: https://github.com/OrdnanceSurvey/osdatahub
 - Documentation: https://osdatahub.readthedocs.io/en/latest/
 - PyPI: https://pypi.org/project/osdatahub/
@@ -37,18 +41,20 @@ in Python. To see what data is available, you can use the [OS Data Hub Explorer]
 
 - [Setup](#setup)
 - [Quick Start](#quick-start)
-  - [Features API](#features-api)
-  - [Places API](#places-api)
-  - [Names API](#names-api)
-  - [Linked Identifiers API](#linked-identifiers-api)
-  - [Downloads API](#downloads-api)
+    - [NGD API](#ngd-api)
+    - [Features API](#features-api)
+    - [Places API](#places-api)
+    - [Names API](#names-api)
+    - [Linked Identifiers API](#linked-identifiers-api)
+    - [Downloads API](#downloads-api)
 - [Tutorials](#tutorials)
 - [Contribute](#contribute)
 
 
 # Setup
 
-`osdatahub` is available on [PyPI](https://pypi.org/project/osdatahub/). To install `osdatahub`, run this command in your terminal:
+`osdatahub` is available on [PyPI](https://pypi.org/project/osdatahub/). To install `osdatahub`, run this command in
+your terminal:
 
 ```bash
 pip install osdatahub
@@ -60,7 +66,8 @@ The library is also available to download via [conda](https://anaconda.org/conda
 conda install -c conda-forge osdatahub
 ```
 
-You'll also need to sign-up for an account on the [OS Data Hub](https://osdatahub.os.uk/) and get an API key. If you've setup you're account and need help getting a key, try the 
+You'll also need to sign-up for an account on the [OS Data Hub](https://osdatahub.os.uk/) and get an API key. If you've
+setup you're account and need help getting a key, try the
 following steps:
 
 1. Navigate to the **API Dashboard** located on the top navigation bar

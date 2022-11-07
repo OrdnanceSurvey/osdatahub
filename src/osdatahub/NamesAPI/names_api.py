@@ -3,13 +3,12 @@ from typing import Union
 
 import requests
 from geojson import FeatureCollection
-from typeguard import check_argument_types
-
 from osdatahub.NamesAPI.local_types import validate_local_type, get_local_type
 from osdatahub.errors import raise_http_error
 from osdatahub.extent import Extent
 from osdatahub.grow_list import GrowList
 from osdatahub.utils import addresses_to_geojson
+from typeguard import check_argument_types
 
 
 class NamesAPI:

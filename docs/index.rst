@@ -1,7 +1,7 @@
 .. osdatahub documentation master file, created by
-   sphinx-quickstart on Tue Nov  2 16:09:27 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+sphinx-quickstart on Tue Nov  2 16:09:27 2021.
+You can adapt this file completely to your liking, but it should at least
+contain the root `toctree` directive.
 
 Welcome to ``osdatahub's`` documentation!
 ==========================================
@@ -19,6 +19,7 @@ developers.
    :maxdepth: 2
  
    readme_link
+   NGD
    FeaturesAPI
    PlacesAPI
    NamesAPI

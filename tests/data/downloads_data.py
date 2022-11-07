@@ -1,12 +1,8 @@
-import os
-import random
-
-from pytest import param
 import itertools
 
-from tqdm import tqdm
-
 from osdatahub.DownloadsAPI.downloads_api import _DownloadObj
+from pytest import param
+from tqdm import tqdm
 
 
 def generate_product_list_params(file_name, file_format, file_subformat, area, return_downloadobj):
@@ -51,14 +47,14 @@ def product_list_fail():
 
 def fake_product(i):
     return {
-                "md5": f"test_md5{i}",
-                "size": f"{i}",
-                "url": f"https://testurl{i}.com",
-                "format": f"test_format{i}",
-                "test_subformat": f"test_subformat{i}",
-                "area": "HP",
-                "fileName": f"testfile{i}.zip"
-            }
+        "md5": f"test_md5{i}",
+        "size": f"{i}",
+        "url": f"https://testurl{i}.com",
+        "format": f"test_format{i}",
+        "test_subformat": f"test_subformat{i}",
+        "area": "HP",
+        "fileName": f"testfile{i}.zip"
+    }
 
 
 def download_pass():
@@ -95,4 +91,3 @@ def download_pass():
     ]
 
     return test_variables, test_data
-
