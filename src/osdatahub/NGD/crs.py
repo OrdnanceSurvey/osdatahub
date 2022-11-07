@@ -10,6 +10,18 @@ EPSG = {
 }
 
 def get_crs(crs: Union[str,int] = None, valid_crs: Union[list, tuple] = EPSG.keys()) -> str:
+    """Return a CRS in the correct format for the NGD API (URL).  Checks the validity of the CRS
+    according to the API and the valid_crs parameter.  
+
+    Args:
+        crs (Union[str,int]): A crs code as a string, int or url
+        valid_crs (Union[list, tuple]): a list or tuple of valid crs, this is an internal parameter not set by user.
+
+    Returns (str): A url as a string in the correct format for the NGD API
+
+    Example::
+    getcrs(crs="epsg:4326", valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"))
+    """
     if not set(valid_crs).issubset(set(EPSG)):
         raise ValueError(f"`valid_crs` parameter is not valid. Must be an iterable containing only {EPSG.keys()} but "
                          f"had value {valid_crs}")
