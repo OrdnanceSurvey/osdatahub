@@ -79,6 +79,62 @@ following steps:
 
 
 # Quick Start
+## NGD API
+
+Ordnance Survey's newest API replaces the Features API with extra functionality, better error handling, and an
+OGC-compliant
+GeoJSON return type. Currently, the NGD supports topographic features, with Places being added soon.
+
+We can use the NGD API by importing the **NGD** class (which helps us run queries):
+
+```python
+from osdatahub import NGD
+```
+
+Then we need to get our [OS API key](https://osdatahub.os.uk/) and store it as a variable ([find out how to
+do this securely with environment variables](https://github.com/OrdnanceSurvey/osdatahub/blob/modify-links/Examples/Setting%20up%20an%20API%20key.ipynb)):
+
+```python
+key = "[YOUR KEY GOES HERE]"
+```
+
+Next, we must decide which NGD Collection we are interested in. We can discover the available collection ids in 2 ways:
+
+1. Browse the [OS Data Hub Technical Documentation](https://osdatahub.os.uk/docs/ofa/technicalSpecification)
+2. Run the `get_collections()` function:
+
+```python
+NGD.get_collections()
+```
+
+Then we can instantiate the NGD class, ready for us to query:
+
+```python
+collection = "bld-fts-buildingline"
+ngd = NGD(key, collection)
+results = ngd.query(max_results=50)
+```
+
+The `query()` function supports many different options and filters, such as various output CRS', CQL filters, and
+start and end times for temporal features.
+
+The data stored in the results variable will be in geojson format, limited to
+50 features. To save the query results as a geojson file, you need to import
+the [geojson module](https://github.com/jazzband/geojson) and use the `.dump() `
+function:
+
+```python
+import geojson
+
+geojson.dump(results, open("FILENAME.geojson", "w"))
+```
+
+If you have the ID of a specific feature you would like to query, you can use the `query_feature()` function instead:
+
+```python
+feature_id = "0000013e-5fed-447d-a627-dae6fb215138"
+feature = ngd.query_feature(feature_id)
+```
 
 ## Features API
 

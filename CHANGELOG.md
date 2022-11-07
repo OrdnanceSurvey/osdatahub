@@ -6,6 +6,7 @@
 
 - Added NGD API [dchirst] [BenDickens]
 - Fixed typos in Features and Places APIs [dchirst]
+- Added NGD quick start to README
 
 ## [1.1.0]
 
