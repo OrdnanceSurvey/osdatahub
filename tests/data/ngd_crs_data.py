@@ -18,6 +18,10 @@ def test_ngd_crs():
         param(7405, EPSG, EPSG["epsg:7405"]),
         param(7405, ["epsg:7405"], EPSG["epsg:7405"]),
         param(3857, ("epsg:7405", "epsg:3857"), EPSG["epsg:3857"]),
+        param("http://www.opengis.net/def/crs/EPSG/0/4326/", EPSG, EPSG["epsg:4326"]),
+        param("www.opengis.net/def/crs/EPSG/0/4326", EPSG, EPSG["epsg:4326"]),
+        param("http://www.opengis.net/def/crs/OGC/1.3/crs84", EPSG, EPSG["crs84"]),
+        param("HTTPS://www.opengis.net/def/crs/OGC/1.3/CRS84", EPSG, EPSG["crs84"]),
     ]
     return test_variables, test_data
 

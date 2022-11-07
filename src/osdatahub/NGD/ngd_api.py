@@ -62,6 +62,8 @@ class NGD:
     """
     __ENDPOINT = r"https://api.os.uk/features/ngd/ofa/v1/collections"
 
+    __HEADERS = {'Accept': 'application/geo+json'}
+
     def __init__(self, key: str, collection: str):
         self.key: str = key
         self.collection: str = collection
@@ -164,11 +166,15 @@ class NGD:
 
         data = {}
 
+        headers = self.__HEADERS
+        headers.update({"key": self.key})
+
         while n_required > 0:
             offset = max(offset, data["numberReturned"] if "numberReturned" in data else 0)
             params.update({"limit": min(n_required, 100), "offset": offset})
             try:
-                response = requests.get(self.__endpoint(), params=params, headers={"key": self.key})
+
+                response = requests.get(self.__endpoint(), params=params, headers=headers)
                 response.raise_for_status()
             except requests.exceptions.HTTPError as e:
                 logging.error(json.dumps(e.response.json(), indent=4))
