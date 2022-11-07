@@ -304,13 +304,13 @@ def test_ngd_instantiation():
             "test_key",
             "test_collection",
             "https://api.os.uk/features/ngd/ofa/v1/collections/test_collection/items/",
-            {"key": "test_key"}
+            {"key": "test_key", 'Accept': 'application/geo+json'}
         ),
         param(
             "test_key2",
             "test_collection2",
             "https://api.os.uk/features/ngd/ofa/v1/collections/test_collection2/items/",
-            {"key": "test_key2"}
+            {"key": "test_key2", 'Accept': 'application/geo+json'}
         )
     ]
     return test_variables, test_data
