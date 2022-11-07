@@ -342,3 +342,85 @@ def test_ngd_query_feature():
     ]
 
     return test_variables, test_data
+
+
+
+def test_ngd_query_live():
+    test_variables = "collection, extent, crs, start_datetime, end_datetime, cql_filter, filter_crs, max_results, offset"
+    test_data = [
+        param(
+            "bld-fts-buildingpart",
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            100,
+            0
+        ),
+        param(
+            "lus-fts-site",
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            50,
+            0
+        ),
+        param(
+            "str-fts-structureline",
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            100,
+            20
+        ),
+        param("trn-ntwk-road",
+            Extent.from_bbox((-2.503510, 53.578646, -2.432785, 53.600655), crs="CRS84"),
+              None,
+              None,
+              None,
+              None,
+              None,
+              100,
+              0
+              ),
+        param("trn-rami-highwaydedication",
+            Extent.from_bbox((-278689.4051, 7090757.3659, -270816.3912, 7094884.9654), crs="EPSG:3857"),
+              None,
+              None,
+              None,
+              None,
+              None,
+              100,
+              0
+              ),
+        param("wtr-ntwk-waterlink",
+            Extent.from_bbox((280371.5367, 597854.9713, 320300.6732, 625998.9645), crs="EPSG:27700"),
+              None,
+              None,
+              None,
+              None,
+              None,
+              100,
+              0
+              ),
+        param("trn-fts-rail",
+            None,
+            3857,
+            None,
+            None,
+            None,
+            None,
+            100,
+            20
+        )
+    ]
+
+    return test_variables, test_data

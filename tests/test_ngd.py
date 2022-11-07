@@ -1,4 +1,6 @@
 from unittest import mock
+from os import environ
+from dotenv import load_dotenv
 
 import pytest
 from osdatahub.NGD.crs import get_crs
@@ -7,6 +9,10 @@ from osdatahub.NGD.ngd_api import _merge_geojsons, NGD
 from tests.data import ngd_crs_data as crs_data
 from tests.data import ngd_merge_geojsons_data as merge_geojsons_data
 from tests.data import ngd_query_data as query_data
+
+load_dotenv()
+
+API_KEY = environ.get("OSDATAHUB_TEST_KEY")
 
 
 class TestNGDCRS:
@@ -66,6 +72,23 @@ class TestNGDQuery:
                       max_results=max_results,
                       offset=offset
                       )
+
+    @pytest.mark.skipif(not API_KEY, reason="Test API key not available")
+    @pytest.mark.parametrize(*query_data.test_ngd_query_live())
+    def test_ngd_api_call(self, collection, extent, crs, start_datetime, end_datetime, cql_filter, filter_crs,
+                          max_results, offset):
+        ngd = NGD(key=API_KEY, collection=collection)
+        results = ngd.query(extent=extent,
+                  crs=crs,
+                  start_datetime=start_datetime,
+                  end_datetime=end_datetime,
+                  cql_filter=cql_filter,
+                  filter_crs=filter_crs,
+                  max_results=max_results,
+                  offset=offset
+                )
+
+        assert len(results["features"]) > 0
 
 
 class TestNGDGetCollections:
