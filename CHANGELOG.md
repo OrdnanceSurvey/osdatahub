@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.0]
+## [1.2.0] - 2022/11/07
 
 ### Features
 
@@ -8,7 +8,7 @@
 - Fixed typos in Features and Places APIs [dchirst]
 - Added NGD quick start to README [dchirst] [JEPooley]
 
-## [1.1.0]
+## [1.1.0] - 2022/08/22
 
 ### Features
 
@@ -21,3 +21,4 @@
 ### Bugs
 
 - Error when `nearest` returned an empty feature set (issue 24) [E-Paine]
+
