@@ -16,7 +16,8 @@ jobs:
         uses: technote-space/get-diff-action@v4
         id: git-diff
         with:
-          PATTERNS: CHANGELOG.md
+          FILES: |
+            CHANGELOG.md
       - name: Fail if changelog not updated
         if: (! env.GIT_DIFF)
         run: exit 1
