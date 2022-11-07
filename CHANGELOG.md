@@ -20,3 +20,4 @@
 ### Bugs
 
 - Error when `nearest` returned an empty feature set (issue 24) [E-Paine]
+
