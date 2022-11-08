@@ -1,6 +1,8 @@
 from collections import namedtuple
 
+
 Product = namedtuple("Product", "name geometry")
+
 
 PREMIUM = {
     "topographic_area": Product("Topography_TopographicArea", "Polygon"),
@@ -51,6 +53,7 @@ PREMIUM = {
     "Topography_CartographicSymbol": Product("Topography_CartographicSymbol", "Point"),
     "Topography_CartographicText": Product("Topography_CartographicText", "Point")
 }
+
 
 OPEN = {
     "zoomstack_district_buildings": Product("Zoomstack_DistrictBuildings", "Polygon"),
@@ -166,7 +169,3 @@ def get_product(product_name: str, new_api: bool = False) -> Product:
         return open_lookup[product_name]
     else:
         raise ValueError(f"{product_name} is not a valid product name")
-
-
-if __name__ == '__main__':
-    print(OPEN_NEW)

@@ -1,5 +1,7 @@
 from typing import Union
 
+from typing import Union
+
 from geojson import FeatureCollection
 from osdatahub.grow_list import GrowList
 from shapely.geometry import LinearRing
