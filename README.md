@@ -92,7 +92,7 @@ from osdatahub import NGD
 ```
 
 Then we need to get our [OS API key](https://osdatahub.os.uk/) and store it as a variable ([find out how to
-do this securely with environment variables](https://github.com/OrdnanceSurvey/osdatahub/blob/modify-links/Examples/Setting%20up%20an%20API%20key.ipynb)):
+do this securely with environment variables](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/Setting%20up%20an%20API%20key.ipynb)):
 
 ```python
 key = "[YOUR KEY GOES HERE]"
