@@ -1,7 +1,7 @@
 # Changelog
 
 
-## [Unreleased]
+## [1.2.1] - 2022/12/08
 
 ### Fixed
 
