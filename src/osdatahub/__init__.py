@@ -6,4 +6,4 @@ from osdatahub.LinkedIdentifiersAPI import LinkedIdentifiersAPI
 from osdatahub.DownloadsAPI import OpenDataDownload, DataPackageDownload
 from osdatahub.NGD import NGD
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
