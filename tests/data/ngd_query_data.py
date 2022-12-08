@@ -356,7 +356,7 @@ def test_ngd_query_live():
             None,
             None,
             None,
-            100,
+            5,
             0
         ),
         param(
@@ -378,7 +378,7 @@ def test_ngd_query_live():
             None,
             None,
             None,
-            100,
+            5,
             20
         ),
         param("trn-ntwk-road",
@@ -388,7 +388,7 @@ def test_ngd_query_live():
               None,
               None,
               None,
-              100,
+              5,
               0
               ),
         param("trn-rami-highwaydedication",
@@ -398,7 +398,7 @@ def test_ngd_query_live():
               None,
               None,
               None,
-              100,
+              5,
               0
               ),
         param("wtr-ntwk-waterlink",
@@ -408,7 +408,7 @@ def test_ngd_query_live():
               None,
               None,
               None,
-              100,
+              5,
               0
               ),
         param("trn-fts-rail",
@@ -418,8 +418,19 @@ def test_ngd_query_live():
             None,
             None,
             None,
-            100,
+            7,
             20
+        ),
+        param("trn-ntwk-road",
+            None,
+            3857,
+            None,
+            None,
+            None,
+            None,
+            134,
+            20,
+            id=">100 features"
         )
     ]
 

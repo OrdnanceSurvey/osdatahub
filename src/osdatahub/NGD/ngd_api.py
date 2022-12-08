@@ -170,10 +170,10 @@ class NGD:
         headers.update({"key": self.key})
 
         while n_required > 0:
+            limit = min(n_required, 100)
             offset = max(offset, data["numberReturned"] if "numberReturned" in data else 0)
-            params.update({"limit": min(n_required, 100), "offset": offset})
+            params.update({"limit": limit, "offset": offset})
             try:
-
                 response = requests.get(self.__endpoint(), params=params, headers=headers)
                 response.raise_for_status()
             except requests.exceptions.HTTPError as e:
@@ -184,7 +184,7 @@ class NGD:
 
             data = _merge_geojsons(data, resp_json)
 
-            if resp_json["numberReturned"] < n_required:
+            if resp_json["numberReturned"] < limit:
                 break
             else:
                 n_required -= resp_json["numberReturned"]

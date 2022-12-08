@@ -141,3 +141,5 @@ settings.json
 
 !*sites_*.geojson
 *.tif
+
+/sandbox
