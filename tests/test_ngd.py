@@ -88,7 +88,7 @@ class TestNGDQuery:
                   offset=offset
                 )
 
-        assert len(results["features"]) > 0
+        assert len(results["features"]) == max_results
 
 
 class TestNGDGetCollections:

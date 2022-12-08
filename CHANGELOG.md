@@ -1,5 +1,12 @@
 # Changelog
 
+
+## [Unreleased]
+
+### Fixed
+
+- Fixed paging for NGD Features requests
+
 ## [1.2.0] - 2022/11/07
 
 ### Features
