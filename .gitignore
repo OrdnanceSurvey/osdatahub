@@ -143,3 +143,4 @@ settings.json
 *.tif
 
 /sandbox
+github_issue.py
