@@ -41,7 +41,7 @@ def raise_http_error(response):
     else:
         try:
             is_too_large = response.json()["fault"]["detail"]["errorcode"] == "protocol.http.TooBigLine"
-        except (json.JSONDecoder, KeyError):
+        except (KeyError, json.decoder.JSONDecodeError):
             is_too_large = False
 
         if is_too_large:
