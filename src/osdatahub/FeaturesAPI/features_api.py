@@ -5,7 +5,8 @@ import requests
 from geojson import FeatureCollection
 from typeguard import check_argument_types
 
-from osdatahub import PROXIES, Extent
+import osdatahub
+from osdatahub.extent import Extent
 from osdatahub.errors import raise_http_error
 from osdatahub.FeaturesAPI.feature_products import (get_product,
                                                     validate_product_name)
@@ -14,7 +15,7 @@ from osdatahub.grow_list import GrowList
 from osdatahub.spatial_filter_types import SpatialFilterTypes
 from osdatahub.utils import features_to_geojson, is_new_api
 
-
+print("features", osdatahub.get_proxies())
 class FeaturesAPI:
     """Main class for querying the OS Features API (https://osdatahub.os.uk/docs/wfs/overview)
 
