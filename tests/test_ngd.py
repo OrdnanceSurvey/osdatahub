@@ -35,7 +35,10 @@ class TestNGDQuery:
         ngd = NGD(key=api_key, collection=collection)
         ngd.query()
 
-        request_mocked.assert_called_with(expected_url, headers=expected_headers, params={"limit": 100, "offset": 0})
+        request_mocked.assert_called_with(expected_url,
+                                          headers=expected_headers,
+                                          params={"limit": 100, "offset": 0},
+                                          proxies={})
 
     @pytest.mark.parametrize(*query_data.test_ngd_query())
     @mock.patch('requests.get')
@@ -56,7 +59,8 @@ class TestNGDQuery:
                   )
         request_mocked.assert_called_with(expected_url,
                                           params=expected_params,
-                                          headers={"key": "API-KEY"})
+                                          headers={"key": "API-KEY"},
+                                          proxies={})
 
     @pytest.mark.parametrize(*query_data.test_ngd_query_fail())
     def test_ngd_api_call_fail(self, extent, crs, start_datetime, end_datetime, cql_filter, filter_crs,
@@ -97,7 +101,8 @@ class TestNGDGetCollections:
         request_mocked.return_value.configure_mock(json=lambda: {})
         NGD.get_collections()
 
-        request_mocked.assert_called_with("https://api.os.uk/features/ngd/ofa/v1/collections")
+        request_mocked.assert_called_with("https://api.os.uk/features/ngd/ofa/v1/collections",
+                                          proxies={})
 
 
 class TestNGDQueryFeature:
@@ -111,7 +116,8 @@ class TestNGDQueryFeature:
 
         request_mocked.assert_called_with(expected_url,
                                           params=expected_params,
-                                          headers={"key": "api_key"})
+                                          headers={"key": "api_key"},
+                                          proxies={})
 
 
 class TestMergeGeojsons:

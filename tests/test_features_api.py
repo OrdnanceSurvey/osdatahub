@@ -38,7 +38,8 @@ class TestFeaturesAPI:
 
         # Assert
         request_mocked.assert_called_with(expected_url,
-                                          params=expected_params)
+                                          params=expected_params,
+                                          proxies={})
 
     @pytest.mark.skipif(not API_KEY, reason="Test API key not available")
     @pytest.mark.parametrize(*data.test_query())
