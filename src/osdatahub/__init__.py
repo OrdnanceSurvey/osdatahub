@@ -1,5 +1,15 @@
+import sys
+
+this = sys.modules[__name__]
+this.PROXIES = {}
+
+def set_proxies(proxies):
+    this.PROXIES = proxies
+
+def get_proxies():
+    return this.PROXIES
+
 __version__ = "1.2.1"
-PROXIES = {}
 
 from osdatahub.extent import Extent
 from osdatahub.FeaturesAPI import FeaturesAPI
