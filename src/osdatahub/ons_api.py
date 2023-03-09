@@ -2,6 +2,8 @@ import json
 
 import requests
 
+from osdatahub import PROXIES
+
 ID_ENDPOINT = "http://statistics.data.gov.uk/geometry?resource=http://statistics.data.gov.uk/id/statistical-geography/"
 
 
@@ -44,5 +46,5 @@ def get_ons_geom(ons_code: str) -> dict:
         response_json (dict): The json of the raw response
     """
     url = f"{ID_ENDPOINT}{ons_code}"
-    res = requests.get(url)
+    res = requests.get(url, proxies=PROXIES)
     return _sanitise_response(res)

@@ -2,10 +2,12 @@ from pathlib import Path
 from typing import Union
 
 import requests
-from osdatahub.codes import AREA_CODES
 from typeguard import typechecked
 
-from .downloads_api import _DownloadsAPIBase, _DownloadObj
+from osdatahub import PROXIES
+from osdatahub.codes import AREA_CODES
+
+from .downloads_api import _DownloadObj, _DownloadsAPIBase
 
 
 class OpenDataDownload(_DownloadsAPIBase):
@@ -50,7 +52,7 @@ class OpenDataDownload(_DownloadsAPIBase):
         if area:
             params.update({"area": area})
 
-        response = requests.get(url=self._endpoint(f"{self._id}/downloads"), params=params)
+        response = requests.get(url=self._endpoint(f"{self._id}/downloads"), params=params, proxies=PROXIES)
         response.raise_for_status()
         if return_downloadobj:
             return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=download["size"])

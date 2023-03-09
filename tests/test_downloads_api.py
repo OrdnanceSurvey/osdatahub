@@ -28,7 +28,8 @@ class TestOpenData:
         open_data_download.product_list(file_name=file_name, file_format=file_format, file_subformat=file_subformat,
                                         area=area, return_downloadobj=return_downloadobj)
         request_mocked.assert_called_with(url=expected_url,
-                                          params=expected_params)
+                                          params=expected_params,
+                                          proxies={})
 
         assert type(return_downloadobj) == bool
 

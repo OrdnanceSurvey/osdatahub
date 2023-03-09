@@ -4,12 +4,12 @@ from os import environ
 import geojson
 import requests
 from geojson import FeatureCollection
-from osdatahub import Extent
-from osdatahub import FeaturesAPI
+from typeguard import typechecked
+
+from osdatahub import PROXIES, Extent, FeaturesAPI
 from osdatahub.errors import raise_http_error
 from osdatahub.filters import is_equal
 from osdatahub.grow_list import GrowList
-from typeguard import typechecked
 
 """
 script to generate unprocessed API data
@@ -34,7 +34,7 @@ class FeaturesAPI_NoPostProcessing(FeaturesAPI):
         try:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
-                response = requests.get(self.ENDPOINT, params=params)
+                response = requests.get(self.ENDPOINT, params=params, proxies=PROXIES)
                 data.extend(response.json()["features"])
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
