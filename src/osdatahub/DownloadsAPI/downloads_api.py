@@ -10,6 +10,8 @@ from typing import Union
 import requests
 from tqdm import tqdm
 
+from osdatahub import PROXIES
+
 
 class _DownloadObj:
     """ Helper class to download a file from Downloads API
@@ -40,7 +42,7 @@ class _DownloadObj:
                             f"Skipping download...")
             return output_path
 
-        r = requests.get(self.url, stream=True)
+        r = requests.get(self.url, stream=True, proxies=PROXIES)
         r.raise_for_status()
         size = int(r.headers.get('content-length'))
         chunk_size = 1024
@@ -92,7 +94,7 @@ class _DownloadsAPIBase(ABC):
         """
         Calls endpoint to return details about the product or data package
         """
-        response = requests.get(self._endpoint(self._id))
+        response = requests.get(self._endpoint(self._id), proxies=PROXIES)
         response.raise_for_status()
         return response.json()
 
@@ -104,7 +106,7 @@ class _DownloadsAPIBase(ABC):
         Returns: list of dictionaries containing all products available to download
 
         """
-        response = requests.get(cls._ENDPOINT)
+        response = requests.get(cls._ENDPOINT, proxies=PROXIES)
         response.raise_for_status()
         return response.json()
 
