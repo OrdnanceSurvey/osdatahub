@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Collection, Union
 
+import osdatahub
 from osdatahub.bbox import BBox
 from osdatahub.ons_api import get_ons_geom
 from shapely.geometry import Polygon, box

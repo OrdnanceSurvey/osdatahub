@@ -5,8 +5,9 @@ from typing import Union
 
 import requests
 from typeguard import typechecked
+import osdatahub
 
-from osdatahub import PROXIES
+
 
 from .downloads_api import _DownloadObj, _DownloadsAPIBase
 
@@ -38,7 +39,7 @@ class DataPackageDownload(_DownloadsAPIBase):
         Returns: A list of dictionaries containing all available Data Packages
 
         """
-        response = requests.get(cls._ENDPOINT, params={"key": key}, proxies=PROXIES)
+        response = requests.get(cls._ENDPOINT, params={"key": key}, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         content = response.json()
         if not content:
@@ -53,7 +54,7 @@ class DataPackageDownload(_DownloadsAPIBase):
         """
         Get all the available versions for the data package
         """
-        response = requests.get(self._endpoint(f"{self._id}/versions"), params={"key": self.key}, proxies=PROXIES)
+        response = requests.get(self._endpoint(f"{self._id}/versions"), params={"key": self.key}, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 
@@ -72,7 +73,7 @@ class DataPackageDownload(_DownloadsAPIBase):
         """
         endpoint = self._endpoint(f"{self._id}/versions/{version_id}")
         params = {"key": self.key}
-        response = requests.get(url=endpoint, params=params, proxies=PROXIES)
+        response = requests.get(url=endpoint, params=params, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         content = response.json()
         if not content:

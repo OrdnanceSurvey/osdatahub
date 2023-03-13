@@ -1,13 +1,13 @@
-import sys
+import os
+import json
 
-this = sys.modules[__name__]
-this.PROXIES = {}
+os.environ["PROXIES"] = json.dumps({})
 
 def set_proxies(proxies):
-    this.PROXIES = proxies
+    os.environ["PROXIES"] = json.dumps(proxies)
 
 def get_proxies():
-    return this.PROXIES
+    return json.loads(os.environ["PROXIES"])
 
 __version__ = "1.2.1"
 
