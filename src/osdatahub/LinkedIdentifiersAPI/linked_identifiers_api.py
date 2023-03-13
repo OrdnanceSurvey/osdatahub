@@ -3,7 +3,7 @@ from typing import Union
 import requests
 from typeguard import typechecked
 
-from osdatahub import PROXIES
+import osdatahub
 from osdatahub.errors import raise_http_error
 from osdatahub.LinkedIdentifiersAPI.linked_identifier_options import (
     correlation_methods, feature_types, identifier_types)
@@ -32,7 +32,7 @@ class LinkedIdentifiersAPI:
 
     @staticmethod
     def __request(endpoint: str) -> dict:
-        response = requests.get(endpoint, proxies=PROXIES)
+        response = requests.get(endpoint, proxies=osdatahub.get_proxies())
         if response.status_code != 200:
             raise_http_error(response)
         return response.json()

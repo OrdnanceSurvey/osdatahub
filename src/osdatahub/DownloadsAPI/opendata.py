@@ -4,7 +4,7 @@ from typing import Union
 import requests
 from typeguard import typechecked
 
-from osdatahub import PROXIES
+import osdatahub
 from osdatahub.codes import AREA_CODES
 
 from .downloads_api import _DownloadObj, _DownloadsAPIBase
@@ -52,7 +52,7 @@ class OpenDataDownload(_DownloadsAPIBase):
         if area:
             params.update({"area": area})
 
-        response = requests.get(url=self._endpoint(f"{self._id}/downloads"), params=params, proxies=PROXIES)
+        response = requests.get(url=self._endpoint(f"{self._id}/downloads"), params=params, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         if return_downloadobj:
             return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=download["size"])
