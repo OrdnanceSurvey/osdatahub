@@ -5,7 +5,7 @@ import requests
 from geojson import FeatureCollection
 from typeguard import check_argument_types
 
-from osdatahub import PROXIES
+import osdatahub
 from osdatahub.errors import raise_http_error
 from osdatahub.extent import Extent
 from osdatahub.grow_list import GrowList
@@ -77,7 +77,7 @@ class NamesAPI:
             n_required = min(limit, 100)
             while n_required > 0 and data.grown:
                 params.update({"offset": len(data), "maxresults": n_required})
-                response = requests.get(self.__endpoint("find"), params=params, proxies=PROXIES)
+                response = requests.get(self.__endpoint("find"), params=params, proxies=osdatahub.get_proxies())
                 data.extend(self.__format_response(response))
                 n_required = min(100, limit - len(data))
         except KeyError:
@@ -109,7 +109,7 @@ class NamesAPI:
         if local_type:
             params.update({"fq": self.__format_fq(local_type=local_type)})
         try:
-            response = requests.get(self.__endpoint("nearest"), params=params, proxies=PROXIES)
+            response = requests.get(self.__endpoint("nearest"), params=params, proxies=osdatahub.get_proxies())
             data.extend(self.__format_response(response))
         except KeyError:
             if response.status_code != 200:

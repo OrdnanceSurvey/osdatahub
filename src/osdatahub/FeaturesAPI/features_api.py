@@ -15,7 +15,6 @@ from osdatahub.grow_list import GrowList
 from osdatahub.spatial_filter_types import SpatialFilterTypes
 from osdatahub.utils import features_to_geojson, is_new_api
 
-print("features", osdatahub.get_proxies())
 class FeaturesAPI:
     """Main class for querying the OS Features API (https://osdatahub.os.uk/docs/wfs/overview)
 
@@ -103,7 +102,7 @@ class FeaturesAPI:
         try:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
-                response = requests.get(self.ENDPOINT, params=params, proxies=PROXIES)
+                response = requests.get(self.ENDPOINT, params=params, proxies=osdatahub.get_proxies())
                 resp_json = response.json()
                 if "fault" in resp_json:
                     raise_http_error(response)

@@ -6,7 +6,8 @@ import requests
 from geojson import FeatureCollection
 from typeguard import typechecked
 
-from osdatahub import PROXIES, Extent, FeaturesAPI
+import osdatahub
+from osdatahub import Extent, FeaturesAPI
 from osdatahub.errors import raise_http_error
 from osdatahub.filters import is_equal
 from osdatahub.grow_list import GrowList
@@ -34,7 +35,7 @@ class FeaturesAPI_NoPostProcessing(FeaturesAPI):
         try:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
-                response = requests.get(self.ENDPOINT, params=params, proxies=PROXIES)
+                response = requests.get(self.ENDPOINT, params=params, proxies=osdatahub.get_proxies())
                 data.extend(response.json()["features"])
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
