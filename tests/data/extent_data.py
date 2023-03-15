@@ -44,6 +44,14 @@ def test_from_radius():
             BBox(-10, -10, 10, 10),
             id="shapely point centre",
         ),
+        param(
+            [0, 0],
+            10,
+            "epsg:27700",
+            Extent(Point(0, 0).buffer(10), "epsg:27700"),
+            BBox(-10, -10, 10, 10),
+            id="list centre",
+        ),
     ]
     return test_variables, test_data
 
