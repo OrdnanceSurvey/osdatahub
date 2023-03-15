@@ -20,7 +20,8 @@ class TestFind:
                        expected_url, expected_params):
         names.find(text, limit=limit, bounds=bounds, bbox_filter=bbox_filter, local_type=local_type)
         request_mocked.assert_called_with(expected_url,
-                                          params=expected_params)
+                                          params=expected_params,
+                                          proxies={})
 
     @pytest.mark.parametrize(*data.test_find_fail())
     @pytest.mark.usefixtures("names")
@@ -41,7 +42,8 @@ class TestNearest:
     def test_nearest_pass(self, request_mocked, names, point, radius, local_type, expected_url, expected_params):
         names.nearest(point=point, radius=radius, local_type=local_type)
         request_mocked.assert_called_with(expected_url,
-                                          params=expected_params)
+                                          params=expected_params,
+                                          proxies={})
 
     @pytest.mark.parametrize(*data.test_nearest_fail())
     @pytest.mark.usefixtures("names")

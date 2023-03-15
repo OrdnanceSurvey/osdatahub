@@ -48,6 +48,7 @@ the [OS Data Hub Explorer](https://labs.os.uk/public/data-hub-explorer/).
     - [Linked Identifiers API](#linked-identifiers-api)
     - [Downloads API](#downloads-api)
 - [Tutorials](#tutorials)
+- [Proxies](#proxies)
 - [Contribute](#contribute)
 
 
@@ -319,6 +320,20 @@ the Examples folder. Here is a list of the available content:
 - [Converting Query Results into Common Formats](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/Converting%20API%20Results%20into%20Common%20Data%20Formats.ipynb)
 - [Post Processing Query Results](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/Post%20Processing%20API%20Queries.ipynb)
 - [Common CRS Pitfalls](https://github.com/OrdnanceSurvey/osdatahub/blob/master/Examples/CRS%20pitfalls.ipynb)
+
+
+# Proxies
+
+To set proxies, use the `set_proxies` method from `osdatahub`. This should look something like:
+
+```python
+import osdatahub
+
+osdatahub.set_proxies({"http": "http://ip:port", "https": "https://ip:port"})
+```
+
+and will apply to all the osdatahub api requests.
+
 
 # Contribute
 

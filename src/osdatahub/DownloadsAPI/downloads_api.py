@@ -7,8 +7,11 @@ from multiprocessing import cpu_count
 from pathlib import Path
 from typing import Union
 
+import osdatahub
 import requests
 from tqdm import tqdm
+
+
 
 
 class _DownloadObj:
@@ -40,7 +43,7 @@ class _DownloadObj:
                             f"Skipping download...")
             return output_path
 
-        r = requests.get(self.url, stream=True)
+        r = requests.get(self.url, stream=True, proxies=osdatahub.get_proxies())
         r.raise_for_status()
         size = int(r.headers.get('content-length'))
         chunk_size = 1024
@@ -92,7 +95,7 @@ class _DownloadsAPIBase(ABC):
         """
         Calls endpoint to return details about the product or data package
         """
-        response = requests.get(self._endpoint(self._id))
+        response = requests.get(self._endpoint(self._id), proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 
@@ -104,7 +107,7 @@ class _DownloadsAPIBase(ABC):
         Returns: list of dictionaries containing all products available to download
 
         """
-        response = requests.get(cls._ENDPOINT)
+        response = requests.get(cls._ENDPOINT, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 

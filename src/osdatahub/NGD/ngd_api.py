@@ -5,10 +5,12 @@ from datetime import datetime
 from typing import Union
 
 import requests
-from geojson import FeatureCollection, Feature
+from geojson import Feature, FeatureCollection
+from typeguard import check_argument_types
+
+import osdatahub
 from osdatahub import Extent
 from osdatahub.NGD.crs import get_crs
-from typeguard import check_argument_types
 
 
 def _merge_geojsons(gj1: FeatureCollection, gj2: FeatureCollection) -> FeatureCollection:
@@ -79,7 +81,7 @@ class NGD:
         Returns:
             Dict: Dictionary containing all Feature Collections currently supported with details for each
         """
-        response = requests.get(cls.__ENDPOINT)
+        response = requests.get(cls.__ENDPOINT, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 
@@ -174,7 +176,7 @@ class NGD:
             offset = max(offset, data["numberReturned"] if "numberReturned" in data else 0)
             params.update({"limit": limit, "offset": offset})
             try:
-                response = requests.get(self.__endpoint(), params=params, headers=headers)
+                response = requests.get(self.__endpoint(), params=params, headers=headers, proxies=osdatahub.get_proxies())
                 response.raise_for_status()
             except requests.exceptions.HTTPError as e:
                 logging.error(json.dumps(e.response.json(), indent=4))
@@ -206,7 +208,7 @@ class NGD:
         """
         params = {"crs": get_crs(crs)} if crs else {}
 
-        response = requests.get(self.__endpoint(feature_id), params=params, headers={"key": self.key})
+        response = requests.get(self.__endpoint(feature_id), params=params, headers={"key": self.key}, proxies=osdatahub.get_proxies())
         response.raise_for_status()
 
         return response.json()
