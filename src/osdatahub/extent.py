@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Collection, Union
+from typing import Collection, Union, Iterable
 
 import osdatahub
 from osdatahub.bbox import BBox
@@ -70,11 +70,11 @@ class Extent:
             ) from None
 
     @classmethod
-    def from_radius(cls, centre: tuple, radius: float, crs: str) -> "Extent":
+    def from_radius(cls, centre: Iterable, radius: float, crs: str) -> "Extent":
         """Creates a circular extent, given a centre point and a radius.
 
         Args:
-            centre (tuple): Either a coordinate tuple in the form (x, y)
+            centre (Iterable): Either a coordinate tuple in the form (x, y)
                 or a shapely Point.
             radius (float): The radius of the circle in metres
             crs (str): The CRS corresponding to the point coordinate,
@@ -91,7 +91,7 @@ class Extent:
             raise ValueError(
                 f"crs must be one of ('EPSG:27700', 'EPSG:3857'), got {crs}"
             )
-        if isinstance(centre, tuple) and len(centre) == 2:
+        if isinstance(centre, Iterable) and len(centre) == 2:
             return Extent(Point(*centre).buffer(radius), crs)
         elif isinstance(centre, Point):
             return Extent(centre.buffer(radius), crs)
