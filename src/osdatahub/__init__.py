@@ -1,13 +1,13 @@
 import os
 import json
 
-os.environ["OSDATAHUB_PROXIES"] = json.dumps({})
+os.environ["_OSDATAHUB_PROXIES"] = json.dumps({})
 
 def set_proxies(proxies):
-    os.environ["OSDATAHUB_PROXIES"] = json.dumps(proxies)
+    os.environ["_OSDATAHUB_PROXIES"] = json.dumps(proxies)
 
 def get_proxies():
-    return json.loads(os.environ["OSDATAHUB_PROXIES"])
+    return json.loads(os.environ["_OSDATAHUB_PROXIES"])
 
 __version__ = "1.2.1"
 
