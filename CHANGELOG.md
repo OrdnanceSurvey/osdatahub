@@ -1,6 +1,18 @@
 # Changelog
 
 
+## [1.2.2] - 2023/03/16
+
+### Fixed
+
+- Fix BaseException being raised instead of caught with JSONDecodeError (issue 62) [JEPooley]
+- Extents `from_radius` method no longer errors if the coordinate is not a tuple - now accepts any Iterable (issue 66) [JEPooley]
+- Updated setup.cfg and tox.ini to reflect python3.11 compatability (issue 68) [JEPooley] [dchirst]
+
+### Features
+
+- Added proxy support using the `osdatahub.set_proxies` method (issue 55) [JEPooley] [FHunt-OS] [abiddiscombe]
+
 ## [1.2.1] - 2022/12/08
 
 ### Fixed

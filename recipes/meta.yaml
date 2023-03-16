@@ -1,6 +1,6 @@
 
 {% set name = "osdatahub" %}
-{% set version = "1.2.1" %}
+{% set version = "1.2.2" %}
 
 
 package:
