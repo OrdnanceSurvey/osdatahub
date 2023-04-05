@@ -125,7 +125,7 @@ class PlacesAPI:
             n_required = min(limit, 100)
             while n_required > 0 and data.grown:
                 params.update({"offset": len(data), "maxresults": n_required})
-                response = requests.get(self.__endpoint("find"), params=params, proxies=osdatahub.get_proxies())
+                response = osdatahub.get(self.__endpoint("find"), params=params, proxies=osdatahub.get_proxies())
                 data.extend(self.__format_response(response))
                 n_required = min(100, limit - len(data))
         except KeyError:
@@ -169,7 +169,7 @@ class PlacesAPI:
             n_required = min(limit, 100)
             while n_required > 0 and data.grown:
                 params.update({"offset": len(data), "maxresults": n_required})
-                response = requests.get(self.__endpoint("postcode"), params=params, proxies=osdatahub.get_proxies())
+                response = osdatahub.get(self.__endpoint("postcode"), params=params, proxies=osdatahub.get_proxies())
                 data.extend(self.__format_response(response))
                 n_required = min(100, limit - len(data))
         except KeyError:
@@ -203,7 +203,7 @@ class PlacesAPI:
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
             )
         try:
-            response = requests.get(self.__endpoint("uprn"), params=params, proxies=osdatahub.get_proxies())
+            response = osdatahub.get(self.__endpoint("uprn"), params=params, proxies=osdatahub.get_proxies())
             data.extend(self.__format_response(response))
         except KeyError:
             response.raise_for_status()
@@ -248,7 +248,7 @@ class PlacesAPI:
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
             )
         try:
-            response = requests.get(self.__endpoint("nearest"), params=params, proxies=osdatahub.get_proxies())
+            response = osdatahub.get(self.__endpoint("nearest"), params=params, proxies=osdatahub.get_proxies())
             data.extend(self.__format_response(response))
         except KeyError:
             response.raise_for_status()

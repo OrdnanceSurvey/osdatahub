@@ -35,7 +35,7 @@ class FeaturesAPI_NoPostProcessing(FeaturesAPI):
         try:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
-                response = requests.get(self.ENDPOINT, params=params, proxies=osdatahub.get_proxies())
+                response = osdatahub.get(self.ENDPOINT, params=params, proxies=osdatahub.get_proxies())
                 data.extend(response.json()["features"])
                 n_required = min(100, limit - len(data))
         except json.decoder.JSONDecodeError:
