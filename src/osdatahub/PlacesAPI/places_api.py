@@ -77,7 +77,7 @@ class PlacesAPI:
             n_required = min(limit, 100)
             while n_required > 0 and data.grown:
                 params["params"].update({"offset": len(data), "maxresults": n_required})
-                response = requests.post(**params)
+                response = osdatahub.post(**params)
                 data.extend(self.__format_response(response))
                 n_required = min(100, limit - len(data))
         except KeyError:
