@@ -1,3 +1,8 @@
+"""
+This requests wrapper is included to handle incomplete responses from the api.
+Information and inspiration from https://blog.petrzemek.net/2018/04/22/on-incomplete-http-reads-and-the-requests-library-in-python/
+"""
+
 import requests
 
 
