@@ -1,6 +1,12 @@
 # Changelog
 
 
+## [1.2.3] - 2023/04/12
+
+### Fixed
+
+- Added requests wrapper that raises an error in the case of an incomplete response (issue 73) [JEPooley]
+
 ## [1.2.2] - 2023/03/16
 
 ### Fixed
