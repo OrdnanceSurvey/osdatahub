@@ -1,1 +1,1 @@
-from osdatahub.MapsAPI.provider import OSTileProvider
+from osdatahub.MapsAPI.provider import AvailableLayers, OSTileProvider
