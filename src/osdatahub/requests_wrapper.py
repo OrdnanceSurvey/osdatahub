@@ -4,7 +4,6 @@ Information and inspiration from https://blog.petrzemek.net/2018/04/22/on-incomp
 """
 
 import requests
-import time
 
 def check_length(func):
     """
