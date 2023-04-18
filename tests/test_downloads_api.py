@@ -1,6 +1,6 @@
 import os
 import unittest.mock as mock
-
+import tempfile
 import pytest
 from osdatahub import OpenDataDownload, DataPackageDownload
 from osdatahub.DownloadsAPI.downloads_api import _DownloadObj
@@ -93,9 +93,18 @@ class TestDownloadObj:
         download_obj = _DownloadObj(url="test_url", file_name="test_file", size=256)
         yield download_obj
 
-    def download_pass(self):
-        # TODO: implement _DownloadObj download pass
-        pass
+    @pytest.mark.skipif(API_KEY is None, reason="Test API key not available")
+    def test_download_pass(self):
+        # Arrange
+        product_package = DataPackageDownload(API_KEY, "98")
+        files_to_download = product_package.product_list("156")
+        
+        # Act
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            downloaded = product_package.download("156", tmpdirname)
+        
+        # Assert
+        assert len(downloaded) == len(files_to_download["downloads"])
 
     def download_fail(self):
         # TODO: implement _DownloadObje download fail
