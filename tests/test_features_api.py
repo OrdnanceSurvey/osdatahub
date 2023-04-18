@@ -24,7 +24,7 @@ class TestFeaturesAPI:
         assert params == expected_result
 
     @pytest.mark.parametrize(*data.test_request_params())
-    @mock.patch('osdatahub.get')
+    @mock.patch('requests.get')
     def test_request_params(self, request_mocked, extent, product, filters,
                             limit, expected_url, expected_params):
         # Arrange

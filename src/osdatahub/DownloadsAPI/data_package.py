@@ -39,7 +39,7 @@ class DataPackageDownload(_DownloadsAPIBase):
         Returns: A list of dictionaries containing all available Data Packages
 
         """
-        response = osdatahub.get(cls._ENDPOINT, params={"key": key}, proxies=osdatahub.get_proxies())
+        response = requests.get(cls._ENDPOINT, params={"key": key}, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         content = response.json()
         if not content:
@@ -54,7 +54,7 @@ class DataPackageDownload(_DownloadsAPIBase):
         """
         Get all the available versions for the data package
         """
-        response = osdatahub.get(self._endpoint(f"{self._id}/versions"), params={"key": self.key}, proxies=osdatahub.get_proxies())
+        response = requests.get(self._endpoint(f"{self._id}/versions"), params={"key": self.key}, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 
@@ -73,7 +73,7 @@ class DataPackageDownload(_DownloadsAPIBase):
         """
         endpoint = self._endpoint(f"{self._id}/versions/{version_id}")
         params = {"key": self.key}
-        response = osdatahub.get(url=endpoint, params=params, proxies=osdatahub.get_proxies())
+        response = requests.get(url=endpoint, params=params, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         content = response.json()
         if not content:
@@ -91,8 +91,7 @@ class DataPackageDownload(_DownloadsAPIBase):
                  version_id: str,
                  output_dir: Union[str, Path] = ".",
                  file_name: str = None,
-                 overwrite: bool = False,
-                 processes: int = None) -> list:
+                 overwrite: bool = False) -> list:
         """
         Downloads Data Package files to your local machine
 
@@ -113,6 +112,4 @@ class DataPackageDownload(_DownloadsAPIBase):
             download_list = self.product_list(version_id, return_downloadobj=True)
             return super()._download(download_list=download_list,
                                      output_dir=output_dir,
-                                     overwrite=overwrite,
-                                     download_multiple=True,
-                                     processes=processes)
+                                     overwrite=overwrite)

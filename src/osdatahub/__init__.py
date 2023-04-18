@@ -18,4 +18,3 @@ from osdatahub.NamesAPI import NamesAPI
 from osdatahub.LinkedIdentifiersAPI import LinkedIdentifiersAPI
 from osdatahub.DownloadsAPI import OpenDataDownload, DataPackageDownload
 from osdatahub.NGD import NGD
-from osdatahub.requests_wrapper import get

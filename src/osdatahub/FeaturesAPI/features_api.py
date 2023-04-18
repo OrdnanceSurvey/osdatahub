@@ -102,7 +102,7 @@ class FeaturesAPI:
         try:
             while n_required > 0 and data.grown:
                 params.update({"count": n_required, "startIndex": len(data)})
-                response = osdatahub.get(self.ENDPOINT, params=params, proxies=osdatahub.get_proxies())
+                response = requests.get(self.ENDPOINT, params=params, proxies=osdatahub.get_proxies())
                 resp_json = response.json()
                 if "fault" in resp_json:
                     raise_http_error(response)

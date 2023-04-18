@@ -52,7 +52,7 @@ class OpenDataDownload(_DownloadsAPIBase):
         if area:
             params.update({"area": area})
 
-        response = osdatahub.get(url=self._endpoint(f"{self._id}/downloads"), params=params, proxies=osdatahub.get_proxies())
+        response = requests.get(url=self._endpoint(f"{self._id}/downloads"), params=params, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         if return_downloadobj:
             return [_DownloadObj(url=download["url"], file_name=download["fileName"], size=download["size"])
@@ -65,9 +65,7 @@ class OpenDataDownload(_DownloadsAPIBase):
                  file_format: str = None,
                  file_subformat: str = None,
                  area: str = None,
-                 download_multiple: bool = False,
-                 overwrite: bool = False,
-                 processes: int = None) -> list:
+                 overwrite: bool = False) -> list:
         """
         Downloads Product files to your local machine
 
@@ -89,6 +87,4 @@ class OpenDataDownload(_DownloadsAPIBase):
                                           area=area, return_downloadobj=True)
         return super()._download(download_list=download_list,
                                  output_dir=output_dir,
-                                 overwrite=overwrite,
-                                 download_multiple=download_multiple,
-                                 processes=processes)
+                                 overwrite=overwrite)

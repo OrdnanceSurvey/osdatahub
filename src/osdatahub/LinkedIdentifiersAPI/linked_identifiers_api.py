@@ -32,7 +32,7 @@ class LinkedIdentifiersAPI:
 
     @staticmethod
     def __request(endpoint: str) -> dict:
-        response = osdatahub.get(endpoint, proxies=osdatahub.get_proxies())
+        response = requests.get(endpoint, proxies=osdatahub.get_proxies())
         if response.status_code != 200:
             raise_http_error(response)
         return response.json()

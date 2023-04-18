@@ -43,7 +43,7 @@ class _DownloadObj:
                             f"Skipping download...")
             return output_path
 
-        response = osdatahub.get(self.url, stream=True, proxies=osdatahub.get_proxies())
+        response = requests.get(self.url, stream=True, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         size = int(response.headers.get('content-length'))
         chunk_size = 1024
@@ -95,7 +95,7 @@ class _DownloadsAPIBase(ABC):
         """
         Calls endpoint to return details about the product or data package
         """
-        response = osdatahub.get(self._endpoint(self._id), proxies=osdatahub.get_proxies())
+        response = requests.get(self._endpoint(self._id), proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 
@@ -107,7 +107,7 @@ class _DownloadsAPIBase(ABC):
         Returns: list of dictionaries containing all products available to download
 
         """
-        response = osdatahub.get(cls._ENDPOINT, proxies=osdatahub.get_proxies())
+        response = requests.get(cls._ENDPOINT, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 
@@ -121,8 +121,7 @@ class _DownloadsAPIBase(ABC):
         pass
 
     @staticmethod
-    def _download(download_list: Union[list, _DownloadObj], output_dir: Union[str, Path], overwrite: bool = False,
-                  download_multiple: bool = False, processes: int = None) -> list:
+    def _download(download_list: Union[list, _DownloadObj], output_dir: Union[str, Path], overwrite: bool = False) -> list:
         """
         Downloads product/datapackage to the given directory. Can download a single format or can download multiple
         formats in parallel
@@ -140,31 +139,11 @@ class _DownloadsAPIBase(ABC):
         """
         if isinstance(download_list, list) and len(download_list) == 0:
             raise Exception("Argument \"download_list\" is empty. Please provide at least one DownloadObj to download")
-        elif isinstance(download_list, list) and len(download_list) > 1 and not download_multiple:
-            raise Exception("Argument \"download_list\" contains more than 1 object to download, but argument "
-                            "\"download_multiple\" is set to False. Please pass only 1 download or set "
-                            "\"download_multiple\" to True.")
 
         if not os.path.isdir(output_dir):
             os.makedirs(output_dir)
 
-        # downloads in parallel if multiple files need to be downloaded
-        if isinstance(download_list, list) and len(download_list) > 1 and download_multiple:
-            if not processes:
-                processes = cpu_count()
-            with ThreadPoolExecutor(max_workers=processes) as executor:
-                pbar = tqdm(total=sum([d.size for d in download_list]), unit="B", unit_scale=True, leave=True,
-                            desc=f"Downloading {len(download_list)} files from osdatahub")
-                results = list([executor.submit(p.download, output_dir, overwrite, pbar) for p in download_list])
-
-                num_downloads_completed = 0
-                for _ in as_completed(results):
-                    num_downloads_completed += 1
-                    pbar.set_description(
-                        f"Downloading {len(download_list) - num_downloads_completed} files from osdatahub")
-        else:
-            # download single file
-            d = download_list[0] if isinstance(download_list, list) else download_list
-            results = [d.download(output_dir, overwrite)]
+        # download files
+        results = [d.download(output_dir, overwrite) for d in download_list]
 
         return results

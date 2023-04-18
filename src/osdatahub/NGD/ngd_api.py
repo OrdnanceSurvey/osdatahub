@@ -81,7 +81,7 @@ class NGD:
         Returns:
             Dict: Dictionary containing all Feature Collections currently supported with details for each
         """
-        response = osdatahub.get(cls.__ENDPOINT, proxies=osdatahub.get_proxies())
+        response = requests.get(cls.__ENDPOINT, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 
@@ -176,7 +176,7 @@ class NGD:
             offset = max(offset, data["numberReturned"] if "numberReturned" in data else 0)
             params.update({"limit": limit, "offset": offset})
             try:
-                response = osdatahub.get(self.__endpoint(), params=params, headers=headers, proxies=osdatahub.get_proxies())
+                response = requests.get(self.__endpoint(), params=params, headers=headers, proxies=osdatahub.get_proxies())
                 response.raise_for_status()
             except requests.exceptions.HTTPError as e:
                 logging.error(json.dumps(e.response.json(), indent=4))
@@ -208,7 +208,7 @@ class NGD:
         """
         params = {"crs": get_crs(crs)} if crs else {}
 
-        response = osdatahub.get(self.__endpoint(feature_id), params=params, headers={"key": self.key}, proxies=osdatahub.get_proxies())
+        response = requests.get(self.__endpoint(feature_id), params=params, headers={"key": self.key}, proxies=osdatahub.get_proxies())
         response.raise_for_status()
 
         return response.json()

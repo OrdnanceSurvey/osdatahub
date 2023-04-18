@@ -15,7 +15,7 @@ class TestFind:
 
     @pytest.mark.parametrize(*data.test_find_pass())
     @pytest.mark.usefixtures("names")
-    @mock.patch('osdatahub.get')
+    @mock.patch('requests.get')
     def test_find_pass(self, request_mocked, names, text, limit, bounds, bbox_filter, local_type,
                        expected_url, expected_params):
         names.find(text, limit=limit, bounds=bounds, bbox_filter=bbox_filter, local_type=local_type)
@@ -38,7 +38,7 @@ class TestNearest:
 
     @pytest.mark.parametrize(*data.test_nearest_pass())
     @pytest.mark.usefixtures("names")
-    @mock.patch('osdatahub.get')
+    @mock.patch('requests.get')
     def test_nearest_pass(self, request_mocked, names, point, radius, local_type, expected_url, expected_params):
         names.nearest(point=point, radius=radius, local_type=local_type)
         request_mocked.assert_called_with(expected_url,
