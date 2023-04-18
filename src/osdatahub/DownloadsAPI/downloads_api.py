@@ -121,8 +121,7 @@ class _DownloadsAPIBase(ABC):
     @staticmethod
     def _download(download_list: Union[list, _DownloadObj], output_dir: Union[str, Path], overwrite: bool = False) -> list:
         """
-        Downloads product/datapackage to the given directory. Can download a single format or can download multiple
-        formats in parallel
+        Downloads product/datapackage to the given directory.
 
         Args:
              download_list (Union[list, DownloadObj]): The DownloadObj objects representing all the
@@ -130,10 +129,6 @@ class _DownloadsAPIBase(ABC):
              output_dir (Union[str, Path]): path to directory where the files will be saved to
              overwrite (bool, optional): Whether to overwrite any existing files with the same name and path.
                 Defaults to False
-             download_multiple (bool, optional): Whether to download multiple files, generally the same data but in
-                different formats. Defaults to False
-             processes (int, optional): If downloading multiple files, the number of parallel processes to be used.
-                defaults to the machine's CPU count
         """
         if isinstance(download_list, list) and len(download_list) == 0:
             raise Exception("Argument \"download_list\" is empty. Please provide at least one DownloadObj to download")

@@ -101,8 +101,6 @@ class DataPackageDownload(_DownloadsAPIBase):
                 current working directory
             file_name (str, optional): name of the file(s) to download
             overwrite (bool, optional): whether to overwrite existing files. Defaults to False
-            processes (int, optional): Number of processes with which to download multiple files. Only relevant if
-                multiple files will be downloaded (and download_multiple is set to True)
         """
         if file_name is not None:
             url = f'{self._endpoint(f"{self.id}/versions/{version_id}/downloads")}?fileName={file_name}&key={self.key}'

@@ -77,11 +77,7 @@ class OpenDataDownload(_DownloadsAPIBase):
             file_subformat (str, optional): subformat of the file(s) to download
             area (str, optional): The area that the file must cover. Available values can be found in
                 osdatahub.codes.AREA_CODES or on the `OS Data Hub website <https://osdatahub.os.uk/docs/downloads/technicalSpecification#/OS%20OpenData/get_products__productId__downloads>`_
-            download_multiple (bool, optional): whether to download multiple files if multiple products are within your
-                search criteria. Defaults to False
             overwrite (bool, optional): whether to overwrite existing files. Defaults to False
-            processes (int, optional): Number of processes with which to download multiple files. Only relevant if
-                multiple files will be downloaded (and download_multiple is set to True)
         """
         download_list = self.product_list(file_name=file_name, file_format=file_format, file_subformat=file_subformat,
                                           area=area, return_downloadobj=True)
