@@ -41,7 +41,7 @@ class _DownloadObj:
                             f"Skipping download...")
             return output_path
 
-        response = requests.get(self.url, stream=True, proxies=osdatahub.get_proxies())
+        response = osdatahub.get(self.url, stream=True, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         size = int(response.headers.get('content-length'))
         chunk_size = 1024
@@ -93,7 +93,7 @@ class _DownloadsAPIBase(ABC):
         """
         Calls endpoint to return details about the product or data package
         """
-        response = requests.get(self._endpoint(self._id), proxies=osdatahub.get_proxies())
+        response = osdatahub.get(self._endpoint(self._id), proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 
@@ -105,7 +105,7 @@ class _DownloadsAPIBase(ABC):
         Returns: list of dictionaries containing all products available to download
 
         """
-        response = requests.get(cls._ENDPOINT, proxies=osdatahub.get_proxies())
+        response = osdatahub.get(cls._ENDPOINT, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 

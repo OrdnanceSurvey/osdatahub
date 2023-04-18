@@ -45,5 +45,5 @@ def get_ons_geom(ons_code: str) -> dict:
         response_json (dict): The json of the raw response
     """
     url = f"{ID_ENDPOINT}{ons_code}"
-    res = requests.get(url, proxies=osdatahub.get_proxies())
+    res = osdatahub.get(url, proxies=osdatahub.get_proxies())
     return _sanitise_response(res)
