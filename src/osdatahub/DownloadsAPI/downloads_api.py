@@ -41,7 +41,7 @@ class _DownloadObj:
                             f"Skipping download...")
             return output_path
 
-        response = osdatahub.get(self.url, stream=True, proxies=osdatahub.get_proxies())
+        response = requests.get(self.url, stream=True, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         size = int(response.headers.get('content-length'))
         chunk_size = 1024
