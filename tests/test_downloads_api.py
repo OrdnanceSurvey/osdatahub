@@ -22,7 +22,7 @@ class TestOpenData:
 
     @pytest.mark.parametrize(*data.product_list_pass("test_id"))
     @pytest.mark.usefixtures("open_data_download")
-    @mock.patch('requests.get')
+    @mock.patch('osdatahub.get')
     def test_product_list_pass(self, request_mocked, open_data_download, file_name, file_format, file_subformat, area,
                                return_downloadobj, expected_url, expected_params):
         open_data_download.product_list(file_name=file_name, file_format=file_format, file_subformat=file_subformat,

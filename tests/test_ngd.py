@@ -28,7 +28,7 @@ class TestNGDCRS:
 
 class TestNGDQuery:
     @pytest.mark.parametrize(*query_data.test_ngd_instantiation())
-    @mock.patch('requests.get')
+    @mock.patch('osdatahub.get')
     def test_ngd_instantiation(self, request_mocked, api_key, collection, expected_url, expected_headers):
         request_mocked.return_value.configure_mock(json=lambda: {"features": [], "numberReturned": 0})
 
@@ -41,7 +41,7 @@ class TestNGDQuery:
                                           proxies={})
 
     @pytest.mark.parametrize(*query_data.test_ngd_query())
-    @mock.patch('requests.get')
+    @mock.patch('osdatahub.get')
     def test_ngd_api_call(self, request_mocked, extent, crs, start_datetime, end_datetime, cql_filter, filter_crs,
                           max_results, offset, expected_url, expected_params):
         request_mocked.return_value.configure_mock(json=lambda: {"features": [], "numberReturned": 0})
@@ -96,7 +96,7 @@ class TestNGDQuery:
 
 
 class TestNGDGetCollections:
-    @mock.patch('requests.get')
+    @mock.patch('osdatahub.get')
     def test_ngd_get_collections(self, request_mocked):
         request_mocked.return_value.configure_mock(json=lambda: {})
         NGD.get_collections()
@@ -108,7 +108,7 @@ class TestNGDGetCollections:
 class TestNGDQueryFeature:
 
     @pytest.mark.parametrize(*query_data.test_ngd_query_feature())
-    @mock.patch('requests.get')
+    @mock.patch('osdatahub.get')
     def test_ngd_query_filter(self, request_mocked, feature_id, crs, expected_url, expected_params):
         request_mocked.return_value.configure_mock(json=lambda: {})
         ngd = NGD("api_key", "bld-fts-buildingline")
