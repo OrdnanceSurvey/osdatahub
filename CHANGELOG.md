@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.4] - 2023/04/20
+
+### Fixed
+
+- Removed requests wrapper for Downloads API as it breaks requests that stream the data (issue #79)
+- Improved pbar to include total number of files to be downloaded. Also removed the finished download writeout to preserve aesthetics
 
 ## [1.2.3] - 2023/04/12
 
