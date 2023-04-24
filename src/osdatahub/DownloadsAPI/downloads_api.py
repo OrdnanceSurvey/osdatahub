@@ -43,7 +43,7 @@ class _DownloadObj:
                             f"Skipping download...")
             return output_path
 
-        response = osdatahub.get(self.url, stream=True, proxies=osdatahub.get_proxies())
+        response = requests.get(self.url, stream=True, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         size = int(response.headers.get('content-length'))
         chunk_size = 1024
@@ -56,7 +56,7 @@ class _DownloadObj:
                     f.flush()
                     pbar.update(chunk_size)
 
-        pbar.write(f"Finished downloading {self.file_name} to {output_path}")
+        # pbar.write(f"Finished downloading {self.file_name} to {output_path}")
         return output_path
 
 
@@ -154,14 +154,14 @@ class _DownloadsAPIBase(ABC):
                 processes = cpu_count()
             with ThreadPoolExecutor(max_workers=processes) as executor:
                 pbar = tqdm(total=sum([d.size for d in download_list]), unit="B", unit_scale=True, leave=True,
-                            desc=f"Downloading {len(download_list)} files from osdatahub")
+                            desc=f"Downloaded 0/{len(download_list)} files from osdatahub")
                 results = list([executor.submit(p.download, output_dir, overwrite, pbar) for p in download_list])
 
                 num_downloads_completed = 0
                 for _ in as_completed(results):
                     num_downloads_completed += 1
                     pbar.set_description(
-                        f"Downloading {len(download_list) - num_downloads_completed} files from osdatahub")
+                        f"Downloaded {num_downloads_completed}/{len(download_list)} files from osdatahub")
         else:
             # download single file
             d = download_list[0] if isinstance(download_list, list) else download_list
