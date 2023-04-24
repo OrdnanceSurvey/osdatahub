@@ -1,5 +1,9 @@
 import os
+import tempfile
 import unittest.mock as mock
+import dotenv
+
+dotenv.load_dotenv()
 
 import pytest
 from osdatahub import OpenDataDownload, DataPackageDownload
@@ -69,6 +73,19 @@ class TestDataPackage:
     def data_package(self):
         data_package = DataPackageDownload(key="test_key", product_id="test_id")
         yield data_package
+
+    @pytest.mark.skipif(API_KEY is None, reason="Test API key not available")
+    def test_download_pass(self):
+        # Arrange
+        product_package = DataPackageDownload(API_KEY, "98")
+        files_to_download = product_package.product_list("156")
+
+        # Act
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            downloaded = product_package.download("156", tmpdirname)
+
+        # Assert
+        assert len(downloaded) == len(files_to_download["downloads"])
 
     def test_download_list_pass(self):
         # TODO: implement download_list_pass
