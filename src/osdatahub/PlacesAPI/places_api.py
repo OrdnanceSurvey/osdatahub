@@ -12,6 +12,14 @@ from osdatahub.utils import addresses_to_geojson, validate_in_range
 from osdatahub.codes import DATASET
 
 
+"""
+TODO:
+- Add dataset to parameters
+- Add test for dataset
+- Remove "DPA" key from output
+- Check for DPA in url
+"""
+
 class PlacesAPI:
     """Main class for querying the OS Places API (https://osdatahub.os.uk/docs/places/overview)
 
