@@ -9,6 +9,7 @@ import osdatahub
 from osdatahub import Extent
 from osdatahub.grow_list import GrowList
 from osdatahub.utils import addresses_to_geojson, validate_in_range
+from osdatahub.codes import DATASET
 
 
 class PlacesAPI:
@@ -36,14 +37,29 @@ class PlacesAPI:
 
     def __endpoint(self, api_name: str) -> str:
         return self.__ENDPOINT + api_name + f"?key={self.key}"
+    
+    @staticmethod
+    def __get_dataset_param(self, dataset: Union[str, Iterable] ) -> str:
+        if not isinstance(dataset, str):
+            dataset_unique = set(dataset)
+            shared_datasets = dataset_unique & DATASET
+
+            if len(shared_datasets) == len(dataset_unique):
+                return ",".join(dataset_unique)
+
+        elif  dataset in DATASET:
+            return dataset
+
+        raise ValueError(f"Unrecognised dataset, expected 'LPI', 'DPA' or ['LPI', 'DPA'], got {dataset}")
 
     def query(
             self,
             extent: Extent,
             output_crs: str = None,
             limit: int = 100,
-            classification_code: Union[str, Iterable] = None,
-            logical_status_code: Union[str, int] = None,
+            classification_code: Union[str, Iterable, None] = None,
+            logical_status_code: Union[str, int, None] = None,
+            dataset: Union[str, Iterable, None] = None
     ) -> FeatureCollection:
         """Run a query of the OS Places API within a given extent
 
@@ -72,6 +88,10 @@ class PlacesAPI:
             params["params"].update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
             )
+        
+        if dataset is not None:
+            
+            
 
         try:
             n_required = min(limit, 100)
@@ -92,7 +112,8 @@ class PlacesAPI:
             classification_code: Union[str, Iterable] = None,
             logical_status_code: Union[str, int] = None,
             minmatch: float = None,
-            matchprecision: int = None
+            matchprecision: int = None,
+            dataset: Union[str, Iterable, None] = None
     ) -> FeatureCollection:
         """A free text query of the OS Places API
 
@@ -139,6 +160,7 @@ class PlacesAPI:
             limit: int = 100,
             classification_code: Union[str, Iterable] = None,
             logical_status_code: Union[str, int] = None,
+            dataset: Union[str, Iterable, None] = None
     ) -> FeatureCollection:
         """A query based on a property’s postcode. The minimum for the
         resource is the area and district
@@ -182,6 +204,7 @@ class PlacesAPI:
             output_crs: str = "EPSG:27700",
             classification_code: Union[str, Iterable] = None,
             logical_status_code: Union[str, int] = None,
+            dataset: Union[str, Iterable, None] = None
     ) -> FeatureCollection:
         """A query that takes a UPRN as the search parameter
 
@@ -217,6 +240,7 @@ class PlacesAPI:
             output_crs: str = "EPSG:27700",
             classification_code: Union[str, Iterable] = None,
             logical_status_code: Union[str, int] = None,
+            dataset: Union[str, Iterable, None] = None
     ) -> FeatureCollection:
         """Takes a pair of coordinates (X, Y)/(Lon, Lat) as an input
         to determine the closest address.
