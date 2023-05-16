@@ -9,7 +9,7 @@ import osdatahub
 from osdatahub import Extent
 from osdatahub.grow_list import GrowList
 from osdatahub.utils import addresses_to_geojson, validate_in_range
-
+from osdatahub.codes import DATASET
 
 class PlacesAPI:
     """Main class for querying the OS Places API (https://osdatahub.os.uk/docs/places/overview)
@@ -37,13 +37,28 @@ class PlacesAPI:
     def __endpoint(self, api_name: str) -> str:
         return self.__ENDPOINT + api_name + f"?key={self.key}"
 
+    @staticmethod
+    def __get_dataset_param(dataset: Union[str, Iterable] ) -> str:
+        if not isinstance(dataset, str):
+            dataset_unique = set(dataset)
+            shared_datasets = dataset_unique & DATASET
+
+            if len(shared_datasets) == len(dataset_unique):
+                return ",".join(dataset_unique)
+
+        elif  dataset in DATASET:
+            return dataset
+
+        raise ValueError(f"Unrecognised dataset, expected 'LPI', 'DPA' or ['LPI', 'DPA'], got {dataset}")
+
     def query(
             self,
             extent: Extent,
             output_crs: str = None,
             limit: int = 100,
-            classification_code: Union[str, Iterable] = None,
-            logical_status_code: Union[str, int] = None,
+            classification_code: Union[str, Iterable, None] = None,
+            logical_status_code: Union[str, int, None] = None,
+            dataset: Union[str, Iterable, None] = None
     ) -> FeatureCollection:
         """Run a query of the OS Places API within a given extent
 
@@ -54,6 +69,7 @@ class PlacesAPI:
                 Defaults to 100.
             classification_code (str|Iterable[str], optional): Classification codes to filter query by
             logical_status_code (str|int, optional): logical status codes to filter query by
+            dataset (str|Iterable, optional): The dataset to return. Multiple values can be sent, separated by a comma. Default: DPA.
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -71,6 +87,11 @@ class PlacesAPI:
         if classification_code or logical_status_code:
             params["params"].update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
+            )
+
+        if dataset is not None:
+            params["params"].update(
+                {"dataset": self.__get_dataset_param(dataset)}
             )
 
         try:
@@ -92,7 +113,8 @@ class PlacesAPI:
             classification_code: Union[str, Iterable] = None,
             logical_status_code: Union[str, int] = None,
             minmatch: float = None,
-            matchprecision: int = None
+            matchprecision: int = None,
+            dataset: Union[str, Iterable, None] = None
     ) -> FeatureCollection:
         """A free text query of the OS Places API
 
@@ -105,6 +127,7 @@ class PlacesAPI:
             logical_status_code (str|int, optional): logical status codes to filter query by
             minmatch (float, optional): The minimum match score a result has to have to be returned
             matchprecision (int, optional): The decimal point position at which the match score value is to be truncated
+            dataset (str|Iterable, optional): The dataset to return. Multiple values can be sent, separated by a comma. Default: DPA.
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -119,6 +142,11 @@ class PlacesAPI:
         if classification_code or logical_status_code:
             params.update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
+            )
+        
+        if dataset is not None:
+            params.update(
+                {"dataset": self.__get_dataset_param(dataset)}
             )
 
         try:
@@ -139,6 +167,7 @@ class PlacesAPI:
             limit: int = 100,
             classification_code: Union[str, Iterable] = None,
             logical_status_code: Union[str, int] = None,
+            dataset: Union[str, Iterable, None] = None
     ) -> FeatureCollection:
         """A query based on a property’s postcode. The minimum for the
         resource is the area and district
@@ -154,6 +183,7 @@ class PlacesAPI:
                 Defaults to 100.
             classification_code (str|Iterable[str], optional): Classification codes to filter query by
             logical_status_code (str|int, optional): logical status codes to filter query by
+            dataset (str|Iterable, optional): The dataset to return. Multiple values can be sent, separated by a comma. Default: DPA.
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -165,6 +195,11 @@ class PlacesAPI:
             params.update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
             )
+        if dataset is not None:
+            params.update(
+                {"dataset": self.__get_dataset_param(dataset)}
+            )
+
         try:
             n_required = min(limit, 100)
             while n_required > 0 and data.grown:
@@ -182,6 +217,7 @@ class PlacesAPI:
             output_crs: str = "EPSG:27700",
             classification_code: Union[str, Iterable] = None,
             logical_status_code: Union[str, int] = None,
+            dataset: Union[str, Iterable, None] = None
     ) -> FeatureCollection:
         """A query that takes a UPRN as the search parameter
 
@@ -191,6 +227,7 @@ class PlacesAPI:
                 Defaults to "EPSG:27700".
             classification_code (str|Iterable[str], optional): Classification codes to filter query by
             logical_status_code (str|int, optional): logical status codes to filter query by
+            dataset (str|Iterable, optional): The dataset to return. Multiple values can be sent, separated by a comma. Default: DPA.
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -201,6 +238,10 @@ class PlacesAPI:
         if classification_code or logical_status_code:
             params.update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
+            )
+        if dataset is not None:
+            params.update(
+                {"dataset": self.__get_dataset_param(dataset)}
             )
         try:
             response = osdatahub.get(self.__endpoint("uprn"), params=params, proxies=osdatahub.get_proxies())
@@ -217,6 +258,7 @@ class PlacesAPI:
             output_crs: str = "EPSG:27700",
             classification_code: Union[str, Iterable] = None,
             logical_status_code: Union[str, int] = None,
+            dataset: Union[str, Iterable, None] = None
     ) -> FeatureCollection:
         """Takes a pair of coordinates (X, Y)/(Lon, Lat) as an input
         to determine the closest address.
@@ -230,6 +272,7 @@ class PlacesAPI:
                 Defaults to "EPSG:27700".
             classification_code (str|Iterable[str], optional): Classification codes to filter query by
             logical_status_code (str|int, optional): logical status codes to filter query by
+            dataset (str|Iterable, optional): The dataset to return. Multiple values can be sent, separated by a comma. Default: DPA.
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -247,6 +290,10 @@ class PlacesAPI:
             params.update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
             )
+        if dataset is not None:
+            params.update(
+                {"dataset": self.__get_dataset_param(dataset)}
+            )
         try:
             response = osdatahub.get(self.__endpoint("nearest"), params=params, proxies=osdatahub.get_proxies())
             data.extend(self.__format_response(response))
@@ -256,7 +303,8 @@ class PlacesAPI:
 
     @staticmethod
     def __format_response(response: requests.Response) -> list:
-        return [result["DPA"] for result in response.json()["results"]]
+        results = response.json()["results"]
+        return [result[list(result.keys())[0]] for result in results]
 
     @staticmethod
     def __format_fq(
