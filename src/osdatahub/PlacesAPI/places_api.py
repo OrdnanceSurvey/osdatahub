@@ -11,15 +11,6 @@ from osdatahub.grow_list import GrowList
 from osdatahub.utils import addresses_to_geojson, validate_in_range
 from osdatahub.codes import DATASET
 
-
-"""
-TODO:
-- Add dataset to parameters
-- Add test for dataset
-- Remove "DPA" key from output
-- Check for DPA in url
-"""
-
 class PlacesAPI:
     """Main class for querying the OS Places API (https://osdatahub.os.uk/docs/places/overview)
 
@@ -45,9 +36,9 @@ class PlacesAPI:
 
     def __endpoint(self, api_name: str) -> str:
         return self.__ENDPOINT + api_name + f"?key={self.key}"
-    
+
     @staticmethod
-    def __get_dataset_param(self, dataset: Union[str, Iterable] ) -> str:
+    def __get_dataset_param(dataset: Union[str, Iterable] ) -> str:
         if not isinstance(dataset, str):
             dataset_unique = set(dataset)
             shared_datasets = dataset_unique & DATASET
@@ -78,6 +69,7 @@ class PlacesAPI:
                 Defaults to 100.
             classification_code (str|Iterable[str], optional): Classification codes to filter query by
             logical_status_code (str|int, optional): logical status codes to filter query by
+            dataset (str|Iterable, optional): The dataset to return. Multiple values can be sent, separated by a comma. Default: DPA.
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -96,10 +88,11 @@ class PlacesAPI:
             params["params"].update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
             )
-        
+
         if dataset is not None:
-            
-            
+            params["params"].update(
+                {"dataset": self.__get_dataset_param(dataset)}
+            )
 
         try:
             n_required = min(limit, 100)
@@ -134,6 +127,7 @@ class PlacesAPI:
             logical_status_code (str|int, optional): logical status codes to filter query by
             minmatch (float, optional): The minimum match score a result has to have to be returned
             matchprecision (int, optional): The decimal point position at which the match score value is to be truncated
+            dataset (str|Iterable, optional): The dataset to return. Multiple values can be sent, separated by a comma. Default: DPA.
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -148,6 +142,11 @@ class PlacesAPI:
         if classification_code or logical_status_code:
             params.update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
+            )
+        
+        if dataset is not None:
+            params.update(
+                {"dataset": self.__get_dataset_param(dataset)}
             )
 
         try:
@@ -184,6 +183,7 @@ class PlacesAPI:
                 Defaults to 100.
             classification_code (str|Iterable[str], optional): Classification codes to filter query by
             logical_status_code (str|int, optional): logical status codes to filter query by
+            dataset (str|Iterable, optional): The dataset to return. Multiple values can be sent, separated by a comma. Default: DPA.
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -195,6 +195,11 @@ class PlacesAPI:
             params.update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
             )
+        if dataset is not None:
+            params.update(
+                {"dataset": self.__get_dataset_param(dataset)}
+            )
+
         try:
             n_required = min(limit, 100)
             while n_required > 0 and data.grown:
@@ -222,6 +227,7 @@ class PlacesAPI:
                 Defaults to "EPSG:27700".
             classification_code (str|Iterable[str], optional): Classification codes to filter query by
             logical_status_code (str|int, optional): logical status codes to filter query by
+            dataset (str|Iterable, optional): The dataset to return. Multiple values can be sent, separated by a comma. Default: DPA.
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -232,6 +238,10 @@ class PlacesAPI:
         if classification_code or logical_status_code:
             params.update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
+            )
+        if dataset is not None:
+            params.update(
+                {"dataset": self.__get_dataset_param(dataset)}
             )
         try:
             response = osdatahub.get(self.__endpoint("uprn"), params=params, proxies=osdatahub.get_proxies())
@@ -262,6 +272,7 @@ class PlacesAPI:
                 Defaults to "EPSG:27700".
             classification_code (str|Iterable[str], optional): Classification codes to filter query by
             logical_status_code (str|int, optional): logical status codes to filter query by
+            dataset (str|Iterable, optional): The dataset to return. Multiple values can be sent, separated by a comma. Default: DPA.
 
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
@@ -279,6 +290,10 @@ class PlacesAPI:
             params.update(
                 {"fq": self.__format_fq(classification_code, logical_status_code)}
             )
+        if dataset is not None:
+            params.update(
+                {"dataset": self.__get_dataset_param(dataset)}
+            )
         try:
             response = osdatahub.get(self.__endpoint("nearest"), params=params, proxies=osdatahub.get_proxies())
             data.extend(self.__format_response(response))
@@ -288,7 +303,8 @@ class PlacesAPI:
 
     @staticmethod
     def __format_response(response: requests.Response) -> list:
-        return [result["DPA"] for result in response.json()["results"]]
+        results = response.json()["results"]
+        return [result[list(result.keys())[0]] for result in results]
 
     @staticmethod
     def __format_fq(
