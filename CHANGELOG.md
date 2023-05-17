@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.5] - 2023/05/17
+
+### Fixed
+
+- Import error for osdatahub.post in PlacesAPI [FHunt-OS] [JEPooley]
+
+### Features
+
+- Added support for the dataset parameter within the PlacesAPI wrapper [FHunt-OS] [JEPooley]
+
 ## [1.2.4] - 2023/04/20
 
 ### Fixed
