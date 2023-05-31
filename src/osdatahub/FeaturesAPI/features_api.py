@@ -2,7 +2,6 @@ import json
 import time
 import warnings
 
-import requests
 from geojson import FeatureCollection
 from typeguard import check_argument_types
 
@@ -154,8 +153,6 @@ class FeaturesAPI:
 
 if __name__ == "__main__":
     from os import environ
-
-    from osdatahub import Extent, FeaturesAPI
 
     key = environ.get("OS_API_KEY")
 
