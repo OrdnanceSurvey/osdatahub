@@ -1,4 +1,5 @@
 import json
+import time
 import warnings
 
 import requests
@@ -14,6 +15,7 @@ from osdatahub.filters import Filter
 from osdatahub.grow_list import GrowList
 from osdatahub.spatial_filter_types import SpatialFilterTypes
 from osdatahub.utils import features_to_geojson, is_new_api
+
 
 class FeaturesAPI:
     """Main class for querying the OS Features API (https://osdatahub.os.uk/docs/wfs/overview)
@@ -82,7 +84,7 @@ class FeaturesAPI:
     def xml_filter(self):
         return self.__construct_filter()
 
-    def query(self, limit: int = 100) -> FeatureCollection:
+    def query(self, limit: int = 100, delay: int = 60) -> FeatureCollection:
         """Run a query of the OS Features API
 
         Args:
@@ -111,6 +113,7 @@ class FeaturesAPI:
                     self.product = self.__product_name
                 data.extend(resp_json["features"])
                 n_required = min(100, limit - len(data))
+                time.sleep(delay)
         except json.decoder.JSONDecodeError:
             raise_http_error(response)
 
