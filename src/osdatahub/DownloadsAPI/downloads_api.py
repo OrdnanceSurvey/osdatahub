@@ -45,18 +45,25 @@ class _DownloadObj:
 
         response = requests.get(self.url, stream=True, proxies=osdatahub.get_proxies())
         response.raise_for_status()
-        size = int(response.headers.get('content-length'))
-        chunk_size = 1024
+        expected_size = int(response.headers.get('content-length'))
+        current_size = 0
+        chunk_size = 1048576 # 1024 ** 2 -> 1MB
         if response.status_code == 200:
             with open(output_path, 'wb') as f:
                 if not pbar:
-                    pbar = tqdm(total=size, desc=self.file_name, unit="B", unit_scale=True, leave=True)
+                    pbar = tqdm(total=expected_size, desc=self.file_name, unit="B", unit_scale=True, leave=True)
                 for chunk in response.iter_content(chunk_size=chunk_size):
+                    current_size += len(chunk)
                     f.write(chunk)
                     f.flush()
                     pbar.update(chunk_size)
 
-        # pbar.write(f"Finished downloading {self.file_name} to {output_path}")
+        if expected_size != current_size:
+            deficit = expected_size - current_size
+            raise IOError(
+                f'incomplete read ({current_size} bytes read, {deficit} more expected)'
+            ) 
+        pbar.write(f"Finished downloading {self.file_name} to {output_path}")
         return output_path
 
 

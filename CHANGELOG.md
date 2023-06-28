@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.6] - 2023/06/28
+
+### Features
+- Added check for chunk size when streaming data. Program should error if file download is incomplete [JEPooley]
+
+
+### Changed
+- Upgrade requests version in dependencies to 2.31.0 [gwionap]
+
 ## [1.2.5] - 2023/05/17
 
 ### Fixed
