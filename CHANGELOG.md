@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.6] - 2023/06/28
+
+### Features
+- Added check for chunk size when straming data. Program should error if file download is incomplete
+
 ## [1.2.5] - 2023/05/17
 
 ### Fixed
