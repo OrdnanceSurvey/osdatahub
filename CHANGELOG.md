@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.7] - 2023/06/28
+
+### Fixed
+- NamesAPI no longer raises a KeyError if the response status code is 200
+
 ## [1.2.6] - 2023/06/28
 
 ### Features
