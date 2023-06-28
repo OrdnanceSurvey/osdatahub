@@ -158,5 +158,10 @@ class NamesAPI:
 
     @staticmethod
     def __format_response(response) -> list:
-        return [result["GAZETTEER_ENTRY"] for result
-                in response.json()["results"]]
+        try:
+            return [result["GAZETTEER_ENTRY"] for result
+                    in response.json()["results"]]
+        except KeyError as e:
+            if response.status_code == 200:
+                    return []
+            raise e
