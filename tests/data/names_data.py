@@ -15,7 +15,8 @@ def test_format_fq():
               ["town", "road_user_services"],
               ["LOCAL_TYPE:Town LOCAL_TYPE:Road_User_Services"]),
         param(None,
-              ["hill_or_mountain", "heliport", "postcode", "bay", "electricity_distribution"],
+              ["hill_or_mountain", "heliport", "postcode",
+                  "bay", "electricity_distribution"],
               ["LOCAL_TYPE:Hill_Or_Mountain LOCAL_TYPE:Heliport LOCAL_TYPE:Postcode LOCAL_TYPE:Bay "
                "LOCAL_TYPE:Electricity_Distribution"]),
         param(Extent.from_bbox((1000, 1000, 2000, 2000), crs="EPSG:27700"),
@@ -91,7 +92,8 @@ def test_find_pass():
               None,
               None,
               'https://api.os.uk/search/names/v1/find?key=test',
-              {"query": "Buckingham Palace", "offset": 0, "bounds": "100.0,200.0,300.0,400.0", "maxresults": 50}
+              {"query": "Buckingham Palace", "offset": 0,
+                  "bounds": "100.0,200.0,300.0,400.0", "maxresults": 50}
               ),
         param("Buckingham Palace",
               50,
@@ -99,7 +101,8 @@ def test_find_pass():
               Extent.from_bbox((100, 200, 300, 400), crs="EPSG:27700"),
               None,
               'https://api.os.uk/search/names/v1/find?key=test',
-              {"query": "Buckingham Palace", "offset": 0, "fq": ["BBOX:100.0,200.0,300.0,400.0"], "maxresults": 50}
+              {"query": "Buckingham Palace", "offset": 0, "fq": [
+                  "BBOX:100.0,200.0,300.0,400.0"], "maxresults": 50}
               ),
         param("Buckingham Palace",
               50,
@@ -107,7 +110,8 @@ def test_find_pass():
               None,
               "suburban_area",
               'https://api.os.uk/search/names/v1/find?key=test',
-              {"query": "Buckingham Palace", "offset": 0, "fq": ["LOCAL_TYPE:Suburban_Area"], "maxresults": 50}
+              {"query": "Buckingham Palace", "offset": 0, "fq": [
+                  "LOCAL_TYPE:Suburban_Area"], "maxresults": 50}
               ),
         param("Buckingham Palace",
               50,
@@ -136,6 +140,16 @@ def test_find_pass():
               {"query": "Buckingham Palace", "offset": 0, "bounds": "100.0,200.0,300.0,400.0",
                "fq": ["LOCAL_TYPE:Suburban_Area", "BBOX:100.0,200.0,300.0,400.0"], "maxresults": 50}
               )
+    ]
+    return test_variables, test_data
+
+
+def test_find_live():
+    test_variables = "text, limit, expected_length, minimum_length"
+    test_data = [
+        param("AB22 9", 100, 100, None),
+        param("AB22 9", 47, 47, None),
+        param("AB22 9", 1000, None, 100),
     ]
     return test_variables, test_data
 
@@ -210,14 +224,16 @@ def test_nearest_pass():
             100,
             "oil_refining",
             'https://api.os.uk/search/names/v1/nearest?key=test',
-            {"point": "100,200", "radius": 100, "fq": ["LOCAL_TYPE:Oil_Refining"]}
+            {"point": "100,200", "radius": 100,
+                "fq": ["LOCAL_TYPE:Oil_Refining"]}
         ),
         param(
             (100, 200),
             100,
             ("oil_refining", "oil_terminal"),
             'https://api.os.uk/search/names/v1/nearest?key=test',
-            {"point": "100,200", "radius": 100, "fq": ["LOCAL_TYPE:Oil_Refining LOCAL_TYPE:Oil_Terminal"]}
+            {"point": "100,200", "radius": 100, "fq": [
+                "LOCAL_TYPE:Oil_Refining LOCAL_TYPE:Oil_Terminal"]}
         )
     ]
     return test_variables, test_data

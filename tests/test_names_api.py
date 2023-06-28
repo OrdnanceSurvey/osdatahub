@@ -6,6 +6,7 @@ from osdatahub.NamesAPI.names_api import NamesAPI
 
 from tests.data import names_data as data
 
+API_KEY = environ.get("OSDATAHUB_TEST_KEY")
 
 class TestFind:
     @pytest.fixture()
@@ -28,6 +29,29 @@ class TestFind:
     def test_find_fail(self, names, text, limit, bounds, bbox_filter, local_type, expected_result):
         with pytest.raises(expected_exception=expected_result):
             names.find(text, limit=limit, bounds=bounds, bbox_filter=bbox_filter, local_type=local_type)
+    
+    
+    def test_unauthorised(self):
+        with pytest.raises(Exception) as exc_info:
+            names = NamesAPI("not a real key")
+            names.find("AB22")
+
+
+    @pytest.mark.skipif(not API_KEY, reason="Test API key not available")
+    @pytest.mark.parametrize(*data.test_find_live())
+    def test_find_live(self, text, limit, expected_length, minimum_length):
+        # Arrange
+        names = NamesAPI(API_KEY)
+        
+        # Act
+        results = names.find(text, limit=limit)["features"]
+        
+        # Assert
+        if minimum_length is not None:
+            assert len(results) >= minimum_length
+        
+        if expected_length is not None:
+            assert len(results) == expected_length
 
 
 class TestNearest:
