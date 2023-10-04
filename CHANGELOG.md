@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.8] - 2023/10/04
+
+### Added
+- Downloads API outputs a missing_files.[datetime].json file that details the specific files that didn't successfully download [JEPooley] [Amber Thorne]
+
+### Fixed
+- Downloads API now shows correct number of downloaded files e.g. when some have failed or are missing [JEPooley] [Amber Thorne]
+
 ## [1.2.7] - 2023/06/28
 
 ### Fixed
@@ -7,9 +15,8 @@
 
 ## [1.2.6] - 2023/06/28
 
-### Features
+### Added
 - Added check for chunk size when streaming data. Program should error if file download is incomplete [JEPooley]
-
 
 ### Changed
 - Upgrade requests version in dependencies to 2.31.0 [gwionap]
@@ -20,7 +27,7 @@
 
 - Import error for osdatahub.post in PlacesAPI [FHunt-OS] [JEPooley]
 
-### Features
+### Added
 
 - Added support for the dataset parameter within the PlacesAPI wrapper [FHunt-OS] [JEPooley]
 
@@ -45,7 +52,7 @@
 - Extents `from_radius` method no longer errors if the coordinate is not a tuple - now accepts any Iterable (issue 66) [JEPooley]
 - Updated setup.cfg and tox.ini to reflect python3.11 compatability (issue 68) [JEPooley] [dchirst]
 
-### Features
+### Added
 
 - Added proxy support using the `osdatahub.set_proxies` method (issue 55) [JEPooley] [FHunt-OS] [abiddiscombe]
 
@@ -57,7 +64,7 @@
 
 ## [1.2.0] - 2022/11/07
 
-### Features
+### Added
 
 - Added NGD API [dchirst] [BenDickens] [JEPooley]
 - Fixed typos in Features and Places APIs [dchirst]
@@ -65,7 +72,7 @@
 
 ## [1.1.0] - 2022/08/22
 
-### Features
+### Added
 
 - Support the new Data Hub API v2 [dchirst]
 - Allow filters to be joined using bitwise operators [E-Paine]
@@ -73,7 +80,7 @@
 - Allow any type of collection to be used to construct a bounding box (issue 22) [E-Paine]
 - Warn when using EPSG:4329 with the features API (issue 29) [E-Paine]
 
-### Bugs
+### Fixed
 
 - Error when `nearest` returned an empty feature set (issue 24) [E-Paine]
 
