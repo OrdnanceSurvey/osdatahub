@@ -1,17 +1,23 @@
 import functools
+import json
 import logging
 import os
+import time
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
+from http import HTTPStatus
 from multiprocessing import cpu_count
 from pathlib import Path
-from typing import Union
+from typing import List, Union
 
-import osdatahub
 import requests
+from requests.exceptions import HTTPError
 from tqdm import tqdm
 
+import osdatahub
 
+retries = 3
 
 
 class _DownloadObj:
@@ -43,28 +49,71 @@ class _DownloadObj:
                             f"Skipping download...")
             return output_path
 
-        response = requests.get(self.url, stream=True, proxies=osdatahub.get_proxies())
-        response.raise_for_status()
-        expected_size = int(response.headers.get('content-length'))
-        current_size = 0
-        chunk_size = 1048576 # 1024 ** 2 -> 1MB
-        if response.status_code == 200:
-            with open(output_path, 'wb') as f:
-                if not pbar:
-                    pbar = tqdm(total=expected_size, desc=self.file_name, unit="B", unit_scale=True, leave=True)
-                for chunk in response.iter_content(chunk_size=chunk_size):
-                    current_size += len(chunk)
-                    f.write(chunk)
-                    f.flush()
-                    pbar.update(chunk_size)
+        for _ in range(retries):
+            try:
+                response = requests.get(
+                    self.url, stream=True, proxies=osdatahub.get_proxies())
+                response.raise_for_status()
+                expected_size = int(response.headers.get('content-length'))
+                current_size = 0
+                chunk_size = 1048576  # 1024 ** 2 -> 1MB
+                if response.status_code == 200:
+                    with open(output_path, 'wb') as f:
+                        if not pbar:
+                            pbar = tqdm(
+                                total=expected_size, desc=self.file_name, unit="B", unit_scale=True, leave=True)
+                        for chunk in response.iter_content(chunk_size=chunk_size):
+                            current_size += len(chunk)
+                            f.write(chunk)
+                            f.flush()
+                            pbar.update(chunk_size)
+                        if expected_size != current_size:
+                            deficit = expected_size - current_size
+                            raise IOError(
+                                f'incomplete read ({current_size} bytes read, {deficit} more expected)'
+                            )
+                        pbar.write(
+                            f"Finished downloading {self.file_name} to {output_path}")
+                break
 
-        if expected_size != current_size:
-            deficit = expected_size - current_size
-            raise IOError(
-                f'incomplete read ({current_size} bytes read, {deficit} more expected)'
-            ) 
-        pbar.write(f"Finished downloading {self.file_name} to {output_path}")
+            except HTTPError as exc:
+                if int(exc.response.status_code) == 429:
+                    time.sleep(1)
+                    continue
+                raise
+
         return output_path
+
+
+def remove_key(url: str):
+    """Remove key from url
+    """
+    return "".join([section for section in url.split("&") if "key" not in section])
+
+
+def format_missing_files(missing_files: List[_DownloadObj]) -> List[dict]:
+    """Convert download objects to dictionaries and sanitise
+    """
+    file_info = []
+    for _download_obj in missing_files:
+        info = _download_obj.__dict__
+        info['url'] = remove_key(info['url'])
+        file_info.append(info)
+    return {
+        "missing_file_count": len(missing_files),
+        "missing_file_info": file_info
+    }
+
+
+def save_missing_files(missing_files: List[_DownloadObj], output_dir: Union[str, Path]) -> None:
+    """Format and save missing files 
+    """
+    if len(missing_files) == 0:
+        return
+    data = format_missing_files(missing_files)
+    path = os.path.join(
+        output_dir, f"missing_files.{datetime.now().strftime('%Y%m%d%H%M%S')}.json")
+    json.dump(data, open(path, "w"))
 
 
 class _DownloadsAPIBase(ABC):
@@ -102,7 +151,8 @@ class _DownloadsAPIBase(ABC):
         """
         Calls endpoint to return details about the product or data package
         """
-        response = osdatahub.get(self._endpoint(self._id), proxies=osdatahub.get_proxies())
+        response = osdatahub.get(self._endpoint(
+            self._id), proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 
@@ -114,7 +164,8 @@ class _DownloadsAPIBase(ABC):
         Returns: list of dictionaries containing all products available to download
 
         """
-        response = osdatahub.get(cls._ENDPOINT, proxies=osdatahub.get_proxies())
+        response = osdatahub.get(
+            cls._ENDPOINT, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
 
@@ -146,7 +197,8 @@ class _DownloadsAPIBase(ABC):
                 defaults to the machine's CPU count
         """
         if isinstance(download_list, list) and len(download_list) == 0:
-            raise Exception("Argument \"download_list\" is empty. Please provide at least one DownloadObj to download")
+            raise Exception(
+                "Argument \"download_list\" is empty. Please provide at least one DownloadObj to download")
         elif isinstance(download_list, list) and len(download_list) > 1 and not download_multiple:
             raise Exception("Argument \"download_list\" contains more than 1 object to download, but argument "
                             "\"download_multiple\" is set to False. Please pass only 1 download or set "
@@ -162,16 +214,32 @@ class _DownloadsAPIBase(ABC):
             with ThreadPoolExecutor(max_workers=processes) as executor:
                 pbar = tqdm(total=sum([d.size for d in download_list]), unit="B", unit_scale=True, leave=True,
                             desc=f"Downloaded 0/{len(download_list)} files from osdatahub")
-                results = list([executor.submit(p.download, output_dir, overwrite, pbar) for p in download_list])
 
+                processed_downloads = {}
                 num_downloads_completed = 0
-                for _ in as_completed(results):
-                    num_downloads_completed += 1
-                    pbar.set_description(
-                        f"Downloaded {num_downloads_completed}/{len(download_list)} files from osdatahub")
+                results = []
+                missing_files = []
+
+                for p in download_list:
+                    future = executor.submit(
+                        p.download, output_dir, overwrite, pbar)
+                    processed_downloads[future] = p
+
+                for future in as_completed(processed_downloads):
+                    info = processed_downloads[future]
+                    try:
+                        results.append(future.result())
+                        num_downloads_completed += 1
+                        pbar.set_description(
+                            f"Downloaded {num_downloads_completed}/{len(download_list)} files from osdatahub")
+                    except Exception:
+                        missing_files.append(info)
+
+                save_missing_files(missing_files, output_dir)
         else:
             # download single file
-            d = download_list[0] if isinstance(download_list, list) else download_list
+            d = download_list[0] if isinstance(
+                download_list, list) else download_list
             results = [d.download(output_dir, overwrite)]
 
         return results
