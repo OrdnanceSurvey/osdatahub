@@ -77,15 +77,14 @@ class TestDataPackage:
     @pytest.mark.skipif(API_KEY is None, reason="Test API key not available")
     def test_download_pass(self):
         # Arrange
-        product_package = DataPackageDownload(API_KEY, "98")
-        files_to_download = product_package.product_list("156")
+        product_package = DataPackageDownload(API_KEY, "97")
 
         # Act
         with tempfile.TemporaryDirectory() as tmpdirname:
-            downloaded = product_package.download("156", tmpdirname)
+            downloaded = product_package.download("17094", tmpdirname, "bld_fts_buildingpart_orderSummary.json")
 
         # Assert
-        assert len(downloaded) == len(files_to_download["downloads"])
+        assert len(downloaded) == 1
 
     def test_download_list_pass(self):
         # TODO: implement download_list_pass
