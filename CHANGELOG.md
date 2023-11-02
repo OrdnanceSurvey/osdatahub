@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.9] - 2023/10/04
+
+### Changed
+- Increased DownloadsAPI sleep time to 20
+
 ## [1.2.8] - 2023/10/04
 
 ### Added
