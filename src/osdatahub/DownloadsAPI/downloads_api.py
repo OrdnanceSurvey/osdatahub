@@ -78,7 +78,7 @@ class _DownloadObj:
 
             except HTTPError as exc:
                 if int(exc.response.status_code) == 429:
-                    time.sleep(1)
+                    time.sleep(20)
                     continue
                 raise
 
