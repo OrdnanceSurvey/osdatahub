@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.10] - 2024/03/08
+
+### Changed
+- ⚠ PACKAGE DEPRECATED 
+
 ## [1.2.9] - 2023/10/04
 
 ### Changed
