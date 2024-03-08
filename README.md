@@ -1,11 +1,16 @@
 # osdatahub <!-- omit in toc -->
 
+
+> ⚠ **Important Notice**:
+> 
+> - This Python package is no longer actively maintained and will not receive updates.
+> - It may become incompatible with future OS Data Hub APIs.
+
+
 [![GitHub issues](https://img.shields.io/github/issues/OrdnanceSurvey/osdatahub)](https://github.com/OrdnanceSurvey/osdatahub/issues)
 [![Python package](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml/badge.svg)](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml)
 <a href="https://codeclimate.com/github/dchirst/osdatahub/maintainability"><img src="https://api.codeclimate.com/v1/badges/471fd53dbb22e9e28546/maintainability" /></a>
 
-> Coding in JavaScript?  
-> `osdatahub` has a sibling package for JavaScript developers with similar functionality, [check it out here](https://github.com/OrdnanceSurvey/osdatahub-js).
 
 `osdatahub` is a python package from Ordnance Survey (OS) that makes it easier to interact with OS data via
 the [OS Data Hub APIs](https://osdatahub.os.uk/).
@@ -41,15 +46,16 @@ the [OS Data Hub Explorer](https://labs.os.uk/public/data-hub-explorer/).
 
 - [Setup](#setup)
 - [Quick Start](#quick-start)
-    - [NGD API](#ngd-api)
-    - [Features API](#features-api)
-    - [Places API](#places-api)
-    - [Names API](#names-api)
-    - [Linked Identifiers API](#linked-identifiers-api)
-    - [Downloads API](#downloads-api)
+  - [NGD API](#ngd-api)
+  - [Features API](#features-api)
+  - [Places API](#places-api)
+  - [Names API](#names-api)
+  - [Linked Identifiers API](#linked-identifiers-api)
+  - [Downloads API](#downloads-api)
 - [Tutorials](#tutorials)
 - [Proxies](#proxies)
 - [Contribute](#contribute)
+  - [Support](#support)
 
 
 # Setup
