@@ -1,14 +1,12 @@
 import os
 import json
-import warnings
+import logging
 
-message = """
-> **Important Notice**:
-> 
-> - The osdatahub Python package is no longer actively maintained and will not receive updates.
-> - It may become incompatible with future OS Data Hub APIs.
+message = """Deprecation Warning:
+- The osdatahub Python package is no longer actively maintained and will not receive updates.
+- It may become incompatible with future OS Data Hub APIs.
 """
-warnings.warn(message, DeprecationWarning)
+logging.warning(message)
 
 os.environ["_OSDATAHUB_PROXIES"] = json.dumps({})
 
