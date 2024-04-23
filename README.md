@@ -4,7 +4,7 @@
 > ⚠ **Important Notice**:
 > 
 > - This Python package is no longer actively maintained and will not receive updates.
-> - It may become incompatible with future OS Data Hub APIs.
+> - It may become incompatible with future [OS Data Hub APIs](https://osdatahub.os.uk/).
 
 
 [![GitHub issues](https://img.shields.io/github/issues/OrdnanceSurvey/osdatahub)](https://github.com/OrdnanceSurvey/osdatahub/issues)
@@ -39,8 +39,6 @@ the [OS Data Hub Explorer](https://labs.os.uk/public/data-hub-explorer/).
 - conda-forge:  https://anaconda.org/conda-forge/osdatahub
 - Data Hub Explorer: https://labs.os.uk/prototyping/data-hub-explorer/
 - Free Software: Open Government License
-
-**Note:** This package is under active development.
 
 ## Contents <!-- omit in toc -->
 
