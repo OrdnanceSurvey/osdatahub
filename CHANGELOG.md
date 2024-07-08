@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.2.11] - 2024/07/08
+- Package Resupported - Supported under new team [jmbraybrook]
+
 ## [1.2.10] - 2024/03/08
 
 ### Changed
