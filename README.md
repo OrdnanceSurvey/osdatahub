@@ -1,12 +1,5 @@
 # osdatahub <!-- omit in toc -->
 
-
-> ⚠ **Important Notice**:
-> 
-> - This Python package is no longer actively maintained and will not receive updates.
-> - It may become incompatible with future [OS Data Hub APIs](https://osdatahub.os.uk/).
-
-
 [![GitHub issues](https://img.shields.io/github/issues/OrdnanceSurvey/osdatahub)](https://github.com/OrdnanceSurvey/osdatahub/issues)
 [![Python package](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml/badge.svg)](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml)
 <a href="https://codeclimate.com/github/dchirst/osdatahub/maintainability"><img src="https://api.codeclimate.com/v1/badges/471fd53dbb22e9e28546/maintainability" /></a>
@@ -352,4 +345,4 @@ pip install -e .[dev]
 
 ## Support
 
-For any kind of issues or suggestions please see the [**documentation**](https://osdatahub.readthedocs.io/en/latest/), open a **[github issue](https://github.com/OrdnanceSurvey/osdatahub/issues)** or contact us via Email **[rapidprototyping@os.uk](mailto:rapidprototyping@os.uk)**
+For any kind of issues or suggestions please see the [**documentation**](https://osdatahub.readthedocs.io/en/latest/), open a **[github issue](https://github.com/OrdnanceSurvey/osdatahub/issues)** or contact us via Email **[datascience@os.uk](mailto:datascience@os.uk)**
