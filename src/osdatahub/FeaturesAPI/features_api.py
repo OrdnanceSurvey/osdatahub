@@ -3,7 +3,7 @@ import warnings
 
 import requests
 from geojson import FeatureCollection
-from typeguard import check_argument_types
+from typeguard import typechecked
 
 import osdatahub
 from osdatahub.extent import Extent
@@ -82,6 +82,7 @@ class FeaturesAPI:
     def xml_filter(self):
         return self.__construct_filter()
 
+    @typechecked
     def query(self, limit: int = 100) -> FeatureCollection:
         """Run a query of the OS Features API
 
@@ -92,7 +93,7 @@ class FeaturesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
-        assert check_argument_types()
+
         params = self.__params
         data = GrowList()
         n_required = min(limit, 100)
@@ -138,14 +139,15 @@ class FeaturesAPI:
             "typeName": self.product.name,
             "filter": self.__construct_filter(),
         }
-
+    
+    @typechecked
     def add_filters(self, *xml_filters: Filter) -> None:
         """Add XML filter strings to the final query
 
         Args:
             xml_filters (str): Valid OGC XML filter objects
         """
-        assert check_argument_types()
+        
         self.filters.extend(xml_filters)
 
 

@@ -40,7 +40,7 @@ class TestOpenData:
     @pytest.mark.parametrize(*data.product_list_fail())
     def test_product_list_fail(self, open_data_download, file_name, file_format, file_subformat, area,
                                return_downloadobj, expected_result):
-        with pytest.raises(expected_exception=expected_result):
+        with pytest.raises(expected_result):
             open_data_download.product_list(file_name=file_name, file_format=file_format,
                                             file_subformat=file_subformat,
                                             area=area, return_downloadobj=return_downloadobj)

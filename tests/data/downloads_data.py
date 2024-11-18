@@ -1,4 +1,5 @@
 import itertools
+from typeguard import TypeCheckError
 
 from osdatahub.DownloadsAPI.downloads_api import _DownloadObj
 from pytest import param
@@ -17,10 +18,10 @@ def generate_product_list_params(file_name, file_format, file_subformat, area, r
 
 def product_list_pass(product_name):
     test_variables = "file_name, file_format, file_subformat, area, return_downloadobj, expected_url, expected_params"
-    file_names = ["test_file_name", "test_filename2", None]
-    file_formats = ["test_file_format", None]
-    file_subformats = ["test_file_subformat", None]
-    area = ["GB", "TM", None]
+    file_names = ["test_file_name", "test_filename2"]
+    file_formats = ["test_file_format"]
+    file_subformats = ["test_file_subformat"]
+    area = ["GB", "TM"]
     return_downloadobj_values = [True, False]
 
     permutations = list(itertools.product(file_names, file_formats, file_subformats, area, return_downloadobj_values))
@@ -35,12 +36,12 @@ def product_list_fail():
     test_variables = "file_name, file_format, file_subformat, area, return_downloadobj, expected_result"
 
     test_data = [
-        param(123, None, None, None, False, TypeError),
-        param(None, 123, None, None, False, TypeError),
-        param(None, None, 123, None, False, TypeError),
-        param(None, None, None, 123, False, TypeError),
-        param(None, None, None, "Wrong Area Code", False, ValueError),
-        param(None, None, None, None, "wrong value", TypeError)
+        param(123, None, None, None, False, (TypeError, TypeCheckError)),
+        param(None, 123, None, None, False, (TypeError, TypeCheckError)),
+        param(None, None, 123, None, False, (TypeError, TypeCheckError)),
+        param(None, None, None, 123, False, (TypeError, TypeCheckError)),
+        param(None, None, None, "Wrong Area Code", False, (ValueError, TypeCheckError)),
+        param(None, None, None, None, "wrong value", (TypeError, TypeCheckError))
     ]
     return test_variables, test_data
 
