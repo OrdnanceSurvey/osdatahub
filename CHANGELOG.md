@@ -1,9 +1,10 @@
 # Changelog
 
-## [1.2.12] - 2024/11/18
-- Resolved issues on installation on later python versions
+## [1.3.0] - 2024/11/18
+- Removing Support for Python 3.7
+- Adding Support for Python 3.12, 3.13
 
-- Added Support for Python 3.12, 3.13
+- Resolved issues on installation on later python versions
 - Updated Typeguard Version
 - Updated Packages to latest versions
 - Fixed typing on GeoJson Outputs -> Feature Collection to Dict.
