@@ -264,7 +264,7 @@ results = linked_ids.query(200001025758)
 ## Downloads API
 
 If you'd like to download an entire dataset instead of querying the API on demand, the OS Data Hub has the 
-[Downloads API](https://osdatahub.os.uk/docs/downloads/technicalSpecification). This API allows you to search,m explore, and download both [Open Data Products](https://osdatahub.os.uk/downloads/open) (e.g. OS Open Rivers, Boundary-Line, and a 1:250,000 scale 
+[Downloads API](https://osdatahub.os.uk/docs/downloads/technicalSpecification). This API allows you to search, explore, and download both [Open Data Products](https://osdatahub.os.uk/downloads/open) (e.g. OS Open Rivers, Boundary-Line, and a 1:250,000 scale 
 colour raster of Great Britain) and Premium Data Packages using Python.
 
 It is possible to download Open Data products without an API key, but the Premium Data Packages require you to have
@@ -334,7 +334,7 @@ and will apply to all the osdatahub api requests.
 
 # Contribute
 
-This package is still under active developement and we welcome contributions from the community via issues and pull requests.
+This package is still under active development and we welcome contributions from the community via issues and pull requests.
 
 To install osdatahub, along with the tools you need to develop and run tests, 
 run the following in your environment:
