@@ -1,9 +1,7 @@
 from collections.abc import Iterable
 from typing import Union
 
-import requests
-from geojson import FeatureCollection
-from typeguard import check_argument_types
+from typeguard import typechecked
 
 import osdatahub
 from osdatahub.errors import raise_http_error
@@ -38,9 +36,13 @@ class NamesAPI:
     def __endpoint(self, api_name: str) -> str:
         return self.__ENDPOINT + api_name + f"?key={self.key}"
 
-    def find(self, text: str, limit: int = 100,
-             bounds: Extent = None, bbox_filter: Extent = None,
-             local_type: Union[Iterable, str] = None) -> FeatureCollection:
+    @typechecked
+    def find(self,
+             text: str,
+             limit: int = 100,
+             bounds: Union[Extent, None] = None,
+             bbox_filter: Union[Extent, None] = None,
+             local_type: Union[Iterable, str, None] = None) -> dict:
         """A free text query of the OS Names API
 
         Args:
@@ -57,7 +59,6 @@ class NamesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
-        assert check_argument_types()
         data = GrowList()
         params = {"query": text}
 
@@ -84,7 +85,11 @@ class NamesAPI:
             raise_http_error(response)
         return addresses_to_geojson(data.values, "EPSG:27700")
 
-    def nearest(self, point: tuple, radius: float = 100, local_type: Union[Iterable, str] = None) -> FeatureCollection:
+    @typechecked
+    def nearest(self,
+                point: tuple,
+                radius: float = 100,
+                local_type: Union[Iterable, str, None] = None) -> dict:
         """Takes a pair of coordinates (X, Y) as an input
         to determine the closest name.
 
@@ -98,7 +103,6 @@ class NamesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
-        assert check_argument_types()
         data = GrowList()
         if not all([str(p).isnumeric() for p in point]):
             raise TypeError("All values in argument \"point\" must be numeric")
@@ -117,7 +121,9 @@ class NamesAPI:
         return addresses_to_geojson(data.values, crs="EPSG:27700")
 
     @staticmethod
-    def __format_fq(bbox_filter: Extent = None, local_type: Union[str, Iterable] = None) -> list:
+    @typechecked
+    def __format_fq(bbox_filter: Union[Extent, None] = None,
+                    local_type: Union[str, Iterable, None] = None) -> list:
         """
         Formats optional fq arguments for Names API query
 
@@ -130,7 +136,6 @@ class NamesAPI:
         Returns:
             list of fq filtering arguments
         """
-        assert check_argument_types()
         fq_args = []
         if local_type:
             # check that all given local types are valid

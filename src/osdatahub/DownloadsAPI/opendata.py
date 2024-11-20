@@ -22,8 +22,12 @@ class OpenDataDownload(_DownloadsAPIBase):
 
     # TODO: change name
     @typechecked
-    def product_list(self, file_name: str = None, file_format: str = None, file_subformat: str = None,
-                     area: str = None, return_downloadobj: bool = False) -> Union[list, dict]:
+    def product_list(self, 
+                     file_name: Union[str, None] = None, 
+                     file_format: Union[str, None] = None, 
+                     file_subformat: Union[str, None] = None,
+                     area: Union[str, None] = None, 
+                     return_downloadobj: bool = False) -> Union[list, dict]:
         """
         Returns a list of possible downloads for a specific OS OpenData Product based on given filters
 
@@ -60,14 +64,15 @@ class OpenDataDownload(_DownloadsAPIBase):
         else:
             return response.json()
 
-    def download(self, output_dir: Union[str, Path] = ".",
-                 file_name: str = None,
-                 file_format: str = None,
-                 file_subformat: str = None,
-                 area: str = None,
+    def download(self, 
+                 output_dir: Union[str, Path] = ".",
+                 file_name: Union[str, None] = None,
+                 file_format: Union[str, None] = None,
+                 file_subformat: Union[str, None] = None,
+                 area: Union[str, None] = None,
                  download_multiple: bool = False,
                  overwrite: bool = False,
-                 processes: int = None) -> list:
+                 processes: Union[int, None] = None) -> list:
         """
         Downloads Product files to your local machine
 

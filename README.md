@@ -334,7 +334,7 @@ and will apply to all the osdatahub api requests.
 
 # Contribute
 
-This package is still under active developement and we welcome contributions from the community via issues and pull requests.
+This package is still under active development and we welcome contributions from the community via issues and pull requests.
 
 To install osdatahub, along with the tools you need to develop and run tests, 
 run the following in your environment:

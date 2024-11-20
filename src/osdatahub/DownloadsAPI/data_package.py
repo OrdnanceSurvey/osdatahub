@@ -90,9 +90,9 @@ class DataPackageDownload(_DownloadsAPIBase):
     def download(self,
                  version_id: str,
                  output_dir: Union[str, Path] = ".",
-                 file_name: str = None,
+                 file_name: Union[str, None] = None,
                  overwrite: bool = False,
-                 processes: int = None) -> list:
+                 processes: Union[int, None] = None) -> list:
         """
         Downloads Data Package files to your local machine
 
