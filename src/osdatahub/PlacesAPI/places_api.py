@@ -2,8 +2,7 @@ from collections.abc import Iterable
 from typing import Union
 
 import requests
-from geojson import FeatureCollection
-from typeguard import check_argument_types
+from typeguard import typechecked
 
 import osdatahub
 from osdatahub import Extent
@@ -51,6 +50,7 @@ class PlacesAPI:
 
         raise ValueError(f"Unrecognised dataset, expected 'LPI', 'DPA' or ['LPI', 'DPA'], got {dataset}")
 
+    @typechecked
     def query(
             self,
             extent: Extent,
@@ -59,7 +59,7 @@ class PlacesAPI:
             classification_code: Union[str, Iterable, None] = None,
             logical_status_code: Union[str, int, None] = None,
             dataset: Union[str, Iterable, None] = None
-    ) -> FeatureCollection:
+    ) -> dict:
         """Run a query of the OS Places API within a given extent
 
         Args:
@@ -74,7 +74,6 @@ class PlacesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
-        assert check_argument_types()
         if not output_crs:
             output_crs = extent.crs
         data = GrowList()
@@ -105,17 +104,18 @@ class PlacesAPI:
             response.raise_for_status()
         return addresses_to_geojson(data.values, output_crs)
 
+    @typechecked
     def find(
             self,
             text: str,
             output_crs: str = "EPSG:27700",
             limit: int = 100,
-            classification_code: Union[str, Iterable] = None,
-            logical_status_code: Union[str, int] = None,
-            minmatch: float = None,
-            matchprecision: int = None,
+            classification_code: Union[str, Iterable, None] = None,
+            logical_status_code: Union[str, int, None] = None,
+            minmatch: Union[float, None] = None,
+            matchprecision: Union[int, None] = None,
             dataset: Union[str, Iterable, None] = None
-    ) -> FeatureCollection:
+    ) -> dict:
         """A free text query of the OS Places API
 
         Args:
@@ -132,7 +132,6 @@ class PlacesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
-        assert check_argument_types()
         data = GrowList()
         params = {"query": text, "output_srs": output_crs}
         if minmatch is not None:
@@ -160,15 +159,16 @@ class PlacesAPI:
             response.raise_for_status()
         return addresses_to_geojson(data.values, output_crs)
 
+    @typechecked
     def postcode(
             self,
             postcode: str,
             output_crs: str = "EPSG:27700",
             limit: int = 100,
-            classification_code: Union[str, Iterable] = None,
-            logical_status_code: Union[str, int] = None,
+            classification_code: Union[str, Iterable, None] = None,
+            logical_status_code: Union[str, int, None] = None,
             dataset: Union[str, Iterable, None] = None
-    ) -> FeatureCollection:
+    ) -> dict:
         """A query based on a property’s postcode. The minimum for the
         resource is the area and district
 
@@ -188,7 +188,6 @@ class PlacesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
-        assert check_argument_types()
         data = GrowList()
         params = {"postcode": postcode, "output_srs": output_crs}
         if classification_code or logical_status_code:
@@ -211,14 +210,15 @@ class PlacesAPI:
             response.raise_for_status()
         return addresses_to_geojson(data.values, output_crs)
 
+    @typechecked
     def uprn(
             self,
             uprn: int,
             output_crs: str = "EPSG:27700",
-            classification_code: Union[str, Iterable] = None,
-            logical_status_code: Union[str, int] = None,
+            classification_code: Union[str, Iterable, None] = None,
+            logical_status_code: Union[str, int, None] = None,
             dataset: Union[str, Iterable, None] = None
-    ) -> FeatureCollection:
+    ) -> dict:
         """A query that takes a UPRN as the search parameter
 
         Args:
@@ -232,7 +232,6 @@ class PlacesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
-        assert check_argument_types()
         data = GrowList()
         params = {"uprn": uprn, "output_srs": output_crs}
         if classification_code or logical_status_code:
@@ -250,6 +249,7 @@ class PlacesAPI:
             response.raise_for_status()
         return addresses_to_geojson(data.values, output_crs)
 
+    @typechecked
     def nearest(
             self,
             point: tuple,
@@ -259,7 +259,7 @@ class PlacesAPI:
             classification_code: Union[str, Iterable] = None,
             logical_status_code: Union[str, int] = None,
             dataset: Union[str, Iterable, None] = None
-    ) -> FeatureCollection:
+    ) -> dict:
         """Takes a pair of coordinates (X, Y)/(Lon, Lat) as an input
         to determine the closest address.
 
@@ -277,7 +277,6 @@ class PlacesAPI:
         Returns:
             FeatureCollection: The results of the query in GeoJSON format
         """
-        assert check_argument_types()
         data = GrowList()
         point = point if point_crs.upper() != "EPSG:4326" else (point[1], point[0])
         params = {
@@ -307,9 +306,10 @@ class PlacesAPI:
         return [result[list(result.keys())[0]] for result in results]
 
     @staticmethod
+    @typechecked
     def __format_fq(
-            classification_code: Union[str, Iterable] = None,
-            logical_status_code: Union[str, int] = None,
+            classification_code: Union[str, Iterable, None] = None,
+            logical_status_code: Union[str, int, None] = None,
     ) -> list:
         """
         Formats optional fq arguments for Places API query
@@ -321,7 +321,6 @@ class PlacesAPI:
         Returns:
             list of fq filtering arguments
         """
-        assert check_argument_types()
         fq_args = []
         if classification_code:
             if isinstance(classification_code, str):

@@ -1,5 +1,5 @@
 from pytest import param
-
+from typeguard import TypeCheckError
 
 def test_format_fq():
     test_variables = "classification_codes, logical_states, expected_result"
@@ -30,8 +30,8 @@ def test_format_fq():
 def test_format_fq_errors():
     test_variables = "classification_codes, logical_states, expected_result"
     test_data = [
-        param(1, None, TypeError),
-        param(None, "ABC", TypeError),
-        param(None, ("1", "2"), TypeError),
+        param(1, None, (TypeError, TypeCheckError)),
+        param(None, "ABC", (TypeError, TypeCheckError)),
+        param(None, ("1", "2"), (TypeError, TypeCheckError)),
     ]
     return test_variables, test_data

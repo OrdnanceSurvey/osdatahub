@@ -33,7 +33,10 @@ class _DownloadObj:
         self.file_name = file_name
         self.size = size
 
-    def download(self, output_dir: Union[str, Path], overwrite: bool = False, pbar: tqdm = None) -> str:
+    def download(self, 
+                 output_dir: Union[str, Path], 
+                 overwrite: bool = False, 
+                 pbar: Union[tqdm, None] = None) -> str:
         """
         Downloads file to given directory
 
@@ -179,8 +182,11 @@ class _DownloadsAPIBase(ABC):
         pass
 
     @staticmethod
-    def _download(download_list: Union[list, _DownloadObj], output_dir: Union[str, Path], overwrite: bool = False,
-                  download_multiple: bool = False, processes: int = None) -> list:
+    def _download(download_list: Union[list, _DownloadObj], 
+                  output_dir: Union[str, Path], 
+                  overwrite: bool = False,
+                  download_multiple: bool = False, 
+                  processes: Union[int, None] = None) -> list:
         """
         Downloads product/datapackage to the given directory. Can download a single format or can download multiple
         formats in parallel

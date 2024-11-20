@@ -5,15 +5,14 @@ from datetime import datetime
 from typing import Union
 
 import requests
-from geojson import Feature, FeatureCollection
-from typeguard import check_argument_types
+from typeguard import typechecked
 
 import osdatahub
 from osdatahub import Extent
 from osdatahub.NGD.crs import get_crs
 
 
-def _merge_geojsons(gj1: FeatureCollection, gj2: FeatureCollection) -> FeatureCollection:
+def _merge_geojsons(gj1: Union[dict], gj2: Union[dict]) -> Union[dict]:
     """
     Combines 2 geojsons from NGD api into a single valid geojson
 
@@ -84,16 +83,17 @@ class NGD:
         response = osdatahub.get(cls.__ENDPOINT, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
-
+    
+    @typechecked
     def query(self,
-              extent: Extent = None,
-              crs: Union[str, int] = None,
-              start_datetime: datetime = None,
-              end_datetime: datetime = None,
-              cql_filter: str = None,
-              filter_crs: Union[str, int] = None,
+              extent: Union[Extent, None] = None,
+              crs: Union[str, int, None] = None,
+              start_datetime: Union[datetime, None] = None,
+              end_datetime: Union[datetime, None] = None,
+              cql_filter: Union[str, None] = None,
+              filter_crs: Union[str, int, None] = None,
               max_results: int = 100,
-              offset: int = 0) -> FeatureCollection:
+              offset: int = 0) -> Union[dict]:
         """
         Retrieves features from a Collection
 
@@ -123,7 +123,6 @@ class NGD:
             FeatureCollection: The results of the query in GeoJSON format
         """
 
-        assert check_argument_types()
         assert max_results > 0, f"Argument max_results must be greater than 0 but was {max_results}"
         assert offset >= 0, f"Argument offset must be greater than 0 but was {offset}"
         params = {}
@@ -183,7 +182,6 @@ class NGD:
                 raise e
 
             resp_json = response.json()
-
             data = _merge_geojsons(data, resp_json)
 
             if resp_json["numberReturned"] < limit:
@@ -193,7 +191,7 @@ class NGD:
 
         return data
 
-    def query_feature(self, feature_id: str, crs: Union[str, int] = None) -> Feature:
+    def query_feature(self, feature_id: str, crs: Union[str, int] = None) -> dict:
         """
         Retrieves a single feature from a collection
 

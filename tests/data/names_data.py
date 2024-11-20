@@ -1,5 +1,6 @@
 from osdatahub.extent import Extent
 from pytest import param
+from typeguard import TypeCheckError
 
 
 def test_format_fq():
@@ -42,10 +43,10 @@ def test_format_fq_errors():
     test_data = [
         param(None,
               1234,
-              TypeError),
+              (TypeError,TypeCheckError)),
         param(1234,
               None,
-              TypeError),
+              (TypeError,TypeCheckError)),
         param(None,
               "fake_local_type",
               ValueError),
@@ -169,14 +170,14 @@ def test_find_fail():
               Extent.from_bbox((100, 200, 300, 400), crs="EPSG:4326"),
               None,
               None,
-              TypeError
+              (TypeError, TypeCheckError)
               ),
         param("Buckingham Palace",
               50,
               None,
               Extent.from_bbox((100, 200, 300, 400), crs="EPSG:4326"),
               None,
-              TypeError
+              (TypeError,TypeCheckError)
               ),
         param("Buckingham Palace",
               50,
@@ -246,7 +247,7 @@ def test_nearest_fail():
             ("dog", "cat"),
             100,
             None,
-            TypeError
+            (TypeError, TypeCheckError)
         ),
         param(
             (100, 200),

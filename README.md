@@ -1,12 +1,5 @@
 # osdatahub <!-- omit in toc -->
 
-
-> ⚠ **Important Notice**:
-> 
-> - This Python package is no longer actively maintained and will not receive updates.
-> - It may become incompatible with future [OS Data Hub APIs](https://osdatahub.os.uk/).
-
-
 [![GitHub issues](https://img.shields.io/github/issues/OrdnanceSurvey/osdatahub)](https://github.com/OrdnanceSurvey/osdatahub/issues)
 [![Python package](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml/badge.svg)](https://github.com/OrdnanceSurvey/osdatahub/actions/workflows/python-package.yml)
 <a href="https://codeclimate.com/github/dchirst/osdatahub/maintainability"><img src="https://api.codeclimate.com/v1/badges/471fd53dbb22e9e28546/maintainability" /></a>
@@ -271,7 +264,7 @@ results = linked_ids.query(200001025758)
 ## Downloads API
 
 If you'd like to download an entire dataset instead of querying the API on demand, the OS Data Hub has the 
-[Downloads API](https://osdatahub.os.uk/docs/downloads/technicalSpecification). This API allows you to search,m explore, and download both [Open Data Products](https://osdatahub.os.uk/downloads/open) (e.g. OS Open Rivers, Boundary-Line, and a 1:250,000 scale 
+[Downloads API](https://osdatahub.os.uk/docs/downloads/technicalSpecification). This API allows you to search, explore, and download both [Open Data Products](https://osdatahub.os.uk/downloads/open) (e.g. OS Open Rivers, Boundary-Line, and a 1:250,000 scale 
 colour raster of Great Britain) and Premium Data Packages using Python.
 
 It is possible to download Open Data products without an API key, but the Premium Data Packages require you to have
@@ -341,7 +334,7 @@ and will apply to all the osdatahub api requests.
 
 # Contribute
 
-This package is still under active developement and we welcome contributions from the community via issues and pull requests.
+This package is still under active development and we welcome contributions from the community via issues and pull requests.
 
 To install osdatahub, along with the tools you need to develop and run tests, 
 run the following in your environment:
@@ -352,4 +345,4 @@ pip install -e .[dev]
 
 ## Support
 
-For any kind of issues or suggestions please see the [**documentation**](https://osdatahub.readthedocs.io/en/latest/), open a **[github issue](https://github.com/OrdnanceSurvey/osdatahub/issues)** or contact us via Email **[rapidprototyping@os.uk](mailto:rapidprototyping@os.uk)**
+For any kind of issues or suggestions please see the [**documentation**](https://osdatahub.readthedocs.io/en/latest/), open a **[github issue](https://github.com/OrdnanceSurvey/osdatahub/issues)** or contact us via Email **[datascience@os.uk](mailto:datascience@os.uk)**
