@@ -1,3 +1,5 @@
+from typing import Union
+
 class GrowList:
     """
     GrowList is a convenience class that behaves similarly to a normal
@@ -5,7 +7,7 @@ class GrowList:
     with the extend() function.
     """
 
-    def __init__(self, values: list = None):
+    def __init__(self, values: Union[list, None] = None):
         self.values = values if values else []
         self.size = [len(self.values)]
 

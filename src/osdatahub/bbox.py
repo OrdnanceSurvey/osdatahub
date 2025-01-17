@@ -1,4 +1,5 @@
 from dataclasses import astuple, dataclass
+from typing import Union
 
 
 @dataclass
@@ -19,7 +20,7 @@ class BBox:
     def __getitem__(self, index):
         return list(self)[index]
 
-    def to_string(self, precision: int = None) -> str:
+    def to_string(self, precision: Union[int, None] = None) -> str:
         """
         Converts bounding box into string
 
