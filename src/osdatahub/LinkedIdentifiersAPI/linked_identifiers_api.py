@@ -59,8 +59,8 @@ class LinkedIdentifiersAPI:
     def query(
             self,
             identifier: Union[int, str],
-            feature_type: str = None,
-            identifier_type: str = None,
+            feature_type: Union[str, None] = None,
+            identifier_type: Union[str, None] = None,
     ) -> dict:
         """Run a query of the OS Linked Identifiers API - looks up an
         identifier and finds its associated identifiers.

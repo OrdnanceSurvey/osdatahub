@@ -54,7 +54,7 @@ class PlacesAPI:
     def query(
             self,
             extent: Extent,
-            output_crs: str = None,
+            output_crs: Union[str, None] = None,
             limit: int = 100,
             classification_code: Union[str, Iterable, None] = None,
             logical_status_code: Union[str, int, None] = None,
