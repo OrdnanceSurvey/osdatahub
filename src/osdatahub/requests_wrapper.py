@@ -42,13 +42,13 @@ def check_length(func):
 
 def add_user_agent_tag(kwargs):
     """
-    Adds a User-Agent header to the request if it is not already present.
+    Adds a User-Agent header to the request so that it matches the USER AGENT TAG.
     """
 
     if kwargs.get('headers') is None:
         kwargs['headers'] = {}
-    if 'User-Agent' not in kwargs['headers']:
-        kwargs['headers']['User-Agent'] = USER_AGENT_TAG
+
+    kwargs['headers'].update({'User-Agent': USER_AGENT_TAG})
 
     return kwargs
 
