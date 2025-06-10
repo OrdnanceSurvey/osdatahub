@@ -5,8 +5,7 @@ Information and inspiration from https://blog.petrzemek.net/2018/04/22/on-incomp
 
 import requests
 
-USER_AGENT_TAG = 'osdatahub-python'
-
+_USER_AGENT_TAG = 'osdatahub-python'
 
 def check_length(func):
     """
@@ -48,7 +47,7 @@ def add_user_agent_tag(kwargs):
     if kwargs.get('headers') is None:
         kwargs['headers'] = {}
 
-    kwargs['headers'].update({'User-Agent': USER_AGENT_TAG})
+    kwargs['headers'].update({'User-Agent': _USER_AGENT_TAG})
 
     return kwargs
 

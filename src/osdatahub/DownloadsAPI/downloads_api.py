@@ -54,7 +54,7 @@ class _DownloadObj:
 
         for _ in range(retries):
             try:
-                header = {'User-Agent': osdatahub.USER_AGENT_TAG}
+                header = {'User-Agent': 'osdatahub-python'}
                 response = requests.get(
                     self.url, stream=True, headers=header, proxies=osdatahub.get_proxies())
                 response.raise_for_status()
