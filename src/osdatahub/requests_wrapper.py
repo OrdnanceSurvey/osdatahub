@@ -5,6 +5,8 @@ Information and inspiration from https://blog.petrzemek.net/2018/04/22/on-incomp
 
 import requests
 
+USER_AGENT_TAG = 'osdatahub-python'
+
 
 def check_length(func):
     """
@@ -38,6 +40,17 @@ def check_length(func):
         return response
     return wrapper
 
+def add_user_agent_tag(kwargs):
+    """
+    Adds a User-Agent header to the request if it is not already present.
+    """
+
+    if kwargs.get('headers') is None:
+        kwargs['headers'] = {}
+    if 'User-Agent' not in kwargs['headers']:
+        kwargs['headers']['User-Agent'] = USER_AGENT_TAG
+
+    return kwargs
 
 @check_length
 def get(*args, **kwargs):
@@ -54,6 +67,7 @@ def get(*args, **kwargs):
     Raises:
         IOError: If the content length check fails.
     """
+    kwargs = add_user_agent_tag(kwargs)
     return requests.get(*args, **kwargs)
 
 
@@ -72,4 +86,5 @@ def post(*args, **kwargs):
     Raises:
         IOError: If the content length check fails.
     """
+    kwargs = add_user_agent_tag(kwargs)
     return requests.post(*args, **kwargs)
