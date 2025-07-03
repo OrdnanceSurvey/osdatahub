@@ -54,8 +54,9 @@ class _DownloadObj:
 
         for _ in range(retries):
             try:
+                header = {'User-Agent': 'osdatahub-python'}
                 response = requests.get(
-                    self.url, stream=True, proxies=osdatahub.get_proxies())
+                    self.url, stream=True, headers=header, proxies=osdatahub.get_proxies())
                 response.raise_for_status()
                 expected_size = int(response.headers.get('content-length'))
                 current_size = 0
