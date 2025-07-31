@@ -1,7 +1,7 @@
 # Changelog
 
 ## [1.3.2] - 2025/07/30
-- Deprecated support for Python 3.8 and 3.9
+- Deprecated support for Python 3.8
 - Updating dependencies to latest versions
 
 ## [1.3.1] - 2025/06/10
