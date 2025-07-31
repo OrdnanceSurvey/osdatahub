@@ -2,7 +2,6 @@ geojson~=3.2.0
 typeguard~=4.4.4
 shapely~=2.1.1
 tqdm~=4.67.1
-setuptools>=80.9.0
 requests~=2.32.4
 urllib3>=2.5.0 # not directly required, pinned by Snyk to avoid a vulnerability
 zipp>=3.23.0 # not directly required, pinned by Snyk to avoid a vulnerability
