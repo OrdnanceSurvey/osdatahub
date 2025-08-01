@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.3.2] - 2025/07/30
+- Deprecated support for Python 3.8 and 3.9
+- Updating dependencies to latest versions
+
 ## [1.3.1] - 2025/06/10
 - Added User Agent tag for the python wrapper on requests to the OS Data Hub API
 - Added contributions from [aricooperdavis] - Include None type in hints for function params with default value None
