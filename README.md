@@ -12,8 +12,7 @@ OS is the national mapping agency for Great Britain and produces a large variety
 and geospatial products. Much of OS's data is available via the [OS Data Hub](https://osdatahub.os.uk/), a platform
 that hosts both free and premium data products. `osdatahub` provides a user-friendly way to interact with these data
 products
-in Python. To see what data is available, you can use
-the [OS Data Hub Explorer](https://labs.os.uk/public/data-hub-explorer/).
+in Python. To see what data is available, you can explore our data using our [Product Viewers](https://docs.os.uk/more-than-maps/os-ngd-data-demonstrators/product-viewer) or alternatively within our [NGD Documentation](https://docs.os.uk/more-than-maps/os-ngd-data-demonstrators/os-ngd-data).
 
 ![The OS Logo](https://github.com/OrdnanceSurvey/osdatahub/blob/master/media/os-logo.png)
 
