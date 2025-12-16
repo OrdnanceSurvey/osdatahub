@@ -344,4 +344,4 @@ pip install -e .[dev]
 
 ## Support
 
-For any kind of issues or suggestions please see the [**documentation**](https://osdatahub.readthedocs.io/en/latest/), open a **[github issue](https://github.com/OrdnanceSurvey/osdatahub/issues)** or contact us via Email **[datascience@os.uk](mailto:datascience@os.uk)**
+For any kind of issues or suggestions please see the [**documentation**](https://osdatahub.readthedocs.io/en/latest/) or open a **[github issue](https://github.com/OrdnanceSurvey/osdatahub/issues)**
