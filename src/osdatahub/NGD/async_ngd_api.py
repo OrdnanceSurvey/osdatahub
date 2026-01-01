@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 from typeguard import typechecked
 
+import osdatahub
 from osdatahub import Extent
 from osdatahub.AsyncAPI import AsyncHTTPClient
 from osdatahub.NGD.crs import get_crs
@@ -104,6 +105,7 @@ class AsyncNGD:
                 max_concurrent=self._max_concurrent,
                 request_delay=self._request_delay,
                 max_retries=self._max_retries,
+                proxies=osdatahub.get_proxies(),
             )
         return self._client
 
@@ -138,7 +140,7 @@ class AsyncNGD:
 
         should_close = client is None
         if client is None:
-            client = AsyncHTTPClient()
+            client = AsyncHTTPClient(proxies=osdatahub.get_proxies())
 
         try:
             result = await client.get(cls.__ENDPOINT)

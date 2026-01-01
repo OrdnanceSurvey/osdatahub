@@ -18,6 +18,7 @@ class AsyncHTTPClient:
     - Rate limiting via semaphore and request delays
     - Automatic retries with exponential backoff
     - Content-length validation
+    - Proxy support
 
     Args:
         max_concurrent: Maximum concurrent requests (default: 5)
@@ -26,6 +27,8 @@ class AsyncHTTPClient:
         connector_limit: Total connection pool limit (default: 10)
         connector_limit_per_host: Per-host connection limit (default: 5)
         timeout: Request timeout in seconds (default: 30)
+        proxies: Proxy configuration dict (e.g., {"http": "...", "https": "..."})
+            Uses the "https" value for HTTPS requests, "http" for HTTP.
 
     Example::
 
@@ -41,6 +44,7 @@ class AsyncHTTPClient:
         connector_limit: int = 30,
         connector_limit_per_host: int = 5,
         timeout: float = 30.0,
+        proxies: Optional[Dict[str, str]] = None,
     ) -> None:
         self._max_concurrent = max_concurrent
         self._request_delay = request_delay
@@ -48,9 +52,18 @@ class AsyncHTTPClient:
         self._connector_limit = connector_limit
         self._connector_limit_per_host = connector_limit_per_host
         self._timeout = timeout
+        self._proxies = proxies or {}
 
         self._session: Optional[aiohttp.ClientSession] = None
         self._rate_limiter: Optional[RateLimiter] = None
+
+    def _get_proxy(self, url: str) -> Optional[str]:
+        """Get the appropriate proxy URL for the given request URL."""
+        if not self._proxies:
+            return None
+        if url.startswith("https://"):
+            return self._proxies.get("https")
+        return self._proxies.get("http")
 
     async def _get_session(self) -> aiohttp.ClientSession:
         "Initialisation of aiohttp session."
@@ -103,11 +116,13 @@ class AsyncHTTPClient:
 
         last_exception: Optional[Exception] = None
 
+        proxy = self._get_proxy(url)
+
         for attempt in range(self._max_retries):
             try:
                 async with rate_limiter:
                     async with session.get(
-                        url, params=params, headers=headers, **kwargs
+                        url, params=params, headers=headers, proxy=proxy, **kwargs
                     ) as response:
                         response.raise_for_status()
                         data = await response.json()
@@ -159,6 +174,8 @@ class AsyncHTTPClient:
 
         last_exception: Optional[Exception] = None
 
+        proxy = self._get_proxy(url)
+
         for attempt in range(self._max_retries):
             try:
                 async with rate_limiter:
@@ -168,6 +185,7 @@ class AsyncHTTPClient:
                         json=json,
                         params=params,
                         headers=headers,
+                        proxy=proxy,
                         **kwargs,
                     ) as response:
                         response.raise_for_status()
