@@ -8,7 +8,7 @@ See here: https://doc.rust-lang.org/rust-by-example/conversion/from_into.html
 
 
 @dataclass
-class FeatureCollection:
+class NGDFeatureCollection:
     """GeoJSON FeatureCollection response from NGD API."""
 
     type: str
@@ -19,7 +19,7 @@ class FeatureCollection:
     numberMatched: Optional[int] = None
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "FeatureCollection":
+    def from_dict(cls, data: Dict[str, Any]) -> "NGDFeatureCollection":
         """Create FeatureCollection from API response dict."""
         return cls(
             type=data.get("type", "FeatureCollection"),

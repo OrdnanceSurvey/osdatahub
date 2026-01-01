@@ -9,11 +9,11 @@ import osdatahub
 from osdatahub import Extent
 from osdatahub.AsyncAPI import AsyncHTTPClient
 from osdatahub.NGD.crs import get_crs
-from osdatahub.NGD.models import FeatureCollection
+from osdatahub.NGD.models import NGDFeatureCollection
 
 
 # TODO: check that this is more efficient - avoids having to do the copy each time like the synchonous version
-def _merge_all_geojsons(geojsons: List[Dict]) -> FeatureCollection:
+def _merge_all_geojsons(geojsons: List[Dict]) -> NGDFeatureCollection:
     """Merge multiple GeoJSON FeatureCollections into one efficiently."""
     if not geojsons:
         raise ValueError("No geojsons to merge")
@@ -33,7 +33,7 @@ def _merge_all_geojsons(geojsons: List[Dict]) -> FeatureCollection:
         links.extend(gj.get("links", []))
         count += gj.get("numberReturned", 0)
 
-    return FeatureCollection(
+    return NGDFeatureCollection(
         type=base.get("type", "FeatureCollection"),
         features=features,
         numberReturned=count,
@@ -166,7 +166,7 @@ class AsyncNGD:
         filter_crs: Optional[Union[str, int]] = None,
         max_results: Optional[int] = 100,
         offset: int = 0,
-    ) -> FeatureCollection:
+    ) -> NGDFeatureCollection:
         """
         Async query for features from a Collection with parallel pagination.
 
@@ -195,9 +195,11 @@ class AsyncNGD:
             AssertionError: If max_results <= 0 or offset < 0.
             ValueError: If start_datetime > end_datetime or CRS validation fails.
         """
-        if max_results is not None:
-            assert max_results > 0, f"max_results must be > 0, got {max_results}"
-        assert offset >= 0, f"offset must be >= 0, got {offset}"
+
+        if max_results is not None and max_results <= 0:
+            raise ValueError(f"max_results must be > 0, got {max_results}")
+        if offset < 0:
+            raise ValueError(f"offset must be >= 0, got {offset}")
 
         params = self._build_params(
             extent=extent,
@@ -243,7 +245,7 @@ class AsyncNGD:
 
         # TODO: maybe raise exception instead?
         if not successful_results:
-            return FeatureCollection(
+            return NGDFeatureCollection(
                 type="FeatureCollection",
                 features=[],
                 numberReturned=0,
@@ -291,7 +293,7 @@ class AsyncNGD:
         params: Dict,
         headers: Dict,
         start_offset: int = 0,
-    ) -> FeatureCollection:
+    ) -> NGDFeatureCollection:
         """
         Fetch all available features by paginating until no more results.
         """
@@ -335,7 +337,7 @@ class AsyncNGD:
 
         # TODO: Raise exception here?
         if not all_results:
-            return FeatureCollection(
+            return NGDFeatureCollection(
                 type="FeatureCollection",
                 features=[],
                 numberReturned=0,
