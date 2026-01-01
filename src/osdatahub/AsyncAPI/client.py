@@ -22,7 +22,7 @@ class AsyncHTTPClient:
 
     Args:
         max_concurrent: Maximum concurrent requests (default: 5)
-        request_delay: Delay between requests in seconds (default: 0.3)
+        request_delay: Delay between requests in seconds (default: 0.1)
         max_retries: Maximum retry attempts on failure (default: 3)
         connector_limit: Total connection pool limit (default: 10)
         connector_limit_per_host: Per-host connection limit (default: 5)
@@ -39,7 +39,7 @@ class AsyncHTTPClient:
     def __init__(
         self,
         max_concurrent: int = 5,
-        request_delay: float = 0.02,
+        request_delay: float = 0.1,
         max_retries: int = 3,
         connector_limit: int = 30,
         connector_limit_per_host: int = 5,
@@ -120,6 +120,8 @@ class AsyncHTTPClient:
 
         for attempt in range(self._max_retries):
             try:
+                # TODO: Write docs on how this works
+                # The key is that everything must acquire the semapohore to proceed
                 async with rate_limiter:
                     async with session.get(
                         url, params=params, headers=headers, proxy=proxy, **kwargs

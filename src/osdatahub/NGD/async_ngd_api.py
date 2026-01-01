@@ -77,7 +77,7 @@ class AsyncNGD:
 
     __ENDPOINT = r"https://api.os.uk/features/ngd/ofa/v1/collections"
     __HEADERS = {"Accept": "application/geo+json"}
-    __PAGE_SIZE = 100  # NGD API max per request
+    __PAGE_SIZE = 100  # NGD API max return per request
 
     _collections_cache: Optional[Dict] = None
 
@@ -86,7 +86,7 @@ class AsyncNGD:
         key: str,
         collection: str,
         max_concurrent: int = 5,
-        request_delay: float = 0.02,  # could make this 0 but I think API limts would be hit
+        request_delay: float = 0.1,  # TODO: look at the OS throttling docs
         max_retries: int = 3,
     ) -> None:
         self.key: str = key
