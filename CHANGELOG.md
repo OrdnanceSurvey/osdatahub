@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.3.3] - 2026/01/07
+Updating support to 3.14
+Updates and fixes to documentation
+
 ## [1.3.2] - 2025/07/30
 - Deprecated support for Python 3.8 and 3.9
 - Updating dependencies to latest versions
