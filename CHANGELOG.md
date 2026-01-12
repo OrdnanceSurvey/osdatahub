@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.3.4] - 2026/01/12
+- Added Async NGD Client Feature - contributed by [ChrisCarlon]
+
 ## [1.3.3] - 2026/01/07
 - Updating support to python 3.14
 - Updates and fixes to documentation
