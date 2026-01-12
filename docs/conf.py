@@ -23,7 +23,7 @@ copyright = "2025, OS Data Science Team"
 author = "OS Data Science Team"
 
 # The full version, including alpha/beta/rc tags
-release = "1.3.3"
+release = "1.3.4"
 
 # -- General configuration ---------------------------------------------------
 

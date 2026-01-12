@@ -10,6 +10,7 @@ from typeguard import typechecked
 import osdatahub
 from osdatahub import Extent
 from osdatahub.NGD.crs import get_crs
+from osdatahub.NGD.models import NGDFeatureCollection
 
 
 def _merge_geojsons(gj1: Union[dict], gj2: Union[dict]) -> Union[dict]:
@@ -61,9 +62,10 @@ class NGD:
         features = NGD(key, "bld-fts-buildingline")
         results = features.query(max_results=50, extent=extent)
     """
+
     __ENDPOINT = r"https://api.os.uk/features/ngd/ofa/v1/collections"
 
-    __HEADERS = {'Accept': 'application/geo+json'}
+    __HEADERS = {"Accept": "application/geo+json"}
 
     def __init__(self, key: str, collection: str):
         self.key: str = key
@@ -83,17 +85,20 @@ class NGD:
         response = osdatahub.get(cls.__ENDPOINT, proxies=osdatahub.get_proxies())
         response.raise_for_status()
         return response.json()
-    
+
     @typechecked
-    def query(self,
-              extent: Union[Extent, None] = None,
-              crs: Union[str, int, None] = None,
-              start_datetime: Union[datetime, None] = None,
-              end_datetime: Union[datetime, None] = None,
-              cql_filter: Union[str, None] = None,
-              filter_crs: Union[str, int, None] = None,
-              max_results: int = 100,
-              offset: int = 0) -> Union[dict]:
+    def query(
+        self,
+        extent: Union[Extent, None] = None,
+        crs: Union[str, int, None] = None,
+        start_datetime: Union[datetime, None] = None,
+        end_datetime: Union[datetime, None] = None,
+        cql_filter: Union[str, None] = None,
+        filter_crs: Union[str, int, None] = None,
+        max_results: int = 100,
+        offset: int = 0,
+        output_as_collection: bool = False
+    ) -> Union[dict, NGDFeatureCollection]:
         """
         Retrieves features from a Collection
 
@@ -118,12 +123,16 @@ class NGD:
             max_results (int, optional): The maximum number of features to return. Defaults to 100
             offset (int, optional): The offset number skips past the specified number of features in the collection.
                 Defaults to 0
-
-        Returns:
-            FeatureCollection: The results of the query in GeoJSON format
+            output_as_collection (bool, optional): Outputs as a NGDFeatureCollection which is more pythonic and structured.
+                Defaults to False to ensure backwards compatibility. 
+        Returns either:
+            Dict: The results of the query in GeoJSON format (if output_as_collection is set to False)
+            NGDFeatureCollection: The results of the query in structured form (if output_as_collection is set to True)
         """
 
-        assert max_results > 0, f"Argument max_results must be greater than 0 but was {max_results}"
+        assert max_results > 0, (
+            f"Argument max_results must be greater than 0 but was {max_results}"
+        )
         assert offset >= 0, f"Argument offset must be greater than 0 but was {offset}"
         params = {}
 
@@ -135,7 +144,9 @@ class NGD:
             if start_datetime and end_datetime and start_datetime > end_datetime:
                 raise ValueError("Start time must be before end time")
 
-            start_datetime = start_datetime.isoformat() + "Z" if start_datetime else ".."
+            start_datetime = (
+                start_datetime.isoformat() + "Z" if start_datetime else ".."
+            )
             end_datetime = end_datetime.isoformat() + "Z" if end_datetime else ".."
 
             params["datetime"] = f"{start_datetime}/{end_datetime}"
@@ -146,9 +157,13 @@ class NGD:
             # ADD INTERSECTS QUERY
             if cql_filter:
                 if filter_crs:
-                    assert get_crs(extent.crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84")) == \
-                           get_crs(filter_crs), "If passing extent and a cql filter with a crs, the filter_crs must " \
-                                                "be same as the extent crs"
+                    assert get_crs(
+                        extent.crs,
+                        valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"),
+                    ) == get_crs(filter_crs), (
+                        "If passing extent and a cql filter with a crs, the filter_crs must "
+                        "be same as the extent crs"
+                    )
                 else:
                     filter_crs = extent.crs
 
@@ -158,10 +173,12 @@ class NGD:
                 filter_crs = extent.crs
 
         if cql_filter:
-            params['filter'] = cql_filter
+            params["filter"] = cql_filter
             if filter_crs:
-                params['filter-crs'] = get_crs(crs=filter_crs, valid_crs=("epsg:4326", "epsg:27700", "epsg:3857",
-                                                                          "crs84"))
+                params["filter-crs"] = get_crs(
+                    crs=filter_crs,
+                    valid_crs=("epsg:4326", "epsg:27700", "epsg:3857", "crs84"),
+                )
 
         n_required = max_results
 
@@ -172,10 +189,17 @@ class NGD:
 
         while n_required > 0:
             limit = min(n_required, 100)
-            offset = max(offset, data["numberReturned"] if "numberReturned" in data else 0)
+            offset = max(
+                offset, data["numberReturned"] if "numberReturned" in data else 0
+            )
             params.update({"limit": limit, "offset": offset})
             try:
-                response = osdatahub.get(self.__endpoint(), params=params, headers=headers, proxies=osdatahub.get_proxies())
+                response = osdatahub.get(
+                    self.__endpoint(),
+                    params=params,
+                    headers=headers,
+                    proxies=osdatahub.get_proxies(),
+                )
                 response.raise_for_status()
             except requests.exceptions.HTTPError as e:
                 logging.error(json.dumps(e.response.json(), indent=4))
@@ -189,9 +213,16 @@ class NGD:
             else:
                 n_required -= resp_json["numberReturned"]
 
+        # Added to allow the NGD Sync to work with the NGD ASync
+        if output_as_collection:
+            data = NGDFeatureCollection.from_dict(data)
+
         return data
 
-    def query_feature(self, feature_id: str, crs: Union[str, int] = None) -> dict:
+    def query_feature(self, 
+                      feature_id: str, 
+                      crs: Union[str, int] = None
+                      ) -> dict:
         """
         Retrieves a single feature from a collection
 
@@ -206,7 +237,12 @@ class NGD:
         """
         params = {"crs": get_crs(crs)} if crs else {}
 
-        response = osdatahub.get(self.__endpoint(feature_id), params=params, headers={"key": self.key}, proxies=osdatahub.get_proxies())
+        response = osdatahub.get(
+            self.__endpoint(feature_id),
+            params=params,
+            headers={"key": self.key},
+            proxies=osdatahub.get_proxies(),
+        )
         response.raise_for_status()
 
         return response.json()

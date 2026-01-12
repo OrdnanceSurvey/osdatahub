@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.4] - 2026/01/12
+- Added Async NGD Client Feature - contributed by [ChrisCarlon]
+- Added NGD API support to use the NGDFeatureCollection contributed by [ChrisCarlon]
+- Further updates and fixes to documentation such as broken links. 
+
 ## [1.3.3] - 2026/01/07
 - Updating support to python 3.14
 - Updates and fixes to documentation
