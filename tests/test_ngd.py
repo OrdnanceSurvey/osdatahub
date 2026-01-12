@@ -96,7 +96,7 @@ class TestNGDQuery:
         assert len(results["features"]) == max_results
 
     @pytest.mark.skipif(not API_KEY, reason="Test API key not available")
-    @pytest.mark.parametrize(*query_data.test_ngd_query_live_collection())
+    @pytest.mark.parametrize(*query_data.test_ngd_query_live())
     def test_ngd_api_call_collection(self, collection, extent, crs, start_datetime, end_datetime, cql_filter, filter_crs,
                           max_results, offset):
         ngd = NGD(key=API_KEY, collection=collection)
