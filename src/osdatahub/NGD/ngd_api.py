@@ -10,6 +10,7 @@ from typeguard import typechecked
 import osdatahub
 from osdatahub import Extent
 from osdatahub.NGD.crs import get_crs
+from osdatahub.NGD.models import NGDFeatureCollection
 
 
 def _merge_geojsons(gj1: Union[dict], gj2: Union[dict]) -> Union[dict]:
@@ -96,7 +97,8 @@ class NGD:
         filter_crs: Union[str, int, None] = None,
         max_results: int = 100,
         offset: int = 0,
-    ) -> Union[dict]:
+        output_as_collection: bool = False
+    ) -> Union[dict, NGDFeatureCollection]:
         """
         Retrieves features from a Collection
 
@@ -121,9 +123,11 @@ class NGD:
             max_results (int, optional): The maximum number of features to return. Defaults to 100
             offset (int, optional): The offset number skips past the specified number of features in the collection.
                 Defaults to 0
-
-        Returns:
-            FeatureCollection: The results of the query in GeoJSON format
+            output_as_collection (bool, optional): Outputs as a NGDFeatureCollection which is more pythonic and structured.
+                Defaults to False to ensure backwards compatibility. 
+        Returns either:
+            Dict: The results of the query in GeoJSON format (if output_as_collection is set to False)
+            NGDFeatureCollection: The results of the query in structured form (if output_as_collection is set to True)
         """
 
         assert max_results > 0, (
@@ -209,9 +213,16 @@ class NGD:
             else:
                 n_required -= resp_json["numberReturned"]
 
+        # Added to allow the NGD Sync to work with the NGD ASync
+        if output_as_collection:
+            data = NGDFeatureCollection.from_dict(data)
+
         return data
 
-    def query_feature(self, feature_id: str, crs: Union[str, int] = None) -> dict:
+    def query_feature(self, 
+                      feature_id: str, 
+                      crs: Union[str, int] = None
+                      ) -> dict:
         """
         Retrieves a single feature from a collection
 

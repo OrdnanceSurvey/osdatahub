@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import pytest
 from osdatahub.NGD.crs import get_crs
 from osdatahub.NGD.ngd_api import _merge_geojsons, NGD
+from osdatahub.NGD.models import NGDFeatureCollection
 
 from tests.data import ngd_crs_data as crs_data
 from tests.data import ngd_merge_geojsons_data as merge_geojsons_data
@@ -94,6 +95,24 @@ class TestNGDQuery:
 
         assert len(results["features"]) == max_results
 
+    @pytest.mark.skipif(not API_KEY, reason="Test API key not available")
+    @pytest.mark.parametrize(*query_data.test_ngd_query_live())
+    def test_ngd_api_call_collection(self, collection, extent, crs, start_datetime, end_datetime, cql_filter, filter_crs,
+                          max_results, offset):
+        ngd = NGD(key=API_KEY, collection=collection)
+        results = ngd.query(extent=extent,
+                  crs=crs,
+                  start_datetime=start_datetime,
+                  end_datetime=end_datetime,
+                  cql_filter=cql_filter,
+                  filter_crs=filter_crs,
+                  max_results=max_results,
+                  offset=offset,
+                  output_to_collection=True
+                )
+
+        assert type(results) is NGDFeatureCollection
+        assert len(results.features) == max_results
 
 class TestNGDGetCollections:
     @mock.patch('osdatahub.get')
