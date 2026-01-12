@@ -10,7 +10,7 @@ from osdatahub import Extent
 from osdatahub.AsyncAPI import AsyncHTTPClient
 from osdatahub.NGD.async_ngd_api import AsyncNGD
 
-API_KEY = os.environ.get("OS_API_KEY")
+API_KEY = os.environ.get("OSDATAHUB_TEST_KEY")
 
 
 @pytest.mark.asyncio
