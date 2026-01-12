@@ -12,8 +12,7 @@ def set_proxies(proxies):
 def get_proxies():
     return json.loads(os.environ["_OSDATAHUB_PROXIES"])
 
-
-__version__ = "1.2.11"
+__version__ = "1.3.3"
 
 from osdatahub.DownloadsAPI import DataPackageDownload, OpenDataDownload
 from osdatahub.extent import Extent
