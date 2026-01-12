@@ -108,7 +108,7 @@ class TestNGDQuery:
                   filter_crs=filter_crs,
                   max_results=max_results,
                   offset=offset,
-                  output_to_collection=True
+                  output_as_collection=True
                 )
 
         assert type(results) is NGDFeatureCollection
