@@ -1,8 +1,9 @@
-geojson~=3.2.0
-typeguard~=4.4.4
-shapely~=2.1.1
-tqdm~=4.67.1
-requests~=2.32.4
-aiohttp~=3.13.2
-urllib3>=2.5.0 # not directly required, pinned by Snyk to avoid a vulnerability
-zipp>=3.23.0 # not directly required, pinned by Snyk to avoid a vulnerability
+geojson>=3.3.0
+typeguard>=4.6.0
+shapely>=2.1.2
+tqdm>=4.67.1
+requests>=2.34.2
+setuptools>=84.0.0
+aiohttp~=3.14.3
+urllib3>=2.8.0 # not directly required, pinned by Snyk to avoid a vulnerability
+zipp>=4.1.0 # not directly required, pinned by Snyk to avoid a vulnerability
