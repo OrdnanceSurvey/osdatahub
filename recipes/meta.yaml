@@ -28,7 +28,7 @@ requirements:
     - typeguard >=4.6.0
     - tqdm >=4.67.1
     - urllib3 >=2.8.0
-    - zipp >=3.19.1 
+    - zipp >=4.1.0
     - pytest-asyncio>=1.4.0
     - aiohttp>=3.14.3
 test:
