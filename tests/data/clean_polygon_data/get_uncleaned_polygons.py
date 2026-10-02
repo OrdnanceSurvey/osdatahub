@@ -92,7 +92,7 @@ if __name__ == "__main__":
             site["properties"] = {}
         with open(rf"{folder}\{save_name}.geojson", "w", encoding="utf-8") as f:
             geojson.dump(
-                FeatureCollection(results, crs="EPSG:27700"),
+                results,
                 f,
                 ensure_ascii=False,
                 indent=4,
