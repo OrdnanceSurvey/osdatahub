@@ -1,4 +1,4 @@
 myst-parser==5.1.0
 sphinx-rtd-theme
 urllib3>=2.8.0
-zipp>=4.1.0 
+zipp>=3.19.1
