@@ -1,4 +1,8 @@
 # Changelog
+## [1.3.5] - 2026/10/01
+- Updating requests dependency to 2.34.2 and switching to >= to avoid a vulnerability in urllib3
+- Updating other dependencies to latest versions
+- Deprecated support for Python 3.10
 
 ## [1.3.4] - 2026/01/12
 - Added Async NGD Client Feature - contributed by [ChrisCarlon]

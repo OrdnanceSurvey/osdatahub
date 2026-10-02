@@ -1,7 +1,4 @@
 {
-  "type": "FeatureCollection",
-  "crs": "EPSG:27700",
-  "features": {
     "type": "FeatureCollection",
     "crs": "EPSG:27700",
     "features": [
@@ -949,5 +946,4 @@
         "properties": {}
       }
     ]
-  }
 }

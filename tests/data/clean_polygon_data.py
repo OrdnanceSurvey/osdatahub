@@ -1,3 +1,4 @@
+import os
 import geojson
 from pytest import param
 from shapely.geometry import MultiPolygon, Polygon, mapping
@@ -67,12 +68,13 @@ def test_clean_polygon():
     ]
     return test_variables, test_data
 
-
 def get_test_polygons(polygon_name, source):
     path = f"./tests/data/clean_polygon_data/{source}/{polygon_name}.geojson"
-    with open(path, "r") as f:
-        return geojson.load(f)["features"]
 
+    with open(path, "r") as geojson_file:
+        print(f"Loading test polygon from {path}")
+        data = geojson.load(geojson_file)
+        return data.get("features", [])
 
 shell1 = [(1, 0), (1, 1), (0, 1), (0, 0)]
 shell2 = [(3, 2), (3, 3), (2, 3), (2, 2)]
@@ -88,3 +90,5 @@ simple_polygon2 = mapping(polygon2)
 polygon_with_hole = mapping(Polygon(shell2, [hole]))
 multipolygon1 = mapping(MultiPolygon([polygon1, polygon2]))
 multipolygon_with_hole = mapping(MultiPolygon([polygon2, polygon1_with_hole]))
+
+test_clean_polygon()
