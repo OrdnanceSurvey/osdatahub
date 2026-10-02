@@ -1,3 +1,5 @@
+import json
+
 import geojson
 from pytest import param
 from shapely.geometry import MultiPolygon, Polygon, mapping
@@ -71,8 +73,11 @@ def test_clean_polygon():
 def get_test_polygons(polygon_name, source):
     path = f"./tests/data/clean_polygon_data/{source}/{polygon_name}.geojson"
     with open(path, "r") as f:
-        return geojson.load(f)["features"]
+        data = geojson.load(f)
 
+        if isinstance(data, str):
+            data = json.loads(data)
+        return data["features"]
 
 shell1 = [(1, 0), (1, 1), (0, 1), (0, 0)]
 shell2 = [(3, 2), (3, 3), (2, 3), (2, 2)]
